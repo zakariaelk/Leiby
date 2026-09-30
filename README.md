@@ -1,4 +1,4 @@
-# Leiby Design & Build
+# Zakaria El Khachia — portfolio
 
 Portfolio site built with [Astro](https://astro.build), content managed with [Keystatic](https://keystatic.com), hosted on Netlify.
 
@@ -10,20 +10,19 @@ npm run dev
 ```
 
 - Site: http://localhost:4321
-- Content editor: http://localhost:4321/keystatic (only available while `npm run dev` is running)
+- Content editor: https://leiby-design-build.netlify.app/keystatic (log in with GitHub; saves are commits to this repo)
 
 ## Where things live
 
 | What | Where |
 | --- | --- |
 | Projects (case studies) | `src/content/projects/*.mdoc` |
-| Blog posts | `src/content/posts/*.mdoc` |
-| Services | `src/content/services/*.json` |
 | Home page text, site settings | `src/content/pages/home.json`, `settings.json` |
 | About page | `src/content/pages/about/index.mdoc` |
 | Images | `src/assets/…` (optimised at build time) |
 | Videos | `public/media/…` (MP4) |
 | Design tokens (colours, type, spacing) | `src/styles/global.css` |
+| Hero illustrations | `src/components/HeroCharacter.astro` (home), `HeroPortrait.astro` (/portrait and About) |
 
 ## Deploy
 

@@ -1,7 +1,7 @@
 ---
 // Zig-zag divider between colour bands. `color` is the band it leads into.
 interface Props { color?: string; flip?: boolean; class?: string }
-const { color = 'var(--paper)', flip = false, class: cls } = Astro.props;
+const { color = 'var(--bg)', flip = false, class: cls } = Astro.props;
 ---
 <svg
   class:list={['edge', flip && 'edge--top', cls]}

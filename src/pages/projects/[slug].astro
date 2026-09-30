@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Edge from '../../components/Edge.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getProjects } from '../../lib/data';
 
@@ -25,10 +24,10 @@ const meta = [
 ].filter((m) => m.value);
 ---
 <Base title={d.title} description={d.intro}>
-  <section class:list={['case-hero bg-sun', `c-${d.color}`]}>
+  <section class:list={['case-hero', `c-${d.color}`]}>
     <div class="container case-hero__grid">
       <div class="case-hero__text">
-        <a href="/projects/" class="arrow-link case-hero__back"><span class="arrow" aria-hidden="true">←</span> All projects</a>
+        <a href="/#work" class="arrow-link case-hero__back"><span class="arrow" aria-hidden="true">←</span> All work</a>
         <p class="case-hero__client">{d.client}</p>
         <h1 class="case-hero__title">{d.headline}</h1>
         <p class="lead case-hero__intro">{d.intro}</p>
@@ -48,8 +47,7 @@ const meta = [
   </section>
 
   <div class="case-cover">
-    <div class="case-cover__bg" aria-hidden="true"><div class="bg-sun"></div><Edge /></div>
-    <div class="container">
+        <div class="container">
       <div class:list={['case-cover__img', `c-${d.color}`]}>
         <Image src={d.cover} alt={`${d.title} cover`} widths={[640, 1024, 1440, 1920]} sizes="(min-width: 1440px) 1360px, 100vw" loading="eager" fetchpriority="high" />
       </div>
@@ -76,7 +74,7 @@ const meta = [
     <div class="container">
       <div class="case-next__head">
         <p class="eyebrow">Next up</p>
-        <a href="/projects/" class="arrow-link">All projects <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="/#work" class="arrow-link">All work <span class="arrow" aria-hidden="true">→</span></a>
       </div>
       <div class="case-next__grid">
         <ProjectCard project={next} />
@@ -103,22 +101,21 @@ const meta = [
 </script>
 
 <style>
-  .case-hero { padding-top: clamp(1.5rem, 4vw, 3.5rem); padding-bottom: clamp(2rem, 4vw, 3rem); }
+  .case-hero { position: relative; padding-top: clamp(1.5rem, 4vw, 3.5rem); padding-bottom: clamp(2rem, 4vw, 3rem); background: radial-gradient(60% 80% at 90% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%); }
   .case-hero__grid { display: grid; gap: 2rem 4rem; align-items: end; }
   @media (min-width: 1024px) { .case-hero__grid { grid-template-columns: 1.6fr 1fr; } }
   .case-hero__back { font-size: var(--fs-small); margin-bottom: 1.5rem; }
   .case-hero__back:hover .arrow { transform: translateX(-5px); }
-  .case-hero__client { font-weight: var(--fw-bold); color: var(--coral); font-size: var(--fs-h3); letter-spacing: -0.02em; }
+  .case-hero__client { font-weight: var(--fw-bold); color: var(--accent); font-size: var(--fs-h3); letter-spacing: -0.02em; }
   .case-hero__title { font-size: var(--fs-h1); letter-spacing: -0.045em; margin-top: 0.5rem; max-width: 16ch; }
-  .case-hero__intro { margin-top: 1.25rem; max-width: 40ch; }
+  .case-hero__intro { margin-top: 1.25rem; max-width: 40ch; color: var(--text-soft); }
   .case-meta { display: grid; gap: 1rem 2rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
   @media (min-width: 1024px) { .case-meta { grid-template-columns: 1fr; gap: 0.9rem; } }
-  .case-meta div { border-top: 2px solid var(--ink); padding-top: 0.6rem; }
-  .case-meta dt { font-size: var(--fs-small); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; }
+  .case-meta div { border-top: 1px solid var(--line); padding-top: 0.6rem; }
+  .case-meta dt { font-size: var(--fs-small); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
   .case-meta dd { margin: 0.2rem 0 0; font-weight: var(--fw-medium); }
 
   .case-cover { position: relative; }
-  .case-cover__bg { position: absolute; inset: -1px 0 auto; height: 50%; display: grid; grid-template-rows: 1fr auto; }
   .case-cover .container { position: relative; }
   .case-cover__img { border-radius: var(--radius-lg); overflow: hidden; background: var(--accent); }
   .case-cover__img :global(img) { width: 100%; height: auto; }
@@ -135,12 +132,12 @@ const meta = [
   .toc ol { display: grid; gap: 0.15rem; }
   .toc a {
     display: block; text-decoration: none; padding: 0.35rem 0 0.35rem 1rem; line-height: 1.3; font-size: 0.95rem;
-    color: var(--ink-soft); border-left: 3px solid var(--line); transition: color 0.2s, border-color 0.2s;
+    color: var(--text-soft); border-left: 3px solid var(--line); transition: color 0.2s, border-color 0.2s;
   }
-  .toc a:hover { color: var(--ink); }
-  .toc a.is-active { color: var(--ink); border-color: var(--coral); font-weight: var(--fw-medium); }
+  .toc a:hover { color: var(--text); }
+  .toc a.is-active { color: var(--text); border-color: var(--accent); font-weight: var(--fw-medium); }
 
-  .case-next { background: var(--white); }
+  .case-next { background: var(--surface); }
   .case-next__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
   .case-next__grid { display: grid; gap: 2.5rem; }
   @media (min-width: 700px) { .case-next__grid { grid-template-columns: repeat(2, 1fr); } }

@@ -1,41 +1,30 @@
 ---
-import Edge from './Edge.astro';
-
-interface Props { eyebrow?: string; title: string; intro?: string; shape?: 'circle' | 'dome' | 'square' | 'triangle' }
-const { eyebrow, title, intro, shape = 'circle' } = Astro.props;
+interface Props { eyebrow?: string; title: string; intro?: string }
+const { eyebrow, title, intro } = Astro.props;
 ---
-<section class="phero bg-sun">
+<section class="phero">
+  <div class="phero__glow" aria-hidden="true"></div>
   <div class="container phero__inner">
     <div class="phero__text">
-      {eyebrow && <p class="phero__eyebrow">{eyebrow}</p>}
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
       <h1 class="phero__title">{title}</h1>
       {intro && <p class="lead phero__intro">{intro}</p>}
       <slot />
     </div>
-    <div class:list={['phero__shape', `phero__shape--${shape}`]} aria-hidden="true">
-      <span class="s1"></span><span class="s2"></span><span class="s3"></span>
-    </div>
+    <div class="phero__art"><slot name="art" /></div>
   </div>
-  <Edge />
 </section>
 
 <style>
-  .phero { padding-top: clamp(2rem, 5vw, 4.5rem); overflow: hidden; }
-  .phero__inner { display: grid; gap: 2rem; align-items: end; padding-bottom: clamp(2rem, 4vw, 3.5rem); position: relative; }
-  @media (min-width: 900px) { .phero__inner { grid-template-columns: 1fr 280px; } }
-  .phero__eyebrow { font-weight: var(--fw-bold); color: var(--coral); font-size: var(--fs-h3); letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+  .phero { position: relative; padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2rem, 4vw, 3.5rem); overflow: hidden; }
+  .phero__glow {
+    position: absolute; inset: -30% -10% auto auto; width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
+    background: radial-gradient(closest-side, rgba(255, 61, 154, 0.16), transparent 70%);
+    pointer-events: none;
+  }
+  .phero__inner { position: relative; display: grid; gap: 2rem 3rem; align-items: center; }
+  @media (min-width: 900px) { .phero__inner:has(.phero__art > *) { grid-template-columns: 1.3fr 1fr; } }
+  .phero__art:empty { display: none; }
   .phero__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 18ch; animation: rise 0.9s var(--ease-out) both; }
-  .phero__intro { margin-top: 1.5rem; max-width: 44ch; animation: rise 0.9s var(--ease-out) 0.12s both; }
-  @keyframes rise { from { opacity: 0; transform: translateY(0.5em); } to { opacity: 1; transform: none; } }
-
-  .phero__shape { position: relative; width: 200px; height: 160px; justify-self: end; display: none; }
-  @media (min-width: 900px) { .phero__shape { display: block; width: 260px; height: 220px; } }
-  .phero__shape span { position: absolute; display: block; }
-  .s1 { width: 58%; aspect-ratio: 1; border-radius: 50%; background: var(--coral); right: 0; top: 0; animation: pop 0.7s var(--ease-bounce) 0.2s both, float 4s ease-in-out 1s infinite; }
-  .s2 { width: 62%; aspect-ratio: 2 / 1; border-radius: 999px 999px 0 0; background: var(--ink); left: 0; bottom: 0; transform-origin: bottom; animation: pop 0.7s var(--ease-bounce) 0.35s both, wobble 3s ease-in-out 1s infinite; }
-  .s3 { width: 22%; aspect-ratio: 1; background: var(--blue); border-radius: 8px; left: 12%; top: 8%; animation: pop 0.7s var(--ease-bounce) 0.5s both, spin 12s linear 1.2s infinite; }
-  .phero__shape--square .s1 { background: var(--blue); border-radius: 18px; }
-  .phero__shape--square .s3 { background: var(--coral); border-radius: 50%; }
-  .phero__shape--triangle .s1 { background: var(--mint); border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
-  .phero__shape--dome .s1 { background: var(--pink); }
+  .phero__intro { margin-top: 1.5rem; max-width: 44ch; color: var(--text-soft); animation: rise 0.9s var(--ease-out) 0.12s both; }
 </style>

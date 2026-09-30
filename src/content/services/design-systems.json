@@ -1,1 +1,0 @@
-{ "title": "Design systems & UI", "short": "Design systems", "summary": "Reusable components and clear rules, so your team can build faster and stay consistent.", "deliverables": ["Component libraries in Figma", "Tokens: colour, type, spacing", "Documentation", "Hand-off to code"], "icon": "blocks", "color": "blue", "order": 5 }

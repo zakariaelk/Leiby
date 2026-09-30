@@ -1,0 +1,72 @@
+---
+// Zakaria's hand-drawn portrait (from the current portfolio), recoloured for the dark theme.
+// The pupil follows the cursor, and looks around on its own when the cursor is still.
+---
+<div class="hp" aria-hidden="true">
+  <svg viewBox="0 0 520 520" class="hp__shapes">
+    <circle class="hp-c" cx="300" cy="230" r="190" fill="var(--purple)" />
+    <path class="hp-d" d="M40 520a130 130 0 0 1 260 0Z" fill="var(--pink)" />
+    <rect class="hp-s" x="410" y="60" width="64" height="64" rx="14" fill="var(--sky)" />
+  </svg>
+  <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none">
+    <use href="/img/zakaria-face.svg#ze-face-lines" />
+    <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--purple)" />
+    <g id="hpPupil">
+      <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--bg)" />
+      <circle cx="519" cy="460" r="4" fill="var(--text)" />
+    </g>
+  </svg>
+</div>
+
+<script>
+  const svg = document.getElementById('hpFace') as unknown as SVGSVGElement | null;
+  const pupil = document.getElementById('hpPupil');
+  if (svg && pupil && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const rest = { x: 524.838, y: 465.684 };
+    const lim = { nx: 14, px: 20, ny: 8, py: 9 };
+    let idle: number | undefined;
+    let wander: number | undefined;
+
+    const set = (x: number, y: number, ease = false) => {
+      pupil.style.transition = ease ? 'transform 0.7s cubic-bezier(.45,.05,.55,.95)' : 'none';
+      pupil.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    const follow = (cx: number, cy: number) => {
+      const ctm = svg.getScreenCTM();
+      if (!ctm) return;
+      const pt = new DOMPoint(cx, cy).matrixTransform(ctm.inverse());
+      const dx = pt.x - rest.x, dy = pt.y - rest.y;
+      const mag = Math.hypot(dx, dy) || 1;
+      const t = Math.min(mag / 700, 1);
+      const nx = (dx / mag) * t, ny = (dy / mag) * t;
+      set(nx < 0 ? nx * lim.nx : nx * lim.px, ny < 0 ? ny * lim.ny : ny * lim.py);
+    };
+    const lookAround = () => {
+      const x = (Math.random() * 2 - 1) * (Math.random() < 0.5 ? lim.nx : lim.px) * 0.8;
+      const y = (Math.random() * 2 - 1) * lim.py * 0.8;
+      set(x, y, true);
+      wander = window.setTimeout(lookAround, 1400 + Math.random() * 1800);
+    };
+    window.addEventListener('mousemove', (e) => {
+      window.clearTimeout(wander);
+      window.clearTimeout(idle);
+      follow(e.clientX, e.clientY);
+      idle = window.setTimeout(lookAround, 1500);
+    }, { passive: true });
+    lookAround();
+  }
+</script>
+
+<style>
+  .hp { position: relative; width: 100%; max-width: 520px; margin-inline: auto; aspect-ratio: 1; }
+  .hp__shapes { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .hp__shapes :global(*) { transform-box: fill-box; transform-origin: center; }
+  .hp-c { animation: pop 0.8s var(--ease-bounce) both; }
+  .hp-d { transform-origin: bottom center; animation: pop 0.8s var(--ease-bounce) 0.15s both, wobble 5s ease-in-out 1s infinite; }
+  .hp-s { animation: pop 0.8s var(--ease-bounce) 0.3s both, spin 14s linear 1.1s infinite; }
+  .hp__face {
+    position: absolute; left: 16%; bottom: 0; width: 80%; height: auto;
+    color: var(--text);
+    animation: rise 0.9s var(--ease-out) 0.2s both;
+  }
+</style>

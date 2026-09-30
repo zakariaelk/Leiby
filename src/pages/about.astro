@@ -2,44 +2,60 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import HeroPortrait from '../components/HeroPortrait.astro';
+import home from '../content/pages/home.json';
 
 const about = await getEntry('about', 'index');
 if (!about) throw new Error('About page content is missing');
 const { Content } = await render(about);
-const { title, intro, experience } = about.data;
+const { title, intro, experience, education } = about.data;
+const groups = [
+  { title: 'Experience', rows: experience },
+  { title: 'Education', rows: education },
+];
 ---
 <Base title="About" description={intro}>
-  <PageHero eyebrow="About" title={title} intro={intro} shape="dome" />
+  <PageHero eyebrow="About" title={title} intro={intro}>
+    <p class="about-cities">{home.cities.join(' · ')}</p>
+    <div slot="art" class="about-art"><HeroPortrait /></div>
+  </PageHero>
 
   <section class="section">
     <div class="container about__grid">
       <article class="prose" data-reveal><Content /></article>
-      <aside class="exp" data-reveal style="--delay:.1s">
-        <h2>Experience</h2>
-        <ol role="list">
-          {experience.map((e) => (
-            <li>
-              <div class="exp__top"><strong>{e.name}</strong><span>{e.years}</span></div>
-              <p>{e.role}</p>
-            </li>
-          ))}
-        </ol>
-        <a href="/contact/" class="btn">Work with me <span class="arrow" aria-hidden="true">→</span></a>
+      <aside class="cv" data-reveal style="--delay:.1s">
+        {groups.map((g) => (
+          <div>
+            <h2 class="eyebrow">{g.title}</h2>
+            <ol role="list">
+              {g.rows.map((e) => (
+                <li>
+                  <div class="cv__top"><strong>{e.name}</strong><span>{e.years}</span></div>
+                  <p>{e.role}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+        <a href="#contact" class="btn">Work with me <span class="arrow" aria-hidden="true">→</span></a>
       </aside>
     </div>
   </section>
 </Base>
 
 <style>
+  .about-cities { margin-top: 1.5rem; font-weight: var(--fw-medium); color: var(--sky); }
+  .about-art { max-width: 420px; margin-inline: auto; width: 100%; }
   .section { padding-top: clamp(2rem, 4vw, 3.5rem); }
   .about__grid { display: grid; gap: 3rem; }
   @media (min-width: 1024px) { .about__grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(3rem, 6vw, 6rem); align-items: start; } }
-  .exp { background: var(--white); border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; gap: 1.25rem; justify-items: start; }
-  @media (min-width: 1024px) { .exp { position: sticky; top: calc(var(--header-h) + 2rem); } }
-  .exp h2 { font-size: var(--fs-h3); }
-  .exp ol { display: grid; gap: 1.25rem; width: 100%; }
-  .exp li { border-top: 2px solid var(--ink); padding-top: 0.75rem; }
-  .exp__top { display: flex; justify-content: space-between; gap: 1rem; font-size: 1.1rem; }
-  .exp__top span { color: var(--coral); font-weight: var(--fw-bold); font-size: var(--fs-small); white-space: nowrap; }
-  .exp p { color: var(--ink-soft); margin-top: 0.25rem; font-size: 0.98rem; }
+  .cv { background: var(--surface); border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; gap: 2rem; justify-items: start; }
+  .cv > div { width: 100%; }
+  .cv .eyebrow { margin-bottom: 1rem; }
+  @media (min-width: 1024px) { .cv { position: sticky; top: calc(var(--header-h) + 2rem); } }
+  .cv ol { display: grid; gap: 1.1rem; }
+  .cv li { border-top: 1px solid var(--line); padding-top: 0.75rem; }
+  .cv__top { display: flex; justify-content: space-between; gap: 1rem; font-size: 1.05rem; }
+  .cv__top span { color: var(--pink); font-weight: var(--fw-medium); font-size: var(--fs-small); white-space: nowrap; }
+  .cv p { color: var(--text-soft); margin-top: 0.25rem; font-size: 0.97rem; }
 </style>

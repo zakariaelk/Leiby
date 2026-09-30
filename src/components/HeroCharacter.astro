@@ -1,0 +1,166 @@
+---
+// Flat, unDraw-style scene: Zakaria at his desk. He designs (the window on the left),
+// builds (the code panel) and ships (the paper plane taking off).
+---
+<div class="hc" aria-hidden="true">
+  <svg viewBox="0 0 600 500" class="hc__svg">
+    <!-- floor -->
+    <ellipse cx="330" cy="462" rx="270" ry="14" fill="rgba(245,242,250,0.05)" />
+
+    <!-- trail: laptop → design → code → plane -->
+    <path class="hc-trail" d="M395 250C360 210 330 200 360 175M470 175C500 160 520 140 520 120M560 100C565 80 560 62 548 52" fill="none" stroke="var(--text-soft)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 9" />
+
+    <!-- DESIGN window -->
+    <g class="hc-design">
+      <rect x="250" y="40" width="210" height="136" rx="14" fill="var(--text)" />
+      <circle cx="268" cy="56" r="4" fill="var(--pink)" />
+      <circle cx="282" cy="56" r="4" fill="var(--purple)" />
+      <circle cx="296" cy="56" r="4" fill="var(--sky)" />
+      <g class="hc-block">
+        <rect x="268" y="74" width="80" height="54" rx="8" fill="var(--pink)" />
+        <rect x="266" y="72" width="84" height="58" rx="9" fill="none" stroke="var(--sky)" stroke-width="2" stroke-dasharray="5 4" />
+        <rect x="345" y="125" width="8" height="8" rx="2" fill="var(--text)" stroke="var(--sky)" stroke-width="2" />
+      </g>
+      <circle cx="404" cy="98" r="24" fill="var(--purple)" />
+      <rect x="370" y="134" width="72" height="7" rx="3.5" fill="#cfc9dc" />
+      <rect x="268" y="146" width="174" height="7" rx="3.5" fill="#cfc9dc" />
+      <rect x="268" y="159" width="110" height="7" rx="3.5" fill="#e2dfea" />
+      <!-- cursor dragging the handle -->
+      <path class="hc-cursor" d="M352 132l0 22 6-6 5 10 5-2-5-10 8 0Z" fill="var(--bg)" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round" />
+      <g class="hc-tag"><rect x="206" y="22" width="68" height="26" rx="13" fill="var(--pink)" /><text x="240" y="40" text-anchor="middle">Design</text></g>
+    </g>
+
+    <!-- BUILD code panel -->
+    <g class="hc-code">
+      <rect x="440" y="170" width="150" height="104" rx="14" fill="var(--surface-2)" stroke="rgba(245,242,250,0.14)" stroke-width="1.5" />
+      <text x="458" y="198" class="hc-mono" fill="var(--sky)">&lt;/&gt;</text>
+      <rect class="hc-line l1" x="458" y="212" width="90" height="7" rx="3.5" fill="var(--pink)" />
+      <rect class="hc-line l2" x="472" y="226" width="70" height="7" rx="3.5" fill="var(--purple)" />
+      <rect class="hc-line l3" x="472" y="240" width="96" height="7" rx="3.5" fill="var(--sky)" />
+      <rect class="hc-line l4" x="458" y="254" width="50" height="7" rx="3.5" fill="var(--text-soft)" />
+      <rect class="hc-caret" x="512" y="252" width="3" height="11" rx="1.5" fill="var(--text)" />
+      <g class="hc-tag"><rect x="540" y="156" width="56" height="26" rx="13" fill="var(--sky)" /><text x="568" y="174" text-anchor="middle">Build</text></g>
+    </g>
+
+    <!-- SHIP: paper plane -->
+    <g class="hc-plane">
+      <path d="M520 58 580 30 560 88 546 70Z" fill="var(--pink)" />
+      <path d="M546 70 580 30 538 66Z" fill="#c42a74" />
+      <g class="hc-tag"><rect x="492" y="8" width="52" height="26" rx="13" fill="var(--purple)" /><text x="518" y="26" text-anchor="middle">Ship</text></g>
+    </g>
+
+    <!-- desk -->
+    <rect x="250" y="300" width="310" height="12" rx="4" fill="#3a3350" />
+    <rect x="268" y="312" width="10" height="148" rx="3" fill="#2e2840" />
+    <rect x="530" y="312" width="10" height="148" rx="3" fill="#2e2840" />
+
+    <!-- mug with steam -->
+    <path class="hc-steam" d="M452 266c-6-8 6-12 0-20M462 266c-6-8 6-12 0-20" fill="none" stroke="var(--text-soft)" stroke-width="2.5" stroke-linecap="round" />
+    <rect x="444" y="272" width="26" height="28" rx="5" fill="var(--sky)" />
+    <path d="M470 280h5a6 6 0 0 1 0 12h-5" fill="none" stroke="var(--sky)" stroke-width="4" />
+
+    <!-- floor plant -->
+    <g class="hc-plant">
+      <path d="M574 426c-26-14-34-46-16-62 12 18 18 38 16 62Z" fill="#37d399" />
+      <path d="M578 426c6-34 30-52 50-46-6 24-24 40-50 46Z" fill="#2bb884" />
+      <path d="M576 426c-4-38 6-62 16-72 10 24 4 50-16 72Z" fill="#45e3a8" />
+      <path d="M574 424c-18-4-34 4-44 16 18 6 34 2 44-16Z" fill="#2bb884" />
+    </g>
+    <path d="M556 424h40l-5 38h-30Z" fill="var(--pink)" />
+
+    <!-- laptop (screen faces Zakaria) -->
+    <rect x="300" y="292" width="96" height="8" rx="3" fill="#cfc9dc" />
+    <path d="M388 296h14l24-70h-14Z" fill="#cfc9dc" />
+    <circle cx="409" cy="258" r="4" fill="var(--pink)" />
+    <path class="hc-glow" d="M388 296 412 226 330 240 300 292Z" fill="var(--sky)" opacity="0.07" />
+
+    <!-- chair -->
+    <rect x="140" y="232" width="15" height="116" rx="7.5" fill="#3b3350" />
+    <rect x="148" y="334" width="100" height="13" rx="6.5" fill="#3b3350" />
+    <rect x="193" y="347" width="9" height="84" fill="#2e2840" />
+    <rect x="158" y="430" width="80" height="8" rx="4" fill="#2e2840" />
+    <circle cx="164" cy="446" r="7" fill="#2e2840" />
+    <circle cx="232" cy="446" r="7" fill="#2e2840" />
+
+    <!-- Zakaria -->
+    <g class="hc-person">
+      <!-- back leg -->
+      <path d="M182 322 272 330 266 434" fill="none" stroke="#3a3260" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="250" y="428" width="46" height="16" rx="8" fill="#d9d4e4" />
+      <!-- back arm -->
+      <path class="hc-arm-back" d="M214 240 242 288 308 292" fill="none" stroke="#7d52e0" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" />
+      <!-- front leg -->
+      <path d="M186 316 286 320 292 432" fill="none" stroke="#463d6b" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="276" y="426" width="50" height="18" rx="9" fill="var(--text)" />
+      <!-- torso -->
+      <path d="M166 332C158 282 170 240 198 222L234 218C254 234 258 272 252 332Z" fill="var(--purple)" />
+      <!-- neck + head -->
+      <rect x="212" y="194" width="18" height="30" rx="7" fill="#c98a64" />
+      <g class="hc-head">
+        <circle cx="226" cy="174" r="29" fill="#c98a64" />
+        <circle cx="253" cy="178" r="6" fill="#c98a64" />
+        <!-- beard -->
+        <path d="M203 180C205 204 221 214 238 210 249 207 255 196 254 186 245 193 233 195 223 189 214 185 209 181 203 180Z" fill="#241915" />
+        <!-- hair + bun -->
+        <path d="M196 176C193 150 212 139 233 143 248 146 256 157 254 167 241 158 225 160 215 168 210 176 204 180 196 176Z" fill="#241915" />
+        <circle cx="200" cy="146" r="13" fill="#241915" />
+        <circle cx="214" cy="180" r="6" fill="#b0714f" />
+        <ellipse class="hc-eye" cx="243" cy="171" rx="2.6" ry="3" fill="#241915" />
+      </g>
+      <!-- front arm, typing -->
+      <g class="hc-arm">
+        <path d="M224 234 254 284" fill="none" stroke="var(--purple)" stroke-width="24" stroke-linecap="round" />
+        <path d="M254 284 322 286" fill="none" stroke="#c98a64" stroke-width="15" stroke-linecap="round" />
+        <ellipse cx="327" cy="287" rx="10" ry="7" fill="#c98a64" />
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .hc { width: 100%; max-width: 620px; margin-inline: auto; }
+  .hc__svg { width: 100%; height: auto; overflow: visible; }
+  .hc__svg :global(*) { transform-box: fill-box; }
+  .hc__svg text { font-family: var(--font); font-size: 13px; font-weight: 700; fill: var(--on-accent); }
+  .hc__svg .hc-mono { font-size: 15px; fill: var(--sky); font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+
+  /* floating cards */
+  .hc-design { animation: float 6s ease-in-out infinite; }
+  .hc-code { animation: float 6s ease-in-out -2s infinite; }
+  .hc-plane { transform-origin: center; animation: fly 5s ease-in-out infinite; }
+  @keyframes fly { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(8px, -10px) rotate(-6deg); } }
+  .hc-trail { animation: dash 14s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -200; } }
+
+  /* designing: the block gets resized by the cursor */
+  .hc-block { transform-origin: 268px 74px; transform-box: view-box; animation: resize 4s var(--ease-out) infinite; }
+  .hc-cursor { transform-box: view-box; animation: drag 4s var(--ease-out) infinite; }
+  @keyframes resize { 0%, 15%, 100% { transform: scale(1); } 45%, 80% { transform: scale(1.18, 1.1); } }
+  @keyframes drag { 0%, 15%, 100% { transform: translate(0, 0); } 45%, 80% { transform: translate(15px, 6px); } }
+
+  /* building: code lines get typed */
+  .hc-line { transform-origin: left center; animation: type 6s steps(8) infinite; }
+  .l2 { animation-delay: 0.6s; } .l3 { animation-delay: 1.2s; } .l4 { animation-delay: 1.8s; }
+  @keyframes type { 0% { transform: scaleX(0); } 20%, 90% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+  .hc-caret { animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* the person */
+  .hc-arm { animation: typing 0.5s ease-in-out infinite alternate; }
+  .hc-arm-back { animation: typing 0.5s ease-in-out -0.25s infinite alternate; }
+  @keyframes typing { to { transform: translateY(-2px); } }
+  .hc-head { transform-origin: 50% 90%; animation: nod 6s ease-in-out infinite; }
+  @keyframes nod { 0%, 70%, 100% { transform: rotate(0); } 78%, 90% { transform: rotate(-7deg); } }
+  .hc-eye { transform-origin: center; animation: eyeblink 4.5s infinite; }
+  @keyframes eyeblink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+  .hc-steam { animation: steam 3s ease-in-out infinite; }
+  @keyframes steam { 0%, 100% { opacity: 0.2; transform: translateY(2px); } 50% { opacity: 0.8; transform: translateY(-3px); } }
+  .hc-plant { transform-origin: 50% 100%; animation: wobble 5s ease-in-out infinite; }
+  .hc-glow { animation: glow 3s ease-in-out infinite; }
+  @keyframes glow { 50% { opacity: 0.14; } }
+
+  /* tags pop in */
+  .hc-tag { transform-origin: center; animation: pop 0.6s var(--ease-bounce) both; }
+  .hc-code .hc-tag { animation-delay: 0.2s; }
+  .hc-plane .hc-tag { animation-delay: 0.4s; }
+</style>

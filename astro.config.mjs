@@ -11,6 +11,13 @@ export default defineConfig({
   site: 'https://leiby-design-build.netlify.app',
   integrations: [react(), markdoc(), keystatic()],
   adapter: netlify({ imageCDN: false, devFeatures: { images: false, edgeFunctions: false, environmentVariables: false } }),
+  // Pages from the earlier agency version.
+  redirects: {
+    '/projects': '/',
+    '/services': '/',
+    '/blog': '/',
+    '/contact': '/',
+  },
   prefetch: {
     prefetchAll: true,
   },

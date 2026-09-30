@@ -1,93 +1,106 @@
 ---
-import Logo from './Logo.astro';
 import Edge from './Edge.astro';
 import settings from '../content/pages/settings.json';
 
-const links = [
-  { href: '/services/', label: 'Services' },
-  { href: '/about/', label: 'About' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/contact/', label: 'Contact' },
-];
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer">
-  <Edge color="var(--sun)" />
-  <div class="bg-sun">
-    <div class="container site-footer__grid">
-      <div class="site-footer__brand">
-        <a href="/" aria-label="Leiby Design & Build, home"><Logo size="lg" /></a>
-        <p class="site-footer__pitch">Have a problem worth solving? <br />Let's walk it together.</p>
-        <a class="site-footer__email" href={`mailto:${settings.email}`}>{settings.email}</a>
-      </div>
+<footer class="site-footer" id="contact">
+  <Edge color="var(--surface)" flip={false} />
+  <div class="bg-surface">
+    <div class="container contact">
+      <p class="eyebrow" data-reveal>Get in touch</p>
+      <h2 class="contact__title" data-reveal>{settings.contactTitle}</h2>
+      <p class="lead muted contact__text" data-reveal>{settings.contactText}</p>
 
-      <nav aria-label="Footer">
-        <ul role="list" class="site-footer__links">
-          {links.map((l) => (
-            <li><a href={l.href}>{l.label} <span class="arrow" aria-hidden="true">→</span></a></li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="site-footer__social">
-        <p>Follow along</p>
+      <div class="contact__actions" data-reveal>
+        <div class="reveal-email" data-email={settings.email}>
+          <a class="btn reveal-email__btn" href={`mailto:${settings.email}`}>
+            Get in touch <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="reveal-email__shown" hidden>
+            <a class="reveal-email__address" href={`mailto:${settings.email}`}>{settings.email}</a>
+            <button type="button" class="btn btn--ghost reveal-email__copy">Copy</button>
+          </div>
+        </div>
         <a href={settings.linkedin} class="social-btn" target="_blank" rel="noopener" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5c0-1.2-.02-2.73-1.66-2.73-1.67 0-1.92 1.3-1.92 2.64V21h-4V9.75Z"/></svg>
         </a>
-        <span class="site-footer__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</span>
       </div>
+      <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
+
+      <svg class="contact__shapes" viewBox="0 0 240 200" aria-hidden="true">
+        <circle cx="170" cy="70" r="56" fill="var(--purple)" />
+        <path d="M20 200a70 70 0 0 1 140 0Z" fill="var(--pink)" />
+        <rect x="170" y="140" width="44" height="44" rx="10" fill="var(--sky)" />
+      </svg>
     </div>
   </div>
-  <div class="site-footer__bar bg-ink">
+  <div class="site-footer__bar">
     <div class="container site-footer__bar-inner">
-      <span>© {year} Leiby Design &amp; Build</span>
-      <span>{settings.location}</span>
+      <span>© {year} {settings.name} · <span class="arabic" lang="ar">{settings.nameArabic}</span></span>
+      <span>{settings.role}</span>
     </div>
   </div>
 </footer>
 
+<script>
+  // "Get in touch" opens the mail app, then turns into the address itself
+  // (with a copy button) for people without a mail app set up.
+  document.querySelectorAll<HTMLElement>('.reveal-email').forEach((wrap) => {
+    const email = wrap.dataset.email ?? '';
+    const btn = wrap.querySelector<HTMLAnchorElement>('.reveal-email__btn');
+    const shown = wrap.querySelector<HTMLElement>('.reveal-email__shown');
+    const copy = wrap.querySelector<HTMLButtonElement>('.reveal-email__copy');
+    btn?.addEventListener('click', () => {
+      window.setTimeout(() => {
+        btn.hidden = true;
+        if (shown) shown.hidden = false;
+      }, 250);
+    });
+    copy?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email);
+        copy.textContent = 'Copied!';
+      } catch {
+        copy.textContent = 'Select & copy';
+      }
+      window.setTimeout(() => (copy.textContent = 'Copy'), 2000);
+    });
+  });
+</script>
+
 <style>
   .site-footer { margin-top: auto; }
-  .site-footer .bg-sun { padding-block: clamp(2.5rem, 5vw, 5rem) clamp(3rem, 6vw, 6rem); }
-  .site-footer__grid {
-    display: grid; gap: 3rem;
-    grid-template-columns: 1fr;
-  }
-  .site-footer__brand a { text-decoration: none; }
-  .site-footer__pitch { font-size: var(--fs-lead); font-weight: var(--fw-medium); line-height: 1.3; margin-top: 2rem; letter-spacing: -0.01em; }
-  .site-footer__email {
-    display: inline-block; margin-top: 1rem; font-weight: var(--fw-bold); font-size: var(--fs-h3);
-    letter-spacing: -0.02em; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: var(--coral);
+  .site-footer :global(.edge) { color: var(--surface); }
+  .contact { position: relative; padding-block: clamp(3rem, 6vw, 6rem) clamp(4rem, 8vw, 7rem); overflow: hidden; }
+  .contact__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 16ch; position: relative; z-index: 1; }
+  .contact__text { margin-top: 1.5rem; max-width: 44ch; position: relative; z-index: 1; }
+  .contact__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.25rem; position: relative; z-index: 1; }
+  .reveal-email__shown { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; animation: pop 0.45s var(--ease-bounce); }
+  .reveal-email__shown[hidden], .reveal-email__btn[hidden] { display: none; }
+  .reveal-email__address {
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 2rem); font-weight: var(--fw-bold); letter-spacing: -0.02em;
+    color: var(--text); text-decoration-color: var(--pink); text-decoration-thickness: 3px; text-underline-offset: 6px;
     word-break: break-word;
   }
-  .site-footer__links { display: grid; gap: 0.6rem; }
-  .site-footer__links a {
-    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem); font-weight: var(--fw-bold); letter-spacing: -0.03em;
-    text-decoration: none; color: var(--ink); display: inline-flex; gap: 0.35em; align-items: center;
-  }
-  .site-footer__links a:hover { color: var(--coral); }
-  .site-footer__social { display: grid; gap: 0.75rem; align-content: start; justify-items: start; }
-  .site-footer__social p { font-size: var(--fs-small); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.1em; }
+  .reveal-email__copy { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.9rem; }
   .social-btn {
     width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
-    background: var(--ink); color: var(--white); transition: transform 0.3s var(--ease-bounce), background 0.2s;
+    background: var(--surface-2); color: var(--text); transition: transform 0.3s var(--ease-bounce), background 0.2s, color 0.2s;
   }
   .social-btn svg { width: 22px; }
-  .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--coral); }
-  .site-footer__status { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: var(--fw-medium); margin-top: 0.75rem; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 var(--mint); animation: ping 2s infinite; }
-  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(47, 199, 149, 0.6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(47, 199, 149, 0); } }
+  .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--sky); color: var(--on-accent); }
+  .contact__status { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.75rem; color: var(--text-soft); font-weight: var(--fw-medium); position: relative; z-index: 1; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #3ee6a1; animation: ping 2s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(62, 230, 161, 0.6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(62, 230, 161, 0); } }
+  .contact__shapes {
+    position: absolute; right: var(--gutter); bottom: 0; width: clamp(140px, 22vw, 300px); opacity: 0.9; pointer-events: none;
+  }
+  .contact__shapes :global(*) { transform-box: fill-box; transform-origin: center; }
+  .contact__shapes circle { animation: float 5s ease-in-out infinite; }
+  .contact__shapes rect { animation: spin 14s linear infinite; }
+  @media (max-width: 699px) { .contact__shapes { opacity: 0.25; } }
 
-  .site-footer__bar { font-size: var(--fs-small); }
+  .site-footer__bar { font-size: var(--fs-small); color: var(--text-soft); background: var(--bg); }
   .site-footer__bar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-block: 1.1rem; }
-
-  @media (min-width: 768px) {
-    .site-footer__grid { grid-template-columns: 1.3fr 1fr; }
-    .site-footer__social { grid-column: 1 / -1; grid-auto-flow: column; align-items: center; justify-content: start; gap: 1.25rem; }
-    .site-footer__status { margin-top: 0; }
-  }
-  @media (min-width: 1100px) {
-    .site-footer__grid { grid-template-columns: 1.4fr 1fr 0.8fr; }
-    .site-footer__social { grid-column: auto; grid-auto-flow: row; justify-items: start; }
-  }
 </style>
