@@ -22,7 +22,9 @@ npm run dev
 | Images | `src/assets/…` (optimised at build time) |
 | Videos | `public/media/…` (MP4) |
 | Design tokens (colours, type, spacing) | `src/styles/global.css` |
-| Hero portrait, doodles, greetings | `src/components/HeroPortrait.astro` |
+| Hero portrait + greeting bubble | `src/components/HeroPortrait.astro` (line drawing), `CartoonFace.astro` (cartoon, preview at /cartoon) |
+| Get in touch button (mailto + shows the email) | `src/components/GetInTouch.astro` |
+| Footer bridge animation | `src/components/BridgeBuild.astro` |
 | City monuments | `src/components/Monument.astro` |
 | Animated intro concept | `src/pages/concept.astro` (not linked, not indexed) |
 

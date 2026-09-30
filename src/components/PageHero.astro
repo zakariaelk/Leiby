@@ -19,7 +19,7 @@ const { eyebrow, title, intro } = Astro.props;
 <Wave bg="var(--sun)" />
 
 <style>
-  .phero { position: relative; padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2rem, 4vw, 3.5rem); overflow: hidden; }
+  .phero { position: relative; padding-block: calc(var(--header-h) + clamp(2rem, 5vw, 4.5rem)) clamp(2rem, 4vw, 3.5rem); overflow: hidden; }
   .phero__glow { right: -20vw; top: -30vw; }
   .phero .eyebrow { color: var(--ink); }
   .phero__inner { position: relative; display: grid; gap: 2.5rem 3rem; align-items: center; }

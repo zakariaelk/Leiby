@@ -6,8 +6,12 @@ import Wave from './Wave.astro';
 import HeroPortrait from './HeroPortrait.astro';
 import Monument from './Monument.astro';
 import ProjectCard from './ProjectCard.astro';
+import GetInTouch from './GetInTouch.astro';
 import home from '../content/pages/home.json';
 import { getProjects, inlineMarkup } from '../lib/data';
+
+interface Props { art?: 'line' | 'cartoon'; noindex?: boolean }
+const { art = 'line', noindex = false } = Astro.props;
 
 const projects = await getProjects();
 const spotlight = projects.find((p) => p.data.featured) ?? projects[0];
@@ -18,17 +22,17 @@ const timeline = [
   { title: 'Education', rows: about?.data.education ?? [] },
 ];
 ---
-<Base>
+<Base noindex={noindex}>
   <!-- ========== Intro ========== -->
   <section class="hero bg-sun">
     <div class="glow hero__glow" aria-hidden="true"></div>
     <div class="container hero__grid">
-      <div class="hero__art"><HeroPortrait /></div>
+      <div class="hero__art"><HeroPortrait variant={art} /></div>
       <div class="hero__text">
         <p class="hero__intro" set:html={inlineMarkup(home.heroText)} />
         <div class="hero__actions">
           <a href="#work" class="btn">My work <span class="arrow arrow--down" aria-hidden="true">→</span></a>
-          <a href="#contact" class="btn btn--ghost">Get in touch</a>
+          <GetInTouch variant="ghost" />
         </div>
         <ol role="list" class="cities" aria-label="Cities I've lived and worked in">
           {home.cities.map((city, i) => (
@@ -45,7 +49,7 @@ const timeline = [
     <div class="container">
       <h2 id="work-title" class="eyebrow">{home.workTitle}</h2>
 
-      <a href={`/projects/${spotlight.id}/`} class:list={['spotlight', `c-${spotlight.data.color}`]}>
+      <a href={`/projects/${spotlight.id}/`} class="spotlight">
         <div class="spotlight__media">
           <Image src={spotlight.data.cover} alt="" widths={[640, 1024, 1440]} sizes="(min-width: 1000px) 60vw, 100vw" />
         </div>
@@ -87,18 +91,18 @@ const timeline = [
 
 <style>
   /* ---------- Hero ---------- */
-  .hero { position: relative; padding-block: clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3rem); overflow: hidden; }
+  .hero { position: relative; padding-block: calc(var(--header-h) + clamp(1.5rem, 4vw, 3.5rem)) clamp(2rem, 4vw, 3rem); overflow: hidden; }
   .hero__glow { right: -20vw; top: -25vw; }
   .hero__grid { position: relative; display: grid; gap: 2rem 4rem; align-items: center; }
-  .hero__art { width: 100%; max-width: min(310px, 82vw); justify-self: center; }
+  .hero__art { width: 100%; max-width: min(280px, 76vw); justify-self: center; margin-top: 1.5rem; }
   @media (min-width: 900px) {
     .hero__grid { grid-template-columns: 1.15fr 1fr; }
     /* Text on the left, portrait on the right so he looks towards the text */
-    .hero__art { order: 2; max-width: 520px; }
+    .hero__art { order: 2; max-width: 520px; margin-top: 0; }
   }
   .hero__intro {
     font-size: var(--fs-intro); line-height: 1.28; font-weight: var(--fw-medium); letter-spacing: -0.025em;
-    max-width: 24ch; animation: rise 0.9s var(--ease-out) 0.1s both;
+    max-width: 30ch; animation: rise 0.9s var(--ease-out) 0.1s both;
   }
   .hero__intro :global(mark) {
     color: inherit; background: var(--white); padding: 0 0.2em; margin: 0 -0.05em;
@@ -116,11 +120,11 @@ const timeline = [
   }
   .cities :global(.monument) { transition: transform 0.4s var(--ease-bounce); }
   .cities li:hover :global(.monument) { transform: translateY(-4px) rotate(-4deg); }
+  /* Phones: three columns, monument above the name, no connectors */
   @media (max-width: 480px) {
-    .cities { font-size: 0.92rem; }
-    .cities li { gap: 0.3rem; }
-    .cities li + li::before { width: 0.6rem; margin-inline: 0.4rem; }
-    .cities :global(.monument) { width: 28px; height: 28px; }
+    .cities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; font-size: 0.92rem; }
+    .cities li { flex-direction: column; gap: 0.35rem; text-align: center; }
+    .cities li + li::before { display: none; }
   }
 
   /* ---------- Work ---------- */
@@ -131,9 +135,9 @@ const timeline = [
     box-shadow: 0 0 0 0 var(--ink);
     transition: box-shadow 0.4s var(--ease-out), transform 0.4s var(--ease-bounce);
   }
-  .spotlight:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0 0 var(--accent); }
+  .spotlight:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0 0 var(--coral); }
   @media (min-width: 1000px) { .spotlight { grid-template-columns: 1.5fr 1fr; } }
-  .spotlight__media { overflow: hidden; background: var(--accent); aspect-ratio: 16 / 10; }
+  .spotlight__media { overflow: hidden; background: var(--coral); aspect-ratio: 16 / 10; }
   .spotlight__media :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .spotlight__text { padding: clamp(1.5rem, 3vw, 3rem); display: grid; gap: 0.9rem; align-content: center; }
   @media (min-width: 1000px) { .spotlight__text { order: -1; } }

@@ -1,16 +1,6 @@
 import { config, collection, singleton, fields } from '@keystatic/core';
 import { block } from '@keystatic/core/content-components';
 
-const colors = fields.select({
-  label: 'Accent colour',
-  options: [
-    { label: 'Coral', value: 'coral' },
-    { label: 'Violet', value: 'violet' },
-    { label: 'Blue', value: 'blue' },
-  ],
-  defaultValue: 'coral',
-});
-
 const video = block({
   label: 'Video',
   schema: {
@@ -68,7 +58,6 @@ export default config({
         year: fields.text({ label: 'Year' }),
         link: fields.url({ label: 'Live link' }),
         cover: fields.image({ label: 'Cover image', directory: 'src/assets/projects', publicPath: '../../assets/projects/' }),
-        color: colors,
         order: fields.integer({ label: 'Order', defaultValue: 99 }),
         featured: fields.checkbox({ label: 'Featured (large card at the top)', defaultValue: false }),
         content: body('projects'),

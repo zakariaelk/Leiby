@@ -1,5 +1,7 @@
 ---
 import Wave from './Wave.astro';
+import GetInTouch from './GetInTouch.astro';
+import BridgeBuild from './BridgeBuild.astro';
 import settings from '../content/pages/settings.json';
 
 const year = new Date().getFullYear();
@@ -8,44 +10,20 @@ const year = new Date().getFullYear();
   <Wave color="var(--sun)" />
   <div class="bg-sun">
     <div class="container contact">
-      <p class="eyebrow" data-reveal>Get in touch</p>
-      <h2 class="contact__title" data-reveal>{settings.contactTitle}</h2>
-      <p class="lead muted contact__text" data-reveal>{settings.contactText}</p>
+      <div class="contact__text-col">
+        <p class="eyebrow" data-reveal>Get in touch</p>
+        <h2 class="contact__title" data-reveal>{settings.contactTitle}</h2>
+        <p class="lead contact__text" data-reveal>{settings.contactText}</p>
 
-      <div class="contact__actions" data-reveal>
-        <div class="reveal-email" data-email={settings.email}>
-          <a class="btn reveal-email__btn" href={`mailto:${settings.email}`}>
-            Get in touch <span class="arrow" aria-hidden="true">→</span>
+        <div class="contact__actions" data-reveal>
+          <GetInTouch />
+          <a href={settings.linkedin} class="social-btn" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5c0-1.2-.02-2.73-1.66-2.73-1.67 0-1.92 1.3-1.92 2.64V21h-4V9.75Z"/></svg>
           </a>
-          <div class="reveal-email__shown" hidden>
-            <a class="reveal-email__address" href={`mailto:${settings.email}`}>{settings.email}</a>
-            <button type="button" class="btn btn--ghost reveal-email__copy">Copy</button>
-          </div>
         </div>
-        <a href={settings.linkedin} class="social-btn" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5c0-1.2-.02-2.73-1.66-2.73-1.67 0-1.92 1.3-1.92 2.64V21h-4V9.75Z"/></svg>
-        </a>
+        <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
       </div>
-      <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
-
-      <div class="record" aria-hidden="true">
-        <svg viewBox="0 0 260 260" class="record__svg">
-          <circle cx="136" cy="136" r="118" fill="var(--coral)" />
-          <g class="record__disc">
-            <circle cx="130" cy="130" r="118" fill="var(--ink)" />
-            <circle cx="130" cy="130" r="100" fill="none" stroke="#3a3731" stroke-width="1.5" />
-            <circle cx="130" cy="130" r="86" fill="none" stroke="#3a3731" stroke-width="1.5" />
-            <circle cx="130" cy="130" r="72" fill="none" stroke="#3a3731" stroke-width="1.5" />
-            <path d="M60 80a90 90 0 0 1 60-38" fill="none" stroke="#5a564d" stroke-width="3" stroke-linecap="round" />
-            <circle cx="130" cy="130" r="40" fill="var(--sun)" />
-            <text x="130" y="140" text-anchor="middle" class="record__label arabic">ز</text>
-            <circle cx="130" cy="130" r="4" fill="var(--ink)" />
-          </g>
-        </svg>
-        <span class="note note--1">♪</span>
-        <span class="note note--2">♫</span>
-        <span class="note note--3">♪</span>
-      </div>
+      <div class="contact__art"><BridgeBuild /></div>
     </div>
   </div>
   <div class="site-footer__bar">
@@ -56,68 +34,28 @@ const year = new Date().getFullYear();
   </div>
 </footer>
 
-<script>
-  // "Get in touch" opens the mail app, then turns into the address itself
-  // (with a copy button) for people without a mail app set up.
-  document.querySelectorAll<HTMLElement>('.reveal-email').forEach((wrap) => {
-    const email = wrap.dataset.email ?? '';
-    const btn = wrap.querySelector<HTMLAnchorElement>('.reveal-email__btn');
-    const shown = wrap.querySelector<HTMLElement>('.reveal-email__shown');
-    const copy = wrap.querySelector<HTMLButtonElement>('.reveal-email__copy');
-    btn?.addEventListener('click', () => {
-      window.setTimeout(() => {
-        btn.hidden = true;
-        if (shown) shown.hidden = false;
-      }, 250);
-    });
-    copy?.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(email);
-        copy.textContent = 'Copied!';
-      } catch {
-        copy.textContent = 'Select & copy';
-      }
-      window.setTimeout(() => (copy.textContent = 'Copy'), 2000);
-    });
-  });
-</script>
-
 <style>
   .site-footer { margin-top: auto; }
-  .contact { position: relative; padding-block: clamp(2.5rem, 5vw, 5rem) clamp(4rem, 8vw, 7rem); }
-  .contact .eyebrow { color: var(--ink); }
-  .contact__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 16ch; position: relative; z-index: 1; }
-  .contact__text { margin-top: 1.5rem; max-width: 44ch; position: relative; z-index: 1; color: var(--ink); opacity: 0.8; }
-  .contact__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.25rem; position: relative; z-index: 1; }
-  .reveal-email__shown { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; animation: pop 0.45s var(--ease-bounce); }
-  .reveal-email__shown[hidden], .reveal-email__btn[hidden] { display: none; }
-  .reveal-email__address {
-    font-size: clamp(1.3rem, 1rem + 1.5vw, 2rem); font-weight: var(--fw-bold); letter-spacing: -0.02em;
-    text-decoration-color: var(--coral); text-decoration-thickness: 3px; text-underline-offset: 6px;
-    word-break: break-word;
+  .contact {
+    position: relative; display: grid; gap: 3rem; align-items: end;
+    padding-block: clamp(2.5rem, 5vw, 5rem) clamp(3.5rem, 7vw, 6rem);
   }
-  .reveal-email__copy { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.9rem; }
+  @media (min-width: 900px) { .contact { grid-template-columns: 1.4fr 1fr; } }
+  .contact .eyebrow { color: var(--ink); }
+  .contact__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 16ch; }
+  .contact__text { margin-top: 1.5rem; max-width: 44ch; opacity: 0.85; }
+  .contact__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.25rem; }
   .social-btn {
     width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
     background: var(--ink); color: var(--white); transition: transform 0.3s var(--ease-bounce), background 0.2s;
   }
   .social-btn svg { width: 22px; }
   .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--coral); }
-  .contact__status { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.75rem; font-weight: var(--fw-medium); position: relative; z-index: 1; }
+  .contact__status { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.75rem; font-weight: var(--fw-medium); }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: #0a7a4b; animation: ping 2s infinite; }
   @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(10, 122, 75, 0.5); } 80%, 100% { box-shadow: 0 0 0 10px rgba(10, 122, 75, 0); } }
-
-  /* A record spinning slowly, with notes hopping out of it */
-  .record { position: absolute; right: var(--gutter); bottom: clamp(2rem, 5vw, 4rem); width: clamp(150px, 22vw, 280px); pointer-events: none; }
-  .record__svg { width: 100%; height: auto; overflow: visible; }
-  .record__disc { transform-origin: 130px 130px; animation: spin 6s linear infinite; }
-  .record__label { font-size: 44px; fill: var(--ink); }
-  .note { position: absolute; font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 700; line-height: 1; animation: hop 2.4s steps(4) infinite; opacity: 0; }
-  .note--1 { left: 0; top: 20%; }
-  .note--2 { left: 18%; top: -4%; animation-delay: 0.8s; color: var(--coral-ink); }
-  .note--3 { left: -12%; top: 50%; animation-delay: 1.6s; }
-  @keyframes hop { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-24px, -48px) rotate(-12deg); } }
-  @media (max-width: 699px) { .record { position: relative; right: auto; bottom: auto; margin: 3rem 0 0 auto; width: 150px; } }
+  .contact__art { width: 100%; max-width: 380px; justify-self: end; }
+  @media (max-width: 899px) { .contact__art { max-width: 280px; } }
 
   .site-footer__bar { font-size: var(--fs-small); color: rgba(255, 255, 255, 0.75); background: var(--ink); }
   .site-footer__bar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-block: 1.1rem; }

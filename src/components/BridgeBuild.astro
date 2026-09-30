@@ -1,0 +1,59 @@
+---
+// An abstract bridge being built from both sides, meeting in the middle (you and me),
+// then a little circle rolls across. Orange, black and blue; stepped, frame-by-frame motion.
+const left = [0, 1, 2];
+const right = [0, 1, 2];
+---
+<svg class="bridge" viewBox="0 0 340 220" aria-hidden="true">
+  <!-- water -->
+  <path class="bw" d="M0 206c14-8 28 8 42 0s28 8 42 0 28 8 42 0 28 8 42 0 28 8 42 0 28 8 42 0 28 8 42 0 28 8 42 0" fill="none" stroke="var(--blue)" stroke-width="5" stroke-linecap="round" />
+  <!-- banks -->
+  <path d="M0 110h54v110H0Z" fill="var(--ink)" />
+  <path d="M286 110h54v110h-54Z" fill="var(--ink)" />
+  <!-- arch + hangers, drawn once the deck is complete -->
+  <path class="arch" d="M54 110Q170 6 286 110" fill="none" stroke="var(--blue)" stroke-width="6" stroke-linecap="round" pathLength="100" />
+  <g class="hangers" stroke="var(--blue)" stroke-width="3" stroke-linecap="round">
+    <path d="M94 110V74M132 110V52M170 110V46M208 110V52M246 110V74" />
+  </g>
+  <!-- deck blocks: black from the left, orange from the right -->
+  {left.map((i) => (
+    <rect class="blk" x={56 + i * 39} y="110" width="37" height="16" rx="3" fill="var(--ink)" style={`--n:${i}`} />
+  ))}
+  {right.map((i) => (
+    <rect class="blk" x={247 - i * 39} y="110" width="37" height="16" rx="3" fill="var(--coral)" style={`--n:${i}`} />
+  ))}
+  <!-- a traveller rolls across once the bridge is done -->
+  <g class="ball"><circle cx="30" cy="96" r="13" fill="var(--sun)" stroke="var(--ink)" stroke-width="3" /></g>
+</svg>
+
+<style>
+  .bridge { width: 100%; height: auto; overflow: visible; }
+  .bridge :global(*) { transform-box: fill-box; }
+
+  /* 10s loop, all stepped: blocks drop in pairs, arch draws, hangers appear, ball rolls, reset */
+  .blk { transform-origin: center bottom; animation: blk 10s steps(1) infinite; animation-delay: calc(var(--n) * 0.8s); }
+  @keyframes blk {
+    0% { transform: translateY(-60px); opacity: 0; }
+    2% { transform: translateY(-24px); opacity: 1; }
+    4% { transform: translateY(4px); }
+    6%, 88% { transform: translateY(0); opacity: 1; }
+    90%, 100% { transform: translateY(0); opacity: 0; }
+  }
+  .arch { stroke-dasharray: 100; stroke-dashoffset: 100; animation: arch 10s steps(1) infinite; }
+  @keyframes arch { 0%, 30% { stroke-dashoffset: 100; } 33% { stroke-dashoffset: 66; } 36% { stroke-dashoffset: 33; } 39%, 88% { stroke-dashoffset: 0; } 90%, 100% { stroke-dashoffset: 100; } }
+  .hangers { opacity: 0; animation: hangers 10s steps(1) infinite; }
+  @keyframes hangers { 0%, 41% { opacity: 0; } 43%, 88% { opacity: 1; } 90%, 100% { opacity: 0; } }
+  .ball { animation: ball 10s steps(1) infinite; }
+  @keyframes ball {
+    0%, 48% { transform: translate(0, 0); }
+    52% { transform: translate(56px, 0); }
+    56% { transform: translate(112px, 0); }
+    60% { transform: translate(168px, 0); }
+    64% { transform: translate(224px, 0); }
+    68%, 86% { transform: translate(280px, 0); }
+    88% { transform: translate(280px, -14px); }
+    90%, 100% { transform: translate(0, 0); }
+  }
+  .bw { animation: bw 1.2s steps(2) infinite; }
+  @keyframes bw { 50% { transform: translateX(-14px); } }
+</style>

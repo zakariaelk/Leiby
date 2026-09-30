@@ -1,0 +1,38 @@
+---
+// "Get in touch" button: opens the visitor's mail app (mailto) and, at the same time,
+// stretches to show the email address for people without a mail app set up.
+import settings from '../content/pages/settings.json';
+
+interface Props { variant?: 'solid' | 'ghost' | 'light'; class?: string }
+const { variant = 'solid', class: cls } = Astro.props;
+---
+<a
+  href={`mailto:${settings.email}`}
+  class:list={['btn', 'git', variant === 'ghost' && 'btn--ghost', variant === 'light' && 'btn--light', cls]}
+  data-git
+>
+  <span class="git__label">Get in touch <span class="arrow" aria-hidden="true">→</span></span>
+  <span class="git__email" aria-hidden="true">{settings.email}</span>
+</a>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-git]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('is-open')) return;
+      const from = btn.getBoundingClientRect().width;
+      btn.classList.add('is-open');
+      btn.setAttribute('aria-label', btn.querySelector('.git__email')?.textContent ?? '');
+      const to = btn.scrollWidth;
+      btn.style.width = `${from}px`;
+      void btn.offsetWidth; // commit the start width so the stretch animates
+      btn.style.width = `${to}px`;
+    });
+  });
+</script>
+
+<style>
+  .git { overflow: hidden; position: relative; transition: width 0.5s var(--ease-bounce), transform 0.3s var(--ease-bounce), box-shadow 0.3s var(--ease-out), background 0.2s; }
+  .git__email { display: none; }
+  .git.is-open .git__label { display: none; }
+  .git.is-open .git__email { display: inline; animation: rise 0.4s var(--ease-out) 0.1s both; user-select: all; }
+</style>

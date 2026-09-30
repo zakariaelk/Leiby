@@ -25,7 +25,7 @@ const meta = [
 ].filter((m) => m.value);
 ---
 <Base title={d.title} description={d.intro}>
-  <section class:list={['case-hero bg-sun', `c-${d.color}`]}>
+  <section class="case-hero bg-sun">
     <div class="container case-hero__grid">
       <div class="case-hero__text">
         <a href="/#work" class="arrow-link case-hero__back"><span class="arrow" aria-hidden="true">←</span> All work</a>
@@ -50,7 +50,7 @@ const meta = [
   <div class="case-cover">
     <div class="case-cover__bg" aria-hidden="true"><div class="bg-sun"></div><Wave /></div>
         <div class="container">
-      <div class:list={['case-cover__img', `c-${d.color}`]}>
+      <div class="case-cover__img">
         <Image src={d.cover} alt={`${d.title} cover`} widths={[640, 1024, 1440, 1920]} sizes="(min-width: 1440px) 1360px, 100vw" loading="eager" fetchpriority="high" />
       </div>
     </div>
@@ -103,7 +103,7 @@ const meta = [
 </script>
 
 <style>
-  .case-hero { position: relative; padding-top: clamp(1.5rem, 4vw, 3.5rem); padding-bottom: clamp(2rem, 4vw, 3rem); background: radial-gradient(55% 90% at 95% 0%, rgba(255, 90, 54, 0.28), rgba(255, 90, 54, 0) 70%), var(--sun); }
+  .case-hero { position: relative; padding-top: calc(var(--header-h) + clamp(1.5rem, 4vw, 3.5rem)); padding-bottom: clamp(2rem, 4vw, 3rem); background: radial-gradient(55% 90% at 95% 0%, rgba(255, 90, 54, 0.28), rgba(255, 90, 54, 0) 70%), var(--sun); }
   .case-hero__grid { display: grid; gap: 2rem 4rem; align-items: end; }
   @media (min-width: 1024px) { .case-hero__grid { grid-template-columns: 1.6fr 1fr; } }
   .case-hero__back { font-size: var(--fs-small); margin-bottom: 1.5rem; }
@@ -120,7 +120,7 @@ const meta = [
   .case-cover { position: relative; }
   .case-cover__bg { position: absolute; inset: -1px 0 auto; height: 50%; display: grid; grid-template-rows: 1fr auto; }
   .case-cover .container { position: relative; }
-  .case-cover__img { border-radius: var(--radius-lg); overflow: hidden; background: var(--accent); box-shadow: 8px 8px 0 0 var(--accent); }
+  .case-cover__img { border-radius: var(--radius-lg); overflow: hidden; background: var(--coral); box-shadow: 8px 8px 0 0 var(--coral); }
   .case-cover__img :global(img) { width: 100%; height: auto; }
 
   .case-body__grid { display: grid; gap: 3rem; }

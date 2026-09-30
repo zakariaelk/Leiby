@@ -1,9 +1,11 @@
 ---
-// Zakaria's hand-drawn portrait (from the current portfolio) on a circle with an offset circle,
-// a speech bubble saying hello in his languages, and three small doodles for design, build and ship.
-// The pupil follows the cursor, and looks around on its own when the cursor is still.
-interface Props { doodles?: boolean; greeting?: boolean }
-const { doodles = true, greeting = true } = Astro.props;
+// Zakaria's portrait on a circle with an offset circle (the logo motif), with a speech bubble
+// saying hello in his languages. `variant`: 'line' (the hand-drawn portrait from the current
+// portfolio; the pupil follows the cursor) or 'cartoon' (the cartoon version).
+import CartoonFace from './CartoonFace.astro';
+
+interface Props { variant?: 'line' | 'cartoon'; greeting?: boolean }
+const { variant = 'line', greeting = true } = Astro.props;
 const greetings = [
   { text: 'Hello', lang: 'en' },
   { text: 'Bonjour', lang: 'fr' },
@@ -11,107 +13,80 @@ const greetings = [
   { text: 'Hallo', lang: 'nl' },
 ];
 ---
-<div class="hp">
+<div class:list={['hp', `hp--${variant}`]}>
   <svg viewBox="0 0 520 520" class="hp__shapes" aria-hidden="true">
-    <defs>
-      <!-- "boiling" hand-drawn lines: the displacement pattern changes a few times a second -->
-      <filter id="boil" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1">
-          <animate attributeName="seed" values="1;4;7;10" dur="0.5s" calcMode="discrete" repeatCount="indefinite" />
-        </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" scale="3" />
-      </filter>
-    </defs>
     <circle class="hp-shadow" cx="316" cy="246" r="190" fill="var(--coral)" />
     <circle cx="300" cy="230" r="190" fill="var(--paper)" />
   </svg>
 
-  <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none" role="img" aria-label="Hand-drawn portrait of Zakaria El Khachia">
-    <use href="/img/zakaria-face.svg#ze-face-lines" />
-    <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--paper)" />
-    <g id="hpPupil">
-      <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--ink)" />
-      <circle cx="519" cy="460" r="4" fill="var(--white)" />
-    </g>
-  </svg>
-
-  {doodles && (
-    <svg viewBox="0 0 520 520" class="hp__doodles" aria-hidden="true" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-      <g filter="url(#boil)">
-        <!-- design: a pencil -->
-        <g transform="translate(52 96) scale(0.85)"><g class="dd dd--1">
-          <path d="M440 70l26 26-52 52-32 6 6-32Z" fill="var(--sun)" />
-          <path d="M440 70l12-12 26 26-12 12" fill="var(--coral)" />
-          <path d="M388 122l26 26" />
-          <text x="420" y="178" class="dd__label">design</text>
-        </g></g>
-        <!-- build: code brackets -->
-        <g transform="translate(8 88)"><g class="dd dd--2">
-          <path d="M452 250l-22 22 22 22M492 250l22 22-22 22M482 242l-20 60" />
-          <text x="446" y="326" class="dd__label">build</text>
-        </g></g>
-        <!-- ship: a paper plane with a loop -->
-        <g transform="translate(-230 40)"><g class="dd dd--3">
-          <path d="M300 20l62-22-16 58-14-18Z" fill="var(--white)" />
-          <path d="M332 38l30-40" />
-          <path d="M296 24c-22 6-28 26-12 30s12-20-10-18c-14 2-26 10-34 20" stroke-dasharray="2 7" />
-          <text x="250" y="16" class="dd__label">ship</text>
-        </g></g>
+  {variant === 'cartoon' ? (
+    <div class="hp__cartoon"><CartoonFace /></div>
+  ) : (
+    <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none" role="img" aria-label="Hand-drawn portrait of Zakaria El Khachia">
+      <use href="/img/zakaria-face.svg#ze-face-lines" />
+      <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--paper)" />
+      <g id="hpPupil">
+        <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--ink)" />
+        <circle cx="519" cy="460" r="4" fill="var(--white)" />
       </g>
     </svg>
   )}
 
   {greeting && (
-    <p class="hp__bubble" aria-label="Hello in Arabic, French, English and Dutch">
+    <p class="hp__bubble" aria-label="Hello in English, French, Arabic and Dutch">
       {greetings.map((g, i) => (
-        <span lang={g.lang} dir={g.lang === 'ar' ? 'rtl' : undefined} class:list={[g.lang === 'ar' && 'arabic']} style={`--i:${i}`} aria-hidden="true">{g.text}</span>
+        <span lang={g.lang} dir={g.lang === 'ar' ? 'rtl' : undefined} class:list={['hp__word', g.lang === 'ar' && 'arabic']} style={`--i:${i}`} aria-hidden="true">{g.text}</span>
       ))}
+      <!-- tail on top, pointing up at the face -->
+      <svg class="hp__tail" viewBox="0 0 34 26" aria-hidden="true"><path d="M3 26 30 2 20 26" fill="var(--white)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" /></svg>
     </p>
   )}
 </div>
 
-<script>
-  const svg = document.getElementById('hpFace') as unknown as SVGSVGElement | null;
-  const pupil = document.getElementById('hpPupil');
-  if (svg && pupil && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const rest = { x: 524.838, y: 465.684 };
-    const lim = { nx: 14, px: 20, ny: 8, py: 9 };
-    let idle: number | undefined;
-    let wander: number | undefined;
+{variant === 'line' && (
+  <script>
+    const svg = document.getElementById('hpFace') as unknown as SVGSVGElement | null;
+    const pupil = document.getElementById('hpPupil');
+    if (svg && pupil && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const rest = { x: 524.838, y: 465.684 };
+      const lim = { nx: 14, px: 20, ny: 8, py: 9 };
+      let idle: number | undefined;
+      let wander: number | undefined;
 
-    const set = (x: number, y: number, ease = false) => {
-      pupil.style.transition = ease ? 'transform 0.7s cubic-bezier(.45,.05,.55,.95)' : 'none';
-      pupil.style.transform = `translate(${x}px, ${y}px)`;
-    };
-    const follow = (cx: number, cy: number) => {
-      const ctm = svg.getScreenCTM();
-      if (!ctm) return;
-      const pt = new DOMPoint(cx, cy).matrixTransform(ctm.inverse());
-      const dx = pt.x - rest.x, dy = pt.y - rest.y;
-      const mag = Math.hypot(dx, dy) || 1;
-      const t = Math.min(mag / 700, 1);
-      const nx = (dx / mag) * t, ny = (dy / mag) * t;
-      set(nx < 0 ? nx * lim.nx : nx * lim.px, ny < 0 ? ny * lim.ny : ny * lim.py);
-    };
-    const lookAround = () => {
-      const x = (Math.random() * 2 - 1) * (Math.random() < 0.5 ? lim.nx : lim.px) * 0.8;
-      const y = (Math.random() * 2 - 1) * lim.py * 0.8;
-      set(x, y, true);
-      wander = window.setTimeout(lookAround, 1400 + Math.random() * 1800);
-    };
-    window.addEventListener('mousemove', (e) => {
-      window.clearTimeout(wander);
-      window.clearTimeout(idle);
-      follow(e.clientX, e.clientY);
-      idle = window.setTimeout(lookAround, 1500);
-    }, { passive: true });
-    lookAround();
-  }
-</script>
+      const set = (x: number, y: number, ease = false) => {
+        pupil.style.transition = ease ? 'transform 0.7s cubic-bezier(.45,.05,.55,.95)' : 'none';
+        pupil.style.transform = `translate(${x}px, ${y}px)`;
+      };
+      const follow = (cx: number, cy: number) => {
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        const pt = new DOMPoint(cx, cy).matrixTransform(ctm.inverse());
+        const dx = pt.x - rest.x, dy = pt.y - rest.y;
+        const mag = Math.hypot(dx, dy) || 1;
+        const t = Math.min(mag / 700, 1);
+        const nx = (dx / mag) * t, ny = (dy / mag) * t;
+        set(nx < 0 ? nx * lim.nx : nx * lim.px, ny < 0 ? ny * lim.ny : ny * lim.py);
+      };
+      const lookAround = () => {
+        const x = (Math.random() * 2 - 1) * (Math.random() < 0.5 ? lim.nx : lim.px) * 0.8;
+        const y = (Math.random() * 2 - 1) * lim.py * 0.8;
+        set(x, y, true);
+        wander = window.setTimeout(lookAround, 1400 + Math.random() * 1800);
+      };
+      window.addEventListener('mousemove', (e) => {
+        window.clearTimeout(wander);
+        window.clearTimeout(idle);
+        follow(e.clientX, e.clientY);
+        idle = window.setTimeout(lookAround, 1500);
+      }, { passive: true });
+      lookAround();
+    }
+  </script>
+)}
 
 <style>
   .hp { position: relative; width: 100%; max-width: 520px; margin-inline: auto; aspect-ratio: 1; }
-  .hp__shapes, .hp__doodles { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .hp__shapes { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .hp__shapes :global(circle) { animation: pop 0.8s var(--ease-bounce) both; transform-origin: 300px 230px; }
   .hp-shadow { animation-delay: 0.12s !important; }
   .hp__face {
@@ -119,34 +94,26 @@ const greetings = [
     color: var(--ink);
     animation: rise 0.9s var(--ease-out) 0.2s both;
   }
+  .hp__cartoon { position: absolute; left: 22%; bottom: 0; width: 70%; animation: rise 0.9s var(--ease-out) 0.2s both; }
 
-  /* Doodles hop between poses like a hand-drawn cartoon */
-  .dd { transform-box: fill-box; transform-origin: center; animation: jitter 1.2s steps(1) infinite, pop 0.5s steps(3) both; }
-  .dd--1 { animation-delay: 0s, 0.5s; }
-  .dd--2 { animation-delay: -0.4s, 0.7s; }
-  .dd--3 { animation-delay: -0.8s, 0.9s; }
-  .dd__label { font-family: var(--font); font-size: 17px; font-weight: 700; fill: var(--ink); stroke: none; letter-spacing: 0.02em; }
-
-  /* Speech bubble: cycles through greetings, one word at a time */
+  /* Speech bubble below the face, its tail pointing up at the mouth */
   .hp__bubble {
-    position: absolute; left: -2%; top: 44%;
+    position: absolute; left: -2%; top: 66%;
     display: grid; place-items: center;
-    padding: 0.55rem 1.1rem; min-width: 7.5rem;
+    padding: 0.55rem 1.15rem; min-width: 7.5rem;
     background: var(--white); border: 2.5px solid var(--ink); border-radius: 999px;
-    font-weight: var(--fw-bold); font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    font-weight: var(--fw-bold); font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
     box-shadow: 4px 4px 0 var(--ink);
+    transform-origin: 80% 0;
     animation: pop 0.5s steps(3) 1s both;
   }
-  .hp__bubble::after {
-    content: ''; position: absolute; right: 14px; bottom: -12px; width: 18px; height: 14px;
-    background: var(--white); border-right: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink);
-    transform: skewX(-30deg); border-bottom-right-radius: 4px;
-  }
-  .hp__bubble span { grid-area: 1 / 1; opacity: 0; animation: word 8s steps(1) infinite; animation-delay: calc(var(--i) * 2s + 1s); }
-  .hp__bubble .arabic { font-size: 1.15em; line-height: 1; }
+  .hp--cartoon .hp__bubble { top: 76%; left: 0; }
+  .hp__tail { position: absolute; top: -23px; right: 16px; width: 34px; height: 26px; overflow: visible; }
+  .hp__word { grid-area: 1 / 1; opacity: 0; animation: word 8s steps(1) infinite; animation-delay: calc(var(--i) * 2s + 1s); }
+  .hp__word.arabic { font-size: 1.15em; line-height: 1; }
   @keyframes word { 0% { opacity: 1; transform: translateY(-2px); } 3% { transform: none; } 25%, 100% { opacity: 0; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .hp__bubble span:first-child { opacity: 1; }
+    .hp__word:first-child { opacity: 1; }
   }
 </style>

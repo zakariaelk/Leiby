@@ -4,6 +4,7 @@
 // Everything moves in stepped frames with "boiling" lines, like hand-drawn animation.
 import '@fontsource-variable/figtree';
 import '../styles/global.css';
+import CartoonFace from '../components/CartoonFace.astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -31,22 +32,16 @@ import '../styles/global.css';
           <circle cx="792" cy="412" r="220" fill="var(--coral)" stroke="none" />
           <circle cx="776" cy="396" r="220" fill="var(--paper)" stroke="none" />
 
-          <!-- the head, bobbing between two poses while thinking -->
-          <g class="head">
-            <svg x="560" y="120" width="420" height="548" viewBox="300 30 920 1200" style="color:var(--ink)">
-              <use href="/img/zakaria-face.svg#ze-face-lines" stroke="none" />
-              <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--paper)" stroke="none" />
-              <g class="pupil">
-                <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--ink)" stroke="none" />
-                <circle cx="519" cy="460" r="4" fill="var(--white)" stroke="none" />
-              </g>
-            </svg>
-          </g>
+        </g>
 
+        <!-- the cartoon head, looking up at the thought -->
+        <CartoonFace look="up" x={600} y={200} width={340} height={391} />
+
+        <g filter="url(#boil2)" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
           <!-- thought dots -->
-          <circle class="dot d1" cx="618" cy="266" r="7" fill="var(--white)" />
-          <circle class="dot d2" cx="588" cy="292" r="10" fill="var(--white)" />
-          <circle class="dot d3" cx="548" cy="318" r="15" fill="var(--white)" />
+          <circle class="dot d1" cx="682" cy="258" r="7" fill="var(--white)" />
+          <circle class="dot d2" cx="642" cy="282" r="10" fill="var(--white)" />
+          <circle class="dot d3" cx="590" cy="306" r="14" fill="var(--white)" />
 
           <g transform="translate(-67 -22) scale(1.25)">
           <!-- the cloud -->
@@ -77,7 +72,7 @@ import '../styles/global.css';
           <g class="scene s3">
             <path d="M200 130l-34 34 34 34M330 130l34 34-34 34M285 118l-40 94" stroke-width="6" />
             <path class="type t1" d="M170 228h60" stroke="var(--coral)" stroke-width="7" />
-            <path class="type t2" d="M244 228h50" stroke="var(--violet)" stroke-width="7" />
+            <path class="type t2" d="M244 228h50" stroke="var(--ink)" stroke-width="7" />
             <path class="type t3" d="M308 228h52" stroke="var(--blue)" stroke-width="7" />
             <text x="266" y="270" class="label">build</text>
           </g>
@@ -95,11 +90,11 @@ import '../styles/global.css';
           </g>
 
           <!-- idea bulb, pops up at "ship" -->
-          <g class="bulb">
+          <g transform="translate(26 64)"><g class="bulb">
             <path d="M720 96a34 34 0 1 1 44 0c-6 6-8 12-8 20h-28c0-8-2-14-8-20z" fill="var(--sun)" />
             <path d="M730 128h24M734 140h16" />
             <path d="M742 34v-18M790 52l12-12M694 52l-12-12M806 92h16M676 92h-16" stroke-width="5" />
-          </g>
+          </g></g>
         </g>
       </svg>
 
@@ -126,11 +121,6 @@ import '../styles/global.css';
       .stage .big { font-size: 46px; }
       .stage .label { font-size: 30px; letter-spacing: -0.01em; }
 
-      /* Head bobs between two poses; the eye looks up at the thought */
-      .head { transform-origin: 50% 100%; animation: bob 1.2s steps(1) infinite; }
-      @keyframes bob { 0% { transform: rotate(0); } 50% { transform: rotate(-2deg) translateY(-3px); } }
-      .pupil { animation: look 10s steps(1) infinite; }
-      @keyframes look { 0% { transform: translate(-12px, -8px); } 45% { transform: translate(-6px, -9px); } 70% { transform: translate(-13px, -4px); } 90% { transform: translate(0, 0); } }
 
       /* Thought dots and cloud pop in, frame by frame */
       .dot, .cloud { transform-origin: center; animation: pop 0.45s steps(3) both; }

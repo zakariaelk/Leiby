@@ -1,0 +1,95 @@
+---
+// A cartoon version of Zakaria, drawn from the hand-drawn portrait: swept-back hair tied at the back,
+// thick brows, full short beard, crew-neck tee. Lines "boil" and everything moves in stepped frames.
+// `look`: 'follow' (eyes follow the cursor) or 'up' (looking up and to the left, thinking).
+interface Props { look?: 'follow' | 'up'; class?: string; x?: number; y?: number; width?: number; height?: number }
+const { look = 'follow', class: cls, x, y, width, height } = Astro.props;
+const skin = '#dca27c';
+const shade = '#c7875f';
+const hair = '#2b211b';
+---
+<svg class:list={['cf', `cf--${look}`, cls]} x={x} y={y} width={width} height={height} viewBox="0 0 400 460" role="img" aria-label="Cartoon portrait of Zakaria El Khachia">
+  <defs>
+    <filter id="cfBoil" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="1" seed="2">
+        <animate attributeName="seed" values="2;6;11" dur="0.42s" calcMode="discrete" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" scale="2.6" />
+    </filter>
+  </defs>
+  <g filter="url(#cfBoil)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <g class="cf__head">
+      <!-- hair tied at the back, peeking over the top -->
+      <circle cx="238" cy="46" r="21" fill={hair} />
+      <!-- neck + tee -->
+      <path d="M168 296v58q32 30 64 0v-58Z" fill={shade} />
+      <path d="M52 460c8-68 60-104 112-112q36 38 72 0c52 8 104 44 112 112Z" fill="var(--ink)" />
+      <!-- ears -->
+      <ellipse cx="117" cy="214" rx="16" ry="26" fill={skin} />
+      <ellipse cx="283" cy="214" rx="16" ry="26" fill={skin} />
+      <path d="M113 204q8 10 2 22M287 204q-8 10-2 22" fill="none" stroke-width="3.5" />
+      <!-- face -->
+      <path d="M124 140c0-56 40-76 76-76s76 20 76 76l2 92c0 60-32 98-78 100-46-2-78-40-78-100Z" fill={skin} />
+      <circle cx="146" cy="238" r="12" fill="var(--coral)" opacity="0.25" stroke="none" />
+      <circle cx="254" cy="238" r="12" fill="var(--coral)" opacity="0.25" stroke="none" />
+      <!-- beard + moustache -->
+      <path d="M123 222c1 64 31 114 77 116 46-2 76-52 77-116-7 24-19 36-35 36-14 0-24-6-42-6s-28 6-42 6c-16 0-28-12-35-36Z" fill={hair} />
+      <path class="cf__mouth" d="M183 284q17 13 34 0" fill="none" stroke="#e9b894" stroke-width="5" />
+      <!-- nose -->
+      <path d="M204 178c-4 22-14 44-10 54 4 6 16 6 20 0" fill="none" stroke-width="4.5" />
+      <!-- eyes -->
+      <g class="cf__eyes">
+        <ellipse cx="160" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
+        <ellipse cx="240" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
+        <g class="cf__pupils" stroke="none">
+          <circle cx="160" cy="195" r="7.5" fill="var(--ink)" />
+          <circle cx="240" cy="195" r="7.5" fill="var(--ink)" />
+          <circle cx="157" cy="192" r="2.2" fill="var(--white)" />
+          <circle cx="237" cy="192" r="2.2" fill="var(--white)" />
+        </g>
+      </g>
+      <!-- brows -->
+      <g class="cf__brows">
+        <path d="M136 170q22-18 50-8l-2 10q-24-6-46 6Z" fill={hair} stroke-width="3" />
+        <path d="M264 170q-22-18-50-8l2 10q24-6 46 6Z" fill={hair} stroke-width="3" />
+      </g>
+      <!-- hair, swept back -->
+      <path d="M118 168c-14-58 10-110 72-118 62-8 110 24 100 100-4 16-8 26-10 30-4-30-14-56-36-68-24-12-56-2-80-6-20-2-38 16-42 62Z" fill={hair} />
+      <path d="M150 62c18-36 86-42 114-4-14-6-32-8-50-2-18-12-44-6-64 6Z" fill={hair} />
+      <path d="M170 72c20-10 50-10 70 2M160 86c24-10 54-8 76 4" fill="none" stroke="#4a3a30" stroke-width="3" />
+    </g>
+  </g>
+</svg>
+
+{look === 'follow' && (
+  <script>
+    // Eyes follow the cursor, updated in small steps (~8 fps) so it feels hand-animated.
+    const face = document.querySelector<SVGSVGElement>('.cf--follow');
+    const pupils = face?.querySelector<SVGGElement>('.cf__pupils');
+    if (face && pupils && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let target = { x: 0, y: 0 };
+      window.addEventListener('mousemove', (e) => {
+        const r = face.getBoundingClientRect();
+        const cx = r.left + r.width * 0.5, cy = r.top + r.height * 0.42;
+        const dx = e.clientX - cx, dy = e.clientY - cy;
+        const mag = Math.hypot(dx, dy) || 1;
+        const t = Math.min(mag / 600, 1);
+        target = { x: Math.round(((dx / mag) * t * 7) / 2) * 2, y: Math.round(((dy / mag) * t * 4) / 2) * 2 };
+      }, { passive: true });
+      window.setInterval(() => { pupils.style.transform = `translate(${target.x}px, ${target.y}px)`; }, 125);
+    }
+  </script>
+)}
+
+<style>
+  .cf { width: 100%; height: auto; overflow: visible; }
+  .cf :global(*) { transform-box: fill-box; }
+  .cf__head { transform-origin: 50% 100%; animation: cf-bob 2.4s steps(1) infinite; }
+  @keyframes cf-bob { 0% { transform: rotate(0); } 50% { transform: rotate(-1.5deg) translateY(-2px); } }
+  .cf__eyes { transform-origin: center; animation: cf-blink 4.2s steps(1) infinite; }
+  @keyframes cf-blink { 0%, 93% { transform: scaleY(1); } 94% { transform: scaleY(0.4); } 96% { transform: scaleY(0.08); } 98% { transform: scaleY(0.6); } }
+  .cf__brows { animation: cf-brows 7s steps(1) infinite; }
+  @keyframes cf-brows { 0%, 60% { transform: translateY(0); } 62%, 70% { transform: translateY(-6px); } 72% { transform: translateY(0); } }
+  .cf--up .cf__pupils { animation: cf-look 10s steps(1) infinite; }
+  @keyframes cf-look { 0% { transform: translate(-6px, -4px); } 45% { transform: translate(-3px, -5px); } 70% { transform: translate(-7px, -2px); } 90% { transform: translate(0, 0); } }
+</style>
