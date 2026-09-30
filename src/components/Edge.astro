@@ -1,0 +1,14 @@
+---
+// Zig-zag divider between colour bands. `color` is the band it leads into.
+interface Props { color?: string; flip?: boolean; class?: string }
+const { color = 'var(--paper)', flip = false, class: cls } = Astro.props;
+---
+<svg
+  class:list={['edge', flip && 'edge--top', cls]}
+  style={`color:${color}`}
+  viewBox="0 0 1440 64"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+>
+  <path d="M0 64V38L180 6l180 32L540 6l180 32L900 6l180 32 180-32 180 32v26Z" fill="currentColor" />
+</svg>

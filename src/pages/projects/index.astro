@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/data';
+
+const projects = await getProjects();
+---
+<Base title="Projects" description="Selected projects by Leiby Design & Build: product design, websites, apps and data tools.">
+  <PageHero
+    eyebrow="Projects"
+    title="Problems we solved together."
+    intro="From safety apps for aid workers to websites for architects and artists. Every project started with a real problem."
+    shape="square"
+  />
+  <section class="section">
+    <div class="container grid">
+      {projects.map((p, i) => <ProjectCard project={p} delay={(i % 2) * 0.08} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid { display: grid; gap: clamp(2.5rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem); }
+  @media (min-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .section { padding-top: clamp(2rem, 4vw, 3.5rem); }
+</style>

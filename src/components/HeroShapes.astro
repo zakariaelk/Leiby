@@ -1,0 +1,60 @@
+---
+// The hero illustration: two shapes (client + me) walking a dotted path together,
+// surrounded by playful bits that drift around.
+---
+<div class="hero-shapes" aria-hidden="true">
+  <svg viewBox="0 0 520 520" class="hero-shapes__svg">
+    <!-- the path we walk -->
+    <path class="hs-path" d="M40 440C120 380 150 300 250 300S400 250 460 140" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 14" />
+    <!-- flag at the end: shipped -->
+    <g class="hs-flag">
+      <path d="M458 140V52" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" />
+      <path d="M460 54h52l-14 18 14 18h-52Z" fill="var(--blue)" />
+    </g>
+    <!-- the two walkers -->
+    <g class="hs-walk">
+      <g class="hs-dome"><path d="M130 330a70 70 0 0 1 140 0Z" fill="var(--ink)" /><circle cx="176" cy="300" r="7" fill="var(--sun)" /><circle cx="214" cy="300" r="7" fill="var(--sun)" /></g>
+      <g class="hs-ball"><circle cx="300" cy="280" r="52" fill="var(--coral)" /><circle cx="286" cy="270" r="6" fill="var(--ink)" /><circle cx="316" cy="270" r="6" fill="var(--ink)" /><path d="M288 292q13 12 26 0" stroke="var(--ink)" stroke-width="5" fill="none" stroke-linecap="round" /></g>
+    </g>
+    <!-- playful extras -->
+    <rect class="hs-square" x="60" y="110" width="74" height="74" rx="12" fill="var(--blue)" />
+    <path class="hs-tri" d="M360 390l50 86h-100Z" fill="var(--mint)" />
+    <path class="hs-squiggle" d="M230 90c20-30 40 30 60 0s40 30 60 0 40 30 60 0" fill="none" stroke="var(--pink)" stroke-width="12" stroke-linecap="round" />
+    <path class="hs-star" d="M110 420l9 22 22 9-22 9-9 22-9-22-22-9 22-9Z" fill="var(--white)" />
+    <circle class="hs-dot" cx="440" cy="330" r="16" fill="var(--white)" />
+  </svg>
+</div>
+
+<style>
+  .hero-shapes { width: 100%; max-width: 560px; margin-inline: auto; }
+  .hero-shapes__svg { width: 100%; height: auto; overflow: visible; }
+  .hero-shapes :global(*) { transform-box: fill-box; }
+
+  .hs-path { stroke-dashoffset: 400; animation: dash-walk 18s linear infinite; }
+  @keyframes dash-walk { to { stroke-dashoffset: 0; } }
+
+  .hs-walk { animation: walk 5.5s ease-in-out infinite; }
+  @keyframes walk { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(14px, -10px); } }
+  .hs-dome { transform-origin: bottom center; animation: sway 1.4s ease-in-out infinite; }
+  .hs-ball { transform-origin: bottom center; animation: bounce 1.4s var(--ease-out) infinite; }
+  @keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  @keyframes bounce { 0%, 100% { transform: translateY(0) scale(1, 1); } 45% { transform: translateY(-22px) scale(0.97, 1.03); } 90% { transform: translateY(0) scale(1.05, 0.95); } }
+
+  .hs-flag { transform-origin: 0 100%; animation: pop 0.8s var(--ease-bounce) 0.6s both; }
+  .hs-flag path:last-child { transform-origin: left center; animation: wave 1.6s ease-in-out infinite; }
+  @keyframes wave { 0%, 100% { transform: skewY(0); } 50% { transform: skewY(-8deg) scaleX(0.94); } }
+
+  .hs-square { transform-origin: center; animation: spin 16s linear infinite; }
+  .hs-tri { transform-origin: center; animation: drift 7s ease-in-out infinite; }
+  .hs-squiggle { stroke-dasharray: 260; stroke-dashoffset: 260; animation: draw 1.4s var(--ease-out) 0.3s forwards, float 5s ease-in-out 1.7s infinite; }
+  .hs-star { transform-origin: center; animation: spin 10s linear infinite reverse; }
+  .hs-dot { animation: float 3.6s ease-in-out infinite; }
+
+  /* Entrance */
+  .hero-shapes__svg > :global(*) { animation-fill-mode: both; }
+  .hs-square, .hs-tri, .hs-star, .hs-dot { opacity: 0; animation-name: pop, var(--loop); }
+  .hs-square { --loop: spin; animation: pop 0.7s var(--ease-bounce) 0.2s both, spin 16s linear 0.9s infinite; }
+  .hs-tri { animation: pop 0.7s var(--ease-bounce) 0.35s both, drift 7s ease-in-out 1s infinite; }
+  .hs-star { animation: pop 0.7s var(--ease-bounce) 0.5s both, spin 10s linear 1.2s infinite reverse; }
+  .hs-dot { animation: pop 0.7s var(--ease-bounce) 0.65s both, float 3.6s ease-in-out 1.3s infinite; }
+</style>

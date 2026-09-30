@@ -1,0 +1,36 @@
+---
+// Two shapes walking side by side: the client and me. The wordmark is plain type.
+interface Props { size?: 'md' | 'lg'; tone?: 'ink' | 'light' }
+const { size = 'md', tone = 'ink' } = Astro.props;
+---
+<span class:list={['logo', `logo--${size}`, `logo--${tone}`]}>
+  <svg class="logo__mark" viewBox="0 0 64 40" aria-hidden="true">
+    <path class="logo__dome" d="M0 40a20 20 0 0 1 40 0Z" />
+    <circle class="logo__dot" cx="46" cy="22" r="18" />
+  </svg>
+  <span class="logo__type">
+    <span class="logo__name">leiby</span>
+    <span class="logo__tag">Design &amp; Build</span>
+  </span>
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink); }
+  .logo--light { color: var(--white); }
+  .logo__mark { width: 2.6rem; height: auto; overflow: visible; }
+  .logo__dome { fill: currentColor; transform-origin: 20px 40px; transition: transform 0.5s var(--ease-bounce); }
+  .logo__dot { fill: var(--coral); mix-blend-mode: multiply; transition: transform 0.5s var(--ease-bounce); }
+  .logo--light .logo__dot { mix-blend-mode: normal; }
+  .logo__type { display: grid; line-height: 1; }
+  .logo__name { font-size: 1.9rem; font-weight: 760; letter-spacing: -0.06em; line-height: 0.85; }
+  .logo__tag {
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 0.3rem; padding-left: 0.1rem;
+  }
+  .logo--lg .logo__mark { width: 4.2rem; }
+  .logo--lg .logo__name { font-size: 3.2rem; }
+  .logo--lg .logo__tag { font-size: 0.85rem; }
+
+  :global(a:hover) > .logo .logo__dot { transform: translateX(-6px); }
+  :global(a:hover) > .logo .logo__dome { transform: rotate(-8deg); }
+</style>

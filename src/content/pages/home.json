@@ -1,0 +1,15 @@
+{
+  "heroTitle": "Design that ships.",
+  "heroText": "I make your problem my own. Then we walk it together, from the first messy question to a product people actually use.",
+  "heroLink": "See how we work together",
+  "servicesTitle": "What I can do for you",
+  "processTitle": "Your problem becomes my problem",
+  "process": [
+    { "title": "Listen first", "text": "We start with your users, your data and your constraints. Not with a moodboard." },
+    { "title": "Own it together", "text": "I work as part of your team. Shared goals, honest trade-offs, no gaps between design and build." },
+    { "title": "Ship, then improve", "text": "Designs that get built, launched and measured. Then we make them better." }
+  ],
+  "ctaTitle": "Book a problem session",
+  "ctaText": "30 minutes, free. Bring a messy problem and leave with a clear first step.",
+  "ctaButton": "Book a session"
+}

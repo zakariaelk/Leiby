@@ -1,0 +1,8 @@
+---
+interface Props { src: string; alt?: string }
+const { src, alt } = Astro.props;
+---
+<figure class="media-video">
+  <video src={src} autoplay muted loop playsinline preload="metadata" aria-label={alt}></video>
+  {alt && <figcaption>{alt}</figcaption>}
+</figure>

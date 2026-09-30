@@ -1,0 +1,133 @@
+---
+import Logo from './Logo.astro';
+
+const nav = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/services/', label: 'Services' },
+  { href: '/about/', label: 'About' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/contact/', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href);
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo" aria-label="Leiby Design & Build, home">
+      <Logo />
+    </a>
+
+    <nav class="site-nav" aria-label="Main">
+      <ul role="list">
+        {nav.map((item) => (
+          <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+      <a href="/contact/" class="btn site-nav__cta">Hire me <span class="arrow" aria-hidden="true">→</span></a>
+    </nav>
+
+    <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">
+      <span class="sr-only">Menu</span>
+      <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <div class="container mobile-menu__inner">
+      <ul role="list">
+        {nav.map((item, i) => (
+          <li style={`--i:${i}`}><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label} <span class="arrow" aria-hidden="true">→</span></a></li>
+        ))}
+      </ul>
+      <a href="/contact/" class="btn btn--light">Hire me <span class="arrow" aria-hidden="true">→</span></a>
+      <svg class="mobile-menu__shape" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="140" cy="60" r="60" fill="var(--sun)" />
+        <path d="M0 200a80 80 0 0 1 160 0Z" fill="var(--ink)" />
+      </svg>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      document.documentElement.classList.toggle('menu-open', open);
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--sun);
+    transition: box-shadow 0.3s;
+  }
+  :global(.is-scrolled) .site-header { box-shadow: 0 1px 0 var(--line); }
+  .site-header__inner {
+    height: var(--header-h);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .site-header__logo { text-decoration: none; position: relative; z-index: 2; }
+
+  .site-nav { display: none; align-items: center; gap: clamp(1rem, 2vw, 2.25rem); }
+  .site-nav ul { display: flex; gap: clamp(1rem, 2vw, 2rem); }
+  .site-nav ul a {
+    font-weight: var(--fw-medium); text-decoration: none; position: relative; padding-block: 0.4rem;
+  }
+  .site-nav ul a::after {
+    content: ''; position: absolute; left: 50%; bottom: -2px; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--coral);
+    transform: translateX(-50%) scale(0); transition: transform 0.35s var(--ease-bounce);
+  }
+  .site-nav ul a:hover::after, .site-nav ul a[aria-current='page']::after { transform: translateX(-50%) scale(1); }
+  .site-nav__cta { min-height: 44px; padding-inline: 1.15rem; }
+
+  .menu-toggle {
+    position: relative; z-index: 2;
+    width: 48px; height: 48px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--ink);
+  }
+  .menu-toggle__bars { display: grid; gap: 5px; width: 20px; }
+  .menu-toggle__bars span { height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.35s var(--ease-out), opacity 0.2s; }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(2) { opacity: 0; }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 1;
+    background: var(--coral); color: var(--white);
+    padding-top: var(--header-h);
+    overflow-y: auto;
+    animation: menu-in 0.45s var(--ease-out);
+  }
+  .mobile-menu[hidden] { display: none; }
+  :global(.menu-open) .site-header__logo :global(.logo) { color: var(--white); }
+  :global(.menu-open) .site-header__logo :global(.logo__dot) { fill: var(--sun); mix-blend-mode: normal; }
+  :global(.menu-open) { overflow: hidden; }
+  .mobile-menu__inner { display: grid; gap: 2rem; padding-block: 2rem 3rem; position: relative; min-height: calc(100dvh - var(--header-h)); align-content: start; }
+  .mobile-menu ul { display: grid; gap: 0.25rem; }
+  .mobile-menu li { animation: item-in 0.5s var(--ease-out) both; animation-delay: calc(var(--i) * 60ms + 80ms); }
+  .mobile-menu ul a {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: clamp(2.25rem, 9vw, 3.5rem); font-weight: var(--fw-bold); letter-spacing: -0.04em;
+    text-decoration: none; padding-block: 0.35rem; border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  }
+  .mobile-menu .btn { justify-self: start; }
+  .mobile-menu__shape { position: absolute; right: var(--gutter); bottom: 2rem; width: min(40vw, 180px); pointer-events: none; }
+
+  @keyframes menu-in { from { clip-path: circle(0% at calc(100% - 3rem) 2.5rem); } to { clip-path: circle(150% at calc(100% - 3rem) 2.5rem); } }
+  @keyframes item-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  @media (min-width: 1024px) {
+    .site-nav { display: flex; }
+    .menu-toggle, .mobile-menu { display: none; }
+  }
+</style>

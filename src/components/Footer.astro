@@ -1,0 +1,93 @@
+---
+import Logo from './Logo.astro';
+import Edge from './Edge.astro';
+import settings from '../content/pages/settings.json';
+
+const links = [
+  { href: '/services/', label: 'Services' },
+  { href: '/about/', label: 'About' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/contact/', label: 'Contact' },
+];
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <Edge color="var(--sun)" />
+  <div class="bg-sun">
+    <div class="container site-footer__grid">
+      <div class="site-footer__brand">
+        <a href="/" aria-label="Leiby Design & Build, home"><Logo size="lg" /></a>
+        <p class="site-footer__pitch">Have a problem worth solving? <br />Let's walk it together.</p>
+        <a class="site-footer__email" href={`mailto:${settings.email}`}>{settings.email}</a>
+      </div>
+
+      <nav aria-label="Footer">
+        <ul role="list" class="site-footer__links">
+          {links.map((l) => (
+            <li><a href={l.href}>{l.label} <span class="arrow" aria-hidden="true">→</span></a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="site-footer__social">
+        <p>Follow along</p>
+        <a href={settings.linkedin} class="social-btn" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5c0-1.2-.02-2.73-1.66-2.73-1.67 0-1.92 1.3-1.92 2.64V21h-4V9.75Z"/></svg>
+        </a>
+        <span class="site-footer__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</span>
+      </div>
+    </div>
+  </div>
+  <div class="site-footer__bar bg-ink">
+    <div class="container site-footer__bar-inner">
+      <span>© {year} Leiby Design &amp; Build</span>
+      <span>{settings.location}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { margin-top: auto; }
+  .site-footer .bg-sun { padding-block: clamp(2.5rem, 5vw, 5rem) clamp(3rem, 6vw, 6rem); }
+  .site-footer__grid {
+    display: grid; gap: 3rem;
+    grid-template-columns: 1fr;
+  }
+  .site-footer__brand a { text-decoration: none; }
+  .site-footer__pitch { font-size: var(--fs-lead); font-weight: var(--fw-medium); line-height: 1.3; margin-top: 2rem; letter-spacing: -0.01em; }
+  .site-footer__email {
+    display: inline-block; margin-top: 1rem; font-weight: var(--fw-bold); font-size: var(--fs-h3);
+    letter-spacing: -0.02em; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: var(--coral);
+    word-break: break-word;
+  }
+  .site-footer__links { display: grid; gap: 0.6rem; }
+  .site-footer__links a {
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem); font-weight: var(--fw-bold); letter-spacing: -0.03em;
+    text-decoration: none; color: var(--ink); display: inline-flex; gap: 0.35em; align-items: center;
+  }
+  .site-footer__links a:hover { color: var(--coral); }
+  .site-footer__social { display: grid; gap: 0.75rem; align-content: start; justify-items: start; }
+  .site-footer__social p { font-size: var(--fs-small); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.1em; }
+  .social-btn {
+    width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
+    background: var(--ink); color: var(--white); transition: transform 0.3s var(--ease-bounce), background 0.2s;
+  }
+  .social-btn svg { width: 22px; }
+  .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--coral); }
+  .site-footer__status { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: var(--fw-medium); margin-top: 0.75rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 var(--mint); animation: ping 2s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(47, 199, 149, 0.6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(47, 199, 149, 0); } }
+
+  .site-footer__bar { font-size: var(--fs-small); }
+  .site-footer__bar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-block: 1.1rem; }
+
+  @media (min-width: 768px) {
+    .site-footer__grid { grid-template-columns: 1.3fr 1fr; }
+    .site-footer__social { grid-column: 1 / -1; grid-auto-flow: column; align-items: center; justify-content: start; gap: 1.25rem; }
+    .site-footer__status { margin-top: 0; }
+  }
+  @media (min-width: 1100px) {
+    .site-footer__grid { grid-template-columns: 1.4fr 1fr 0.8fr; }
+    .site-footer__social { grid-column: auto; grid-auto-flow: row; justify-items: start; }
+  }
+</style>

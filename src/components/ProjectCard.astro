@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { project: CollectionEntry<'projects'>; delay?: number; sizes?: string }
+const { project, delay = 0, sizes = '(min-width: 768px) 50vw, 100vw' } = Astro.props;
+const { client, title, summary, cover, color, year } = project.data;
+---
+<a href={`/projects/${project.id}/`} class:list={['pcard', `c-${color}`]} data-reveal style={`--delay:${delay}s`}>
+  <div class="pcard__media">
+    <Image src={cover} alt="" widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
+    <span class="pcard__blob" aria-hidden="true"></span>
+  </div>
+  <div class="pcard__body">
+    <p class="pcard__client">{client} <span class="pcard__year">{year}</span></p>
+    <h3 class="pcard__title">{title} <span class="arrow" aria-hidden="true">→</span></h3>
+    <p class="pcard__summary">{summary}</p>
+  </div>
+</a>
+
+<style>
+  .pcard { display: grid; gap: 1.1rem; text-decoration: none; align-content: start; }
+  .pcard__media {
+    position: relative; overflow: hidden; border-radius: var(--radius);
+    aspect-ratio: 16 / 10; background: var(--accent);
+  }
+  .pcard__media :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.9s var(--ease-out);
+  }
+  .pcard:hover .pcard__media :global(img) { transform: scale(1.04); }
+  .pcard__blob {
+    position: absolute; right: -40px; bottom: -40px; width: 120px; height: 120px; border-radius: 50%;
+    background: var(--accent); transform: scale(0); transition: transform 0.6s var(--ease-bounce);
+  }
+  .pcard:hover .pcard__blob { transform: scale(1); }
+  .pcard__client { font-weight: var(--fw-bold); font-size: 1.1rem; display: flex; gap: 0.75rem; align-items: baseline; }
+  .pcard__year { font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--ink-soft); }
+  .pcard__title {
+    font-size: var(--fs-h3); color: var(--coral); margin-top: 0.25rem; letter-spacing: -0.025em;
+  }
+  .pcard__summary { color: var(--ink-soft); margin-top: 0.5rem; max-width: 46ch; }
+</style>
