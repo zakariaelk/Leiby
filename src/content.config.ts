@@ -17,7 +17,7 @@ const projects = defineCollection({
       year: z.string(),
       link: z.string().optional(),
       cover: image(),
-      color: z.enum(['pink', 'purple', 'sky']).default('pink'),
+      color: z.enum(['coral', 'violet', 'blue']).default('coral'),
       order: z.number().default(99),
       featured: z.boolean().default(false),
     }),
@@ -32,6 +32,7 @@ const about = defineCollection({
     intro: z.string(),
     experience: timeline,
     education: timeline,
+    languages: z.array(z.string()).default([]),
   }),
 });
 

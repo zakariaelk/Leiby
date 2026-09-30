@@ -4,11 +4,11 @@ import { block } from '@keystatic/core/content-components';
 const colors = fields.select({
   label: 'Accent colour',
   options: [
-    { label: 'Hot pink', value: 'pink' },
-    { label: 'Purple', value: 'purple' },
-    { label: 'Sky blue', value: 'sky' },
+    { label: 'Coral', value: 'coral' },
+    { label: 'Violet', value: 'violet' },
+    { label: 'Blue', value: 'blue' },
   ],
-  defaultValue: 'pink',
+  defaultValue: 'coral',
 });
 
 const video = block({
@@ -81,9 +81,11 @@ export default config({
       path: 'src/content/pages/home',
       format: { data: 'json' },
       schema: {
-        eyebrow: fields.text({ label: 'Small line above the title' }),
-        heroTitle: fields.text({ label: 'Hero title' }),
-        heroText: fields.text({ label: 'Hero text', multiline: true }),
+        heroText: fields.text({
+          label: 'Intro',
+          multiline: true,
+          description: 'Wrap words in *single stars* to highlight them, and **double stars** to make them bold.',
+        }),
         cities: fields.array(fields.text({ label: 'City' }), { label: 'Cities', itemLabel: (p) => p.value }),
         workTitle: fields.text({ label: 'Work section title' }),
       },
@@ -98,6 +100,7 @@ export default config({
         intro: fields.text({ label: 'Intro', multiline: true }),
         experience: timeline('Experience'),
         education: timeline('Education'),
+        languages: fields.array(fields.text({ label: 'Language' }), { label: 'Languages', itemLabel: (p) => p.value }),
         content: body('pages'),
       },
     }),
@@ -107,7 +110,6 @@ export default config({
       format: { data: 'json' },
       schema: {
         name: fields.text({ label: 'Name' }),
-        nameArabic: fields.text({ label: 'Name in Arabic' }),
         role: fields.text({ label: 'Role' }),
         email: fields.text({ label: 'Email' }),
         linkedin: fields.url({ label: 'LinkedIn URL' }),

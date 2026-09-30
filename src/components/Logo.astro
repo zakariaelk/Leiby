@@ -1,34 +1,42 @@
 ---
-// Monogram (ز, the Arabic Z) + name in Latin and Arabic.
+// Monogram (ز, the Arabic Z) on a circle with an offset "shadow" circle, like the button hover.
 import settings from '../content/pages/settings.json';
 
 interface Props { size?: 'md' | 'lg' }
 const { size = 'md' } = Astro.props;
 ---
 <span class:list={['logo', `logo--${size}`]}>
-  <span class="logo__mark" aria-hidden="true"><span class="arabic">ز</span></span>
+  <span class="logo__mark" aria-hidden="true">
+    <span class="logo__shadow"></span>
+    <span class="logo__face"><span class="arabic">ز</span></span>
+  </span>
   <span class="logo__type">
     <span class="logo__name">{settings.name}</span>
-    <span class="logo__ar arabic" lang="ar" dir="rtl">{settings.nameArabic}</span>
+    <span class="logo__role">{settings.role}</span>
   </span>
 </span>
 
 <style>
-  .logo { display: inline-flex; align-items: center; gap: 0.7rem; color: var(--text); }
-  .logo__mark {
-    width: 2.6rem; height: 2.6rem; border-radius: 50%; flex: none;
+  .logo { display: inline-flex; align-items: center; gap: 0.8rem; color: var(--ink); }
+  .logo__mark { position: relative; width: 2.6rem; height: 2.6rem; flex: none; }
+  .logo__shadow, .logo__face { position: absolute; inset: 0; border-radius: 50%; }
+  .logo__shadow { background: var(--coral); transform: translate(3px, 3px); transition: transform 0.35s var(--ease-bounce), background 0.3s; }
+  .logo__face {
     display: grid; place-items: center;
-    background: var(--pink); color: var(--on-accent);
+    background: var(--ink); color: var(--sun);
     font-size: 1.5rem; line-height: 1;
-    transition: transform 0.5s var(--ease-bounce), background 0.3s;
+    transition: transform 0.35s var(--ease-bounce), background 0.3s, color 0.3s;
   }
-  .logo__mark span { transform: translateY(-0.1em); }
-  :global(a:hover) > .logo .logo__mark { transform: rotate(-12deg) scale(1.06); background: var(--sky); }
-  .logo__type { display: grid; line-height: 1; gap: 0.3rem; }
-  .logo__name { font-size: 1.12rem; font-weight: var(--fw-bold); letter-spacing: -0.03em; white-space: nowrap; }
-  .logo__ar { font-size: 1.1rem; color: var(--pink); justify-self: start; line-height: 1.1; }
+  .logo__face span { transform: translateY(-0.1em); }
+  :global(a:hover) > .logo .logo__face { transform: translate(-2px, -2px); background: var(--coral); color: var(--ink); }
+  :global(a:hover) > .logo .logo__shadow { transform: translate(5px, 5px); background: var(--ink); }
 
-  .logo--lg .logo__mark { width: 4rem; height: 4rem; font-size: 2.3rem; }
+  .logo__type { display: grid; line-height: 1.1; gap: 0.15rem; }
+  .logo__name { font-size: 1.1rem; font-weight: var(--fw-bold); letter-spacing: -0.025em; white-space: nowrap; }
+  .logo__role { font-size: 0.85rem; font-weight: var(--fw-regular); color: var(--ink-soft); white-space: nowrap; }
+
+  .logo--lg .logo__mark { width: 4rem; height: 4rem; }
+  .logo--lg .logo__face { font-size: 2.3rem; }
   .logo--lg .logo__name { font-size: 1.6rem; }
-  .logo--lg .logo__ar { font-size: 1.3rem; }
+  .logo--lg .logo__role { font-size: 1rem; }
 </style>

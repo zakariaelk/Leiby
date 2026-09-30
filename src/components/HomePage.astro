@@ -2,14 +2,12 @@
 import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import HeroCharacter from './HeroCharacter.astro';
+import Wave from './Wave.astro';
 import HeroPortrait from './HeroPortrait.astro';
+import Monument from './Monument.astro';
 import ProjectCard from './ProjectCard.astro';
 import home from '../content/pages/home.json';
-import { getProjects } from '../lib/data';
-
-interface Props { art?: 'character' | 'portrait'; noindex?: boolean }
-const { art = 'character', noindex = false } = Astro.props;
+import { getProjects, inlineMarkup } from '../lib/data';
 
 const projects = await getProjects();
 const spotlight = projects.find((p) => p.data.featured) ?? projects[0];
@@ -19,36 +17,28 @@ const timeline = [
   { title: 'Experience', rows: about?.data.experience ?? [] },
   { title: 'Education', rows: about?.data.education ?? [] },
 ];
-
-const [first, ...others] = home.heroTitle.split(' ');
 ---
-<Base noindex={noindex}>
+<Base>
   <!-- ========== Intro ========== -->
-  <section class="hero">
-    <div class="hero__glow" aria-hidden="true"></div>
+  <section class="hero bg-sun">
+    <div class="glow hero__glow" aria-hidden="true"></div>
     <div class="container hero__grid">
+      <div class="hero__art"><HeroPortrait /></div>
       <div class="hero__text">
-        <p class="eyebrow hero__eyebrow">{home.eyebrow}</p>
-        <h1 class="hero__title">
-          <span class="hero__line">{first}</span>
-          <span class="hero__line hero__line--accent">{others.join(' ')}</span>
-        </h1>
-        <p class="lead hero__lead">{home.heroText}</p>
+        <p class="hero__intro" set:html={inlineMarkup(home.heroText)} />
         <div class="hero__actions">
-          <a href="#work" class="btn">My work <span class="arrow" aria-hidden="true">↓</span></a>
+          <a href="#work" class="btn">My work <span class="arrow arrow--down" aria-hidden="true">→</span></a>
           <a href="#contact" class="btn btn--ghost">Get in touch</a>
         </div>
         <ol role="list" class="cities" aria-label="Cities I've lived and worked in">
           {home.cities.map((city, i) => (
-            <li style={`--i:${i}`}><span class="cities__pin" aria-hidden="true"></span>{city}</li>
+            <li style={`--i:${i}`}><Monument city={city} size={34} />{city}</li>
           ))}
         </ol>
       </div>
-      <div class="hero__art">
-        {art === 'portrait' ? <HeroPortrait /> : <HeroCharacter />}
-      </div>
     </div>
   </section>
+  <Wave bg="var(--sun)" />
 
   <!-- ========== Work ========== -->
   <section id="work" class="work" aria-labelledby="work-title">
@@ -57,7 +47,7 @@ const [first, ...others] = home.heroTitle.split(' ');
 
       <a href={`/projects/${spotlight.id}/`} class:list={['spotlight', `c-${spotlight.data.color}`]}>
         <div class="spotlight__media">
-          <Image src={spotlight.data.cover} alt="" widths={[640, 1024, 1440]} sizes="(min-width: 1100px) 60vw, 100vw" loading="eager" fetchpriority="high" />
+          <Image src={spotlight.data.cover} alt="" widths={[640, 1024, 1440]} sizes="(min-width: 1000px) 60vw, 100vw" />
         </div>
         <div class="spotlight__text">
           <p class="spotlight__label">Featured · {spotlight.data.client}</p>
@@ -97,60 +87,57 @@ const [first, ...others] = home.heroTitle.split(' ');
 
 <style>
   /* ---------- Hero ---------- */
-  .hero { position: relative; padding-block: clamp(2rem, 5vw, 4.5rem) clamp(3rem, 6vw, 5rem); overflow: hidden; }
-  .hero__glow {
-    position: absolute; inset: -20% -10% auto auto; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
-    background: radial-gradient(closest-side, rgba(155, 107, 255, 0.22), transparent 70%);
-    pointer-events: none;
+  .hero { position: relative; padding-block: clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3rem); overflow: hidden; }
+  .hero__glow { right: -20vw; top: -25vw; }
+  .hero__grid { position: relative; display: grid; gap: 2rem 4rem; align-items: center; }
+  .hero__art { width: 100%; max-width: min(310px, 82vw); justify-self: center; }
+  @media (min-width: 900px) {
+    .hero__grid { grid-template-columns: 1.15fr 1fr; }
+    /* Text on the left, portrait on the right so he looks towards the text */
+    .hero__art { order: 2; max-width: 520px; }
   }
-  .hero__grid { position: relative; display: grid; gap: 2.5rem 3rem; align-items: center; }
-  @media (min-width: 900px) { .hero__grid { grid-template-columns: 1.05fr 1fr; } }
-  .hero__eyebrow { animation: rise 0.8s var(--ease-out) both; }
-  .hero__title { font-size: var(--fs-display); line-height: 0.92; letter-spacing: -0.055em; font-weight: 720; }
-  .hero__line { display: block; animation: rise 0.9s var(--ease-out) 0.05s both; }
-  .hero__line--accent {
-    animation-delay: 0.15s;
-    background: linear-gradient(90deg, var(--pink), var(--purple) 55%, var(--sky));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    padding-bottom: 0.08em;
+  .hero__intro {
+    font-size: var(--fs-intro); line-height: 1.28; font-weight: var(--fw-medium); letter-spacing: -0.025em;
+    max-width: 24ch; animation: rise 0.9s var(--ease-out) 0.1s both;
   }
-  .hero__lead { margin-top: 1.75rem; max-width: 40ch; color: var(--text-soft); animation: rise 0.9s var(--ease-out) 0.25s both; }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; animation: rise 0.9s var(--ease-out) 0.35s both; }
-  .hero__art { width: 100%; max-width: 560px; justify-self: center; }
-  @media (min-width: 900px) { .hero__art { max-width: none; } }
+  .hero__intro :global(mark) {
+    color: inherit; background: var(--white); padding: 0 0.2em; margin: 0 -0.05em;
+    border-radius: 0.2em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    box-shadow: 3px 3px 0 var(--coral);
+  }
+  .hero__intro :global(strong) { font-weight: var(--fw-bold); }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; animation: rise 0.9s var(--ease-out) 0.25s both; }
 
-  .cities {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0;
-    margin-top: 2.25rem; font-weight: var(--fw-medium); color: var(--text);
-  }
-  .cities li { display: inline-flex; align-items: center; gap: 0.45rem; animation: rise 0.7s var(--ease-out) both; animation-delay: calc(0.45s + var(--i) * 0.12s); }
+  .cities { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 0; margin-top: 2.25rem; font-weight: var(--fw-medium); }
+  .cities li { display: inline-flex; align-items: center; gap: 0.5rem; animation: rise 0.7s var(--ease-out) both; animation-delay: calc(0.4s + var(--i) * 0.12s); }
   .cities li + li::before {
-    content: ''; width: clamp(1.5rem, 4vw, 3rem); height: 2px; margin-inline: 0.75rem;
-    background: repeating-linear-gradient(90deg, var(--text-soft) 0 3px, transparent 3px 8px);
+    content: ''; width: clamp(1rem, 3vw, 2.25rem); height: 2px; margin-inline: 0.7rem;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 8px);
   }
+  .cities :global(.monument) { transition: transform 0.4s var(--ease-bounce); }
+  .cities li:hover :global(.monument) { transform: translateY(-4px) rotate(-4deg); }
   @media (max-width: 480px) {
-    .cities { font-size: 0.95rem; }
-    .cities li + li::before { width: 0.9rem; margin-inline: 0.45rem; }
+    .cities { font-size: 0.92rem; }
+    .cities li { gap: 0.3rem; }
+    .cities li + li::before { width: 0.6rem; margin-inline: 0.4rem; }
+    .cities :global(.monument) { width: 28px; height: 28px; }
   }
-  .cities__pin { width: 10px; height: 10px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 4px rgba(255, 61, 154, 0.2); }
-  .cities li:nth-child(2) .cities__pin { background: var(--purple); box-shadow: 0 0 0 4px rgba(155, 107, 255, 0.2); }
-  .cities li:nth-child(3) .cities__pin { background: var(--sky); box-shadow: 0 0 0 4px rgba(124, 212, 255, 0.2); }
 
   /* ---------- Work ---------- */
   .work { padding-block: clamp(2rem, 4vw, 3rem) var(--space-section); }
   .spotlight {
-    display: grid; overflow: hidden; border-radius: var(--radius-lg); background: var(--surface);
+    display: grid; overflow: hidden; border-radius: var(--radius-lg); background: var(--white);
     text-decoration: none; margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
-    transition: box-shadow 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+    box-shadow: 0 0 0 0 var(--ink);
+    transition: box-shadow 0.4s var(--ease-out), transform 0.4s var(--ease-bounce);
   }
-  .spotlight:hover { box-shadow: 0 0 0 2px var(--accent); }
+  .spotlight:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0 0 var(--accent); }
   @media (min-width: 1000px) { .spotlight { grid-template-columns: 1.5fr 1fr; } }
   .spotlight__media { overflow: hidden; background: var(--accent); aspect-ratio: 16 / 10; }
-  .spotlight__media :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); }
-  .spotlight:hover .spotlight__media :global(img) { transform: scale(1.03); }
+  .spotlight__media :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .spotlight__text { padding: clamp(1.5rem, 3vw, 3rem); display: grid; gap: 0.9rem; align-content: center; }
   @media (min-width: 1000px) { .spotlight__text { order: -1; } }
-  .spotlight__label { font-size: var(--fs-small); font-weight: var(--fw-bold); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+  .spotlight__label { font-size: var(--fs-small); font-weight: var(--fw-bold); letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral-ink); }
   .spotlight__title { font-size: var(--fs-h2); letter-spacing: -0.04em; }
   .spotlight__cta { justify-self: start; margin-top: 0.5rem; }
 
@@ -167,8 +154,8 @@ const [first, ...others] = home.heroTitle.split(' ');
   }
   .cv__row:last-child { border-bottom: 1px solid var(--line); }
   .cv__name { grid-area: name; font-weight: var(--fw-bold); }
-  .cv__role { grid-area: role; color: var(--text-soft); }
-  .cv__years { grid-area: years; color: var(--pink); font-weight: var(--fw-medium); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cv__role { grid-area: role; color: var(--ink-soft); }
+  .cv__years { grid-area: years; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
   @media (min-width: 800px) {
     .cv__row { grid-template-columns: 200px 1fr auto; grid-template-areas: 'name role years'; align-items: baseline; }
   }

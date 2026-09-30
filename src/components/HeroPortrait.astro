@@ -1,21 +1,73 @@
 ---
-// Zakaria's hand-drawn portrait (from the current portfolio), recoloured for the dark theme.
+// Zakaria's hand-drawn portrait (from the current portfolio) on a circle with an offset circle,
+// a speech bubble saying hello in his languages, and three small doodles for design, build and ship.
 // The pupil follows the cursor, and looks around on its own when the cursor is still.
+interface Props { doodles?: boolean; greeting?: boolean }
+const { doodles = true, greeting = true } = Astro.props;
+const greetings = [
+  { text: 'Hello', lang: 'en' },
+  { text: 'Bonjour', lang: 'fr' },
+  { text: 'مرحبا', lang: 'ar' },
+  { text: 'Hallo', lang: 'nl' },
+];
 ---
-<div class="hp" aria-hidden="true">
-  <svg viewBox="0 0 520 520" class="hp__shapes">
-    <circle class="hp-c" cx="300" cy="230" r="190" fill="var(--purple)" />
-    <path class="hp-d" d="M40 520a130 130 0 0 1 260 0Z" fill="var(--pink)" />
-    <rect class="hp-s" x="410" y="60" width="64" height="64" rx="14" fill="var(--sky)" />
+<div class="hp">
+  <svg viewBox="0 0 520 520" class="hp__shapes" aria-hidden="true">
+    <defs>
+      <!-- "boiling" hand-drawn lines: the displacement pattern changes a few times a second -->
+      <filter id="boil" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1">
+          <animate attributeName="seed" values="1;4;7;10" dur="0.5s" calcMode="discrete" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" scale="3" />
+      </filter>
+    </defs>
+    <circle class="hp-shadow" cx="316" cy="246" r="190" fill="var(--coral)" />
+    <circle cx="300" cy="230" r="190" fill="var(--paper)" />
   </svg>
-  <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none">
+
+  <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none" role="img" aria-label="Hand-drawn portrait of Zakaria El Khachia">
     <use href="/img/zakaria-face.svg#ze-face-lines" />
-    <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--purple)" />
+    <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="var(--paper)" />
     <g id="hpPupil">
-      <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--bg)" />
-      <circle cx="519" cy="460" r="4" fill="var(--text)" />
+      <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="var(--ink)" />
+      <circle cx="519" cy="460" r="4" fill="var(--white)" />
     </g>
   </svg>
+
+  {doodles && (
+    <svg viewBox="0 0 520 520" class="hp__doodles" aria-hidden="true" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <g filter="url(#boil)">
+        <!-- design: a pencil -->
+        <g transform="translate(52 96) scale(0.85)"><g class="dd dd--1">
+          <path d="M440 70l26 26-52 52-32 6 6-32Z" fill="var(--sun)" />
+          <path d="M440 70l12-12 26 26-12 12" fill="var(--coral)" />
+          <path d="M388 122l26 26" />
+          <text x="420" y="178" class="dd__label">design</text>
+        </g></g>
+        <!-- build: code brackets -->
+        <g transform="translate(8 88)"><g class="dd dd--2">
+          <path d="M452 250l-22 22 22 22M492 250l22 22-22 22M482 242l-20 60" />
+          <text x="446" y="326" class="dd__label">build</text>
+        </g></g>
+        <!-- ship: a paper plane with a loop -->
+        <g transform="translate(-230 40)"><g class="dd dd--3">
+          <path d="M300 20l62-22-16 58-14-18Z" fill="var(--white)" />
+          <path d="M332 38l30-40" />
+          <path d="M296 24c-22 6-28 26-12 30s12-20-10-18c-14 2-26 10-34 20" stroke-dasharray="2 7" />
+          <text x="250" y="16" class="dd__label">ship</text>
+        </g></g>
+      </g>
+    </svg>
+  )}
+
+  {greeting && (
+    <p class="hp__bubble" aria-label="Hello in Arabic, French, English and Dutch">
+      {greetings.map((g, i) => (
+        <span lang={g.lang} dir={g.lang === 'ar' ? 'rtl' : undefined} class:list={[g.lang === 'ar' && 'arabic']} style={`--i:${i}`} aria-hidden="true">{g.text}</span>
+      ))}
+    </p>
+  )}
 </div>
 
 <script>
@@ -59,14 +111,42 @@
 
 <style>
   .hp { position: relative; width: 100%; max-width: 520px; margin-inline: auto; aspect-ratio: 1; }
-  .hp__shapes { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .hp__shapes :global(*) { transform-box: fill-box; transform-origin: center; }
-  .hp-c { animation: pop 0.8s var(--ease-bounce) both; }
-  .hp-d { transform-origin: bottom center; animation: pop 0.8s var(--ease-bounce) 0.15s both, wobble 5s ease-in-out 1s infinite; }
-  .hp-s { animation: pop 0.8s var(--ease-bounce) 0.3s both, spin 14s linear 1.1s infinite; }
+  .hp__shapes, .hp__doodles { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .hp__shapes :global(circle) { animation: pop 0.8s var(--ease-bounce) both; transform-origin: 300px 230px; }
+  .hp-shadow { animation-delay: 0.12s !important; }
   .hp__face {
     position: absolute; left: 16%; bottom: 0; width: 80%; height: auto;
-    color: var(--text);
+    color: var(--ink);
     animation: rise 0.9s var(--ease-out) 0.2s both;
+  }
+
+  /* Doodles hop between poses like a hand-drawn cartoon */
+  .dd { transform-box: fill-box; transform-origin: center; animation: jitter 1.2s steps(1) infinite, pop 0.5s steps(3) both; }
+  .dd--1 { animation-delay: 0s, 0.5s; }
+  .dd--2 { animation-delay: -0.4s, 0.7s; }
+  .dd--3 { animation-delay: -0.8s, 0.9s; }
+  .dd__label { font-family: var(--font); font-size: 17px; font-weight: 700; fill: var(--ink); stroke: none; letter-spacing: 0.02em; }
+
+  /* Speech bubble: cycles through greetings, one word at a time */
+  .hp__bubble {
+    position: absolute; left: -2%; top: 44%;
+    display: grid; place-items: center;
+    padding: 0.55rem 1.1rem; min-width: 7.5rem;
+    background: var(--white); border: 2.5px solid var(--ink); border-radius: 999px;
+    font-weight: var(--fw-bold); font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    box-shadow: 4px 4px 0 var(--ink);
+    animation: pop 0.5s steps(3) 1s both;
+  }
+  .hp__bubble::after {
+    content: ''; position: absolute; right: 14px; bottom: -12px; width: 18px; height: 14px;
+    background: var(--white); border-right: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink);
+    transform: skewX(-30deg); border-bottom-right-radius: 4px;
+  }
+  .hp__bubble span { grid-area: 1 / 1; opacity: 0; animation: word 8s steps(1) infinite; animation-delay: calc(var(--i) * 2s + 1s); }
+  .hp__bubble .arabic { font-size: 1.15em; line-height: 1; }
+  @keyframes word { 0% { opacity: 1; transform: translateY(-2px); } 3% { transform: none; } 25%, 100% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hp__bubble span:first-child { opacity: 1; }
   }
 </style>

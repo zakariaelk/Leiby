@@ -1,0 +1,8 @@
+---
+// Smooth wave divider between colour bands. `bg` is the band above, `color` the band it leads into.
+interface Props { color?: string; bg?: string; class?: string }
+const { color = 'var(--paper)', bg = 'transparent', class: cls } = Astro.props;
+---
+<svg class:list={['wave', cls]} style={`color:${color};background:${bg}`} viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 56V30C160 6 320 6 480 26s320 30 480 10 320-34 480-12V56Z" fill="currentColor" />
+</svg>

@@ -1,12 +1,12 @@
 ---
-import Edge from './Edge.astro';
+import Wave from './Wave.astro';
 import settings from '../content/pages/settings.json';
 
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer" id="contact">
-  <Edge color="var(--surface)" flip={false} />
-  <div class="bg-surface">
+  <Wave color="var(--sun)" />
+  <div class="bg-sun">
     <div class="container contact">
       <p class="eyebrow" data-reveal>Get in touch</p>
       <h2 class="contact__title" data-reveal>{settings.contactTitle}</h2>
@@ -28,16 +28,29 @@ const year = new Date().getFullYear();
       </div>
       <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
 
-      <svg class="contact__shapes" viewBox="0 0 240 200" aria-hidden="true">
-        <circle cx="170" cy="70" r="56" fill="var(--purple)" />
-        <path d="M20 200a70 70 0 0 1 140 0Z" fill="var(--pink)" />
-        <rect x="170" y="140" width="44" height="44" rx="10" fill="var(--sky)" />
-      </svg>
+      <div class="record" aria-hidden="true">
+        <svg viewBox="0 0 260 260" class="record__svg">
+          <circle cx="136" cy="136" r="118" fill="var(--coral)" />
+          <g class="record__disc">
+            <circle cx="130" cy="130" r="118" fill="var(--ink)" />
+            <circle cx="130" cy="130" r="100" fill="none" stroke="#3a3731" stroke-width="1.5" />
+            <circle cx="130" cy="130" r="86" fill="none" stroke="#3a3731" stroke-width="1.5" />
+            <circle cx="130" cy="130" r="72" fill="none" stroke="#3a3731" stroke-width="1.5" />
+            <path d="M60 80a90 90 0 0 1 60-38" fill="none" stroke="#5a564d" stroke-width="3" stroke-linecap="round" />
+            <circle cx="130" cy="130" r="40" fill="var(--sun)" />
+            <text x="130" y="140" text-anchor="middle" class="record__label arabic">ز</text>
+            <circle cx="130" cy="130" r="4" fill="var(--ink)" />
+          </g>
+        </svg>
+        <span class="note note--1">♪</span>
+        <span class="note note--2">♫</span>
+        <span class="note note--3">♪</span>
+      </div>
     </div>
   </div>
   <div class="site-footer__bar">
     <div class="container site-footer__bar-inner">
-      <span>© {year} {settings.name} · <span class="arabic" lang="ar">{settings.nameArabic}</span></span>
+      <span>© {year} {settings.name}</span>
       <span>{settings.role}</span>
     </div>
   </div>
@@ -71,36 +84,41 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer { margin-top: auto; }
-  .site-footer :global(.edge) { color: var(--surface); }
-  .contact { position: relative; padding-block: clamp(3rem, 6vw, 6rem) clamp(4rem, 8vw, 7rem); overflow: hidden; }
+  .contact { position: relative; padding-block: clamp(2.5rem, 5vw, 5rem) clamp(4rem, 8vw, 7rem); }
+  .contact .eyebrow { color: var(--ink); }
   .contact__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 16ch; position: relative; z-index: 1; }
-  .contact__text { margin-top: 1.5rem; max-width: 44ch; position: relative; z-index: 1; }
+  .contact__text { margin-top: 1.5rem; max-width: 44ch; position: relative; z-index: 1; color: var(--ink); opacity: 0.8; }
   .contact__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.25rem; position: relative; z-index: 1; }
   .reveal-email__shown { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; animation: pop 0.45s var(--ease-bounce); }
   .reveal-email__shown[hidden], .reveal-email__btn[hidden] { display: none; }
   .reveal-email__address {
     font-size: clamp(1.3rem, 1rem + 1.5vw, 2rem); font-weight: var(--fw-bold); letter-spacing: -0.02em;
-    color: var(--text); text-decoration-color: var(--pink); text-decoration-thickness: 3px; text-underline-offset: 6px;
+    text-decoration-color: var(--coral); text-decoration-thickness: 3px; text-underline-offset: 6px;
     word-break: break-word;
   }
   .reveal-email__copy { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.9rem; }
   .social-btn {
     width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px;
-    background: var(--surface-2); color: var(--text); transition: transform 0.3s var(--ease-bounce), background 0.2s, color 0.2s;
+    background: var(--ink); color: var(--white); transition: transform 0.3s var(--ease-bounce), background 0.2s;
   }
   .social-btn svg { width: 22px; }
-  .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--sky); color: var(--on-accent); }
-  .contact__status { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.75rem; color: var(--text-soft); font-weight: var(--fw-medium); position: relative; z-index: 1; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: #3ee6a1; animation: ping 2s infinite; }
-  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(62, 230, 161, 0.6); } 80%, 100% { box-shadow: 0 0 0 10px rgba(62, 230, 161, 0); } }
-  .contact__shapes {
-    position: absolute; right: var(--gutter); bottom: 0; width: clamp(140px, 22vw, 300px); opacity: 0.9; pointer-events: none;
-  }
-  .contact__shapes :global(*) { transform-box: fill-box; transform-origin: center; }
-  .contact__shapes circle { animation: float 5s ease-in-out infinite; }
-  .contact__shapes rect { animation: spin 14s linear infinite; }
-  @media (max-width: 699px) { .contact__shapes { opacity: 0.25; } }
+  .social-btn:hover { transform: rotate(-8deg) scale(1.08); background: var(--coral); }
+  .contact__status { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.75rem; font-weight: var(--fw-medium); position: relative; z-index: 1; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #0a7a4b; animation: ping 2s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(10, 122, 75, 0.5); } 80%, 100% { box-shadow: 0 0 0 10px rgba(10, 122, 75, 0); } }
 
-  .site-footer__bar { font-size: var(--fs-small); color: var(--text-soft); background: var(--bg); }
+  /* A record spinning slowly, with notes hopping out of it */
+  .record { position: absolute; right: var(--gutter); bottom: clamp(2rem, 5vw, 4rem); width: clamp(150px, 22vw, 280px); pointer-events: none; }
+  .record__svg { width: 100%; height: auto; overflow: visible; }
+  .record__disc { transform-origin: 130px 130px; animation: spin 6s linear infinite; }
+  .record__label { font-size: 44px; fill: var(--ink); }
+  .note { position: absolute; font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 700; line-height: 1; animation: hop 2.4s steps(4) infinite; opacity: 0; }
+  .note--1 { left: 0; top: 20%; }
+  .note--2 { left: 18%; top: -4%; animation-delay: 0.8s; color: var(--coral-ink); }
+  .note--3 { left: -12%; top: 50%; animation-delay: 1.6s; }
+  @keyframes hop { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-24px, -48px) rotate(-12deg); } }
+  @media (max-width: 699px) { .record { position: relative; right: auto; bottom: auto; margin: 3rem 0 0 auto; width: 150px; } }
+
+  .site-footer__bar { font-size: var(--fs-small); color: rgba(255, 255, 255, 0.75); background: var(--ink); }
   .site-footer__bar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-block: 1.1rem; }
 </style>

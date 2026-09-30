@@ -22,7 +22,9 @@ npm run dev
 | Images | `src/assets/…` (optimised at build time) |
 | Videos | `public/media/…` (MP4) |
 | Design tokens (colours, type, spacing) | `src/styles/global.css` |
-| Hero illustrations | `src/components/HeroCharacter.astro` (home), `HeroPortrait.astro` (/portrait and About) |
+| Hero portrait, doodles, greetings | `src/components/HeroPortrait.astro` |
+| City monuments | `src/components/Monument.astro` |
+| Animated intro concept | `src/pages/concept.astro` (not linked, not indexed) |
 
 ## Deploy
 

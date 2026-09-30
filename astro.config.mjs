@@ -17,6 +17,7 @@ export default defineConfig({
     '/services': '/',
     '/blog': '/',
     '/contact': '/',
+    '/portrait': '/',
   },
   prefetch: {
     prefetchAll: true,

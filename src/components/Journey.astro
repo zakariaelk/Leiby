@@ -1,0 +1,37 @@
+---
+// Casablanca → Beijing → Rotterdam, each city drawn as its monument in a circle.
+import Monument from './Monument.astro';
+
+interface Props { cities: string[] }
+const { cities } = Astro.props;
+---
+<ol role="list" class="journey" aria-label="Cities I've lived and worked in">
+  {cities.map((city, i) => (
+    <li class="journey__stop" style={`--i:${i}`}>
+      <span class="journey__disc"><Monument city={city} size={72} /></span>
+      <span class="journey__name">{city}</span>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .journey { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; position: relative; padding-top: 1rem; }
+  .journey::before {
+    content: ''; position: absolute; left: 16%; right: 16%; top: calc(1rem + clamp(40px, 7vw, 60px));
+    height: 3px; background: repeating-linear-gradient(90deg, var(--ink) 0 4px, transparent 4px 11px);
+  }
+  .journey__stop {
+    position: relative; display: grid; justify-items: center; gap: 0.75rem;
+    font-weight: var(--fw-bold);
+    animation: pop 0.5s steps(3) both; animation-delay: calc(0.3s + var(--i) * 0.25s);
+  }
+  .journey__stop:nth-child(2) { transform: translateY(-1.25rem); }
+  .journey__disc {
+    display: grid; place-items: center;
+    width: clamp(80px, 14vw, 120px); aspect-ratio: 1; border-radius: 50%;
+    background: var(--paper); box-shadow: 5px 5px 0 var(--coral);
+    transition: transform 0.4s var(--ease-bounce);
+  }
+  .journey__disc :global(svg) { width: 62%; height: auto; }
+  .journey__stop:hover .journey__disc { transform: translate(-3px, -3px) rotate(-4deg); }
+</style>

@@ -1,9 +1,11 @@
 ---
+import Wave from './Wave.astro';
+
 interface Props { eyebrow?: string; title: string; intro?: string }
 const { eyebrow, title, intro } = Astro.props;
 ---
-<section class="phero">
-  <div class="phero__glow" aria-hidden="true"></div>
+<section class="phero bg-sun">
+  <div class="glow phero__glow" aria-hidden="true"></div>
   <div class="container phero__inner">
     <div class="phero__text">
       {eyebrow && <p class="eyebrow">{eyebrow}</p>}
@@ -14,17 +16,15 @@ const { eyebrow, title, intro } = Astro.props;
     <div class="phero__art"><slot name="art" /></div>
   </div>
 </section>
+<Wave bg="var(--sun)" />
 
 <style>
   .phero { position: relative; padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2rem, 4vw, 3.5rem); overflow: hidden; }
-  .phero__glow {
-    position: absolute; inset: -30% -10% auto auto; width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
-    background: radial-gradient(closest-side, rgba(255, 61, 154, 0.16), transparent 70%);
-    pointer-events: none;
-  }
-  .phero__inner { position: relative; display: grid; gap: 2rem 3rem; align-items: center; }
-  @media (min-width: 900px) { .phero__inner:has(.phero__art > *) { grid-template-columns: 1.3fr 1fr; } }
+  .phero__glow { right: -20vw; top: -30vw; }
+  .phero .eyebrow { color: var(--ink); }
+  .phero__inner { position: relative; display: grid; gap: 2.5rem 3rem; align-items: center; }
+  @media (min-width: 900px) { .phero__inner:has(.phero__art > *) { grid-template-columns: 1.2fr 1fr; } }
   .phero__art:empty { display: none; }
   .phero__title { font-size: var(--fs-h1); letter-spacing: -0.045em; max-width: 18ch; animation: rise 0.9s var(--ease-out) both; }
-  .phero__intro { margin-top: 1.5rem; max-width: 44ch; color: var(--text-soft); animation: rise 0.9s var(--ease-out) 0.12s both; }
+  .phero__intro { margin-top: 1.5rem; max-width: 44ch; animation: rise 0.9s var(--ease-out) 0.12s both; }
 </style>
