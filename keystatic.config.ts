@@ -30,7 +30,8 @@ const body = (dir: string) =>
   });
 
 export default config({
-  storage: { kind: 'local' },
+  // Edits are saved as commits to GitHub; Netlify rebuilds the site on every commit.
+  storage: { kind: 'github', repo: 'zakariaelk/Leiby' },
   ui: {
     brand: { name: 'Leiby Design & Build' },
     navigation: {
