@@ -1,14 +1,22 @@
 ---
 // A cartoon version of Zakaria, drawn from the hand-drawn portrait: swept-back hair tied at the back,
-// thick brows, full short beard, crew-neck tee. Lines "boil" and everything moves in stepped frames.
-// `look`: 'follow' (eyes follow the cursor) or 'up' (looking up and to the left, thinking).
-interface Props { look?: 'follow' | 'up'; class?: string; x?: number; y?: number; width?: number; height?: number }
+// thick brows, a short trimmed beard, crew-neck tee. Lines "boil" and everything moves in stepped frames.
+// `look`:
+//   'follow' – eyes follow the cursor
+//   'up'     – looking up and to the left (thinking about something)
+//   'moods'  – cycles through expressions: curious → thinking → deep thinking → satisfied
+interface Props { look?: 'follow' | 'up' | 'moods'; class?: string; x?: number; y?: number; width?: number; height?: number }
 const { look = 'follow', class: cls, x, y, width, height } = Astro.props;
 const skin = '#dca27c';
 const shade = '#c7875f';
 const hair = '#2b211b';
 ---
-<svg class:list={['cf', `cf--${look}`, cls]} x={x} y={y} width={width} height={height} viewBox="0 0 400 460" role="img" aria-label="Cartoon portrait of Zakaria El Khachia">
+<svg
+  class:list={['cf', `cf--${look}`, cls]}
+  data-mood={look === 'moods' ? 'curious' : 'neutral'}
+  x={x} y={y} width={width} height={height}
+  viewBox="0 0 400 460" role="img" aria-label="Cartoon portrait of Zakaria El Khachia"
+>
   <defs>
     <filter id="cfBoil" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="1" seed="2">
@@ -30,33 +38,58 @@ const hair = '#2b211b';
       <path d="M113 204q8 10 2 22M287 204q-8 10-2 22" fill="none" stroke-width="3.5" />
       <!-- face -->
       <path d="M124 140c0-56 40-76 76-76s76 20 76 76l2 92c0 60-32 98-78 100-46-2-78-40-78-100Z" fill={skin} />
-      <circle cx="146" cy="238" r="12" fill="var(--coral)" opacity="0.25" stroke="none" />
-      <circle cx="254" cy="238" r="12" fill="var(--coral)" opacity="0.25" stroke="none" />
-      <!-- beard + moustache -->
-      <path d="M123 222c1 64 31 114 77 116 46-2 76-52 77-116-7 24-19 36-35 36-14 0-24-6-42-6s-28 6-42 6c-16 0-28-12-35-36Z" fill={hair} />
-      <path class="cf__mouth" d="M183 284q17 13 34 0" fill="none" stroke="#e9b894" stroke-width="5" />
+      <!-- cheeks: only blush when satisfied -->
+      <g class="cf__blush" stroke="none">
+        <ellipse cx="146" cy="236" rx="14" ry="9" fill="#e8806a" opacity="0.45" />
+        <ellipse cx="254" cy="236" rx="14" ry="9" fill="#e8806a" opacity="0.45" />
+      </g>
+      <!-- short trimmed beard: sideburns into a jawline band, a thin moustache -->
+      <path d="M123 178l3 52 10-2-3-48Z M277 178l-3 52-10-2 3-48Z" fill={hair} stroke-width="3" />
+      <path d="M124 226c2 62 32 104 76 106 44-2 74-44 76-106-6 34-22 66-46 80-16 8-44 8-60 0-24-14-40-46-46-80Z" fill={hair} stroke-width="3.5" />
+      <path d="M176 270q24-12 48 0-10 8-24 4-14 4-24-4Z" fill={hair} stroke-width="3" />
+      <!-- mouths, one per mood -->
+      <g class="cf__mouths" fill="none" stroke-width="4.5">
+        <path class="m m--neutral" d="M184 288q16 10 32 0" />
+        <ellipse class="m m--curious" cx="200" cy="290" rx="6" ry="8" fill="#6b3226" stroke-width="3.5" />
+        <path class="m m--thinking" d="M186 292l28-7" />
+        <path class="m m--deep" d="M188 290q12-3 24 0" />
+        <path class="m m--satisfied" d="M176 282q24 26 48 0q-24 8-48 0Z" fill="var(--white)" />
+      </g>
       <!-- nose -->
       <path d="M204 178c-4 22-14 44-10 54 4 6 16 6 20 0" fill="none" stroke-width="4.5" />
       <!-- eyes -->
       <g class="cf__eyes">
-        <ellipse cx="160" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
-        <ellipse cx="240" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
-        <g class="cf__pupils" stroke="none">
-          <circle cx="160" cy="195" r="7.5" fill="var(--ink)" />
-          <circle cx="240" cy="195" r="7.5" fill="var(--ink)" />
-          <circle cx="157" cy="192" r="2.2" fill="var(--white)" />
-          <circle cx="237" cy="192" r="2.2" fill="var(--white)" />
+        <g class="cf__open">
+          <ellipse cx="160" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
+          <ellipse cx="240" cy="194" rx="17" ry="12" fill="var(--white)" stroke-width="4" />
+          <g class="cf__pupils" stroke="none">
+            <circle cx="160" cy="195" r="7.5" fill="var(--ink)" />
+            <circle cx="240" cy="195" r="7.5" fill="var(--ink)" />
+            <circle cx="157" cy="192" r="2.2" fill="var(--white)" />
+            <circle cx="237" cy="192" r="2.2" fill="var(--white)" />
+          </g>
+          <!-- heavy lids for deep thinking -->
+          <path class="cf__lids" d="M142 194q18-16 36 0Z M222 194q18-16 36 0Z" fill={skin} stroke-width="4" />
         </g>
+        <!-- happy closed eyes for satisfied -->
+        <path class="cf__closed" d="M144 198q16-16 32 0M224 198q16-16 32 0" fill="none" stroke-width="5" />
       </g>
       <!-- brows -->
       <g class="cf__brows">
-        <path d="M136 170q22-18 50-8l-2 10q-24-6-46 6Z" fill={hair} stroke-width="3" />
-        <path d="M264 170q-22-18-50-8l2 10q24-6 46 6Z" fill={hair} stroke-width="3" />
+        <path class="cf__brow cf__brow--l" d="M136 170q22-18 50-8l-2 10q-24-6-46 6Z" fill={hair} stroke-width="3" />
+        <path class="cf__brow cf__brow--r" d="M264 170q-22-18-50-8l2 10q24-6 46 6Z" fill={hair} stroke-width="3" />
       </g>
       <!-- hair, swept back -->
       <path d="M118 168c-14-58 10-110 72-118 62-8 110 24 100 100-4 16-8 26-10 30-4-30-14-56-36-68-24-12-56-2-80-6-20-2-38 16-42 62Z" fill={hair} />
       <path d="M150 62c18-36 86-42 114-4-14-6-32-8-50-2-18-12-44-6-64 6Z" fill={hair} />
       <path d="M170 72c20-10 50-10 70 2M160 86c24-10 54-8 76 4" fill="none" stroke="#4a3a30" stroke-width="3" />
+    </g>
+    <!-- little extras per mood -->
+    <g class="cf__extras" fill="none" stroke-width="4">
+      <text class="x x--curious" x="318" y="96">?</text>
+      <g class="x x--thinking"><circle cx="312" cy="112" r="5" fill="var(--ink)" stroke="none" /><circle cx="330" cy="92" r="7" fill="var(--ink)" stroke="none" /><circle cx="352" cy="66" r="9" fill="var(--ink)" stroke="none" /></g>
+      <path class="x x--deep" d="M306 92c10-14 26-14 30 0s-14 18-20 8 6-20 22-14" />
+      <path class="x x--satisfied" d="M330 70l5 13 13 5-13 5-5 13-5-13-13-5 13-5Z" fill="#ffc442" stroke-width="3" />
     </g>
   </g>
 </svg>
@@ -81,15 +114,69 @@ const hair = '#2b211b';
   </script>
 )}
 
+{look === 'moods' && (
+  <script>
+    // Cycle through expressions, holding each one for a moment.
+    const face = document.querySelector<SVGSVGElement>('.cf--moods');
+    if (face && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const moods = ['curious', 'thinking', 'deep', 'satisfied'];
+      let i = 0;
+      window.setInterval(() => {
+        i = (i + 1) % moods.length;
+        face.dataset.mood = moods[i];
+      }, 2600);
+    }
+  </script>
+)}
+
 <style>
   .cf { width: 100%; height: auto; overflow: visible; }
   .cf :global(*) { transform-box: fill-box; }
+  .cf text { font-family: var(--font); font-weight: 800; font-size: 54px; fill: var(--ink); stroke: none; }
+
   .cf__head { transform-origin: 50% 100%; animation: cf-bob 2.4s steps(1) infinite; }
   @keyframes cf-bob { 0% { transform: rotate(0); } 50% { transform: rotate(-1.5deg) translateY(-2px); } }
-  .cf__eyes { transform-origin: center; animation: cf-blink 4.2s steps(1) infinite; }
+  .cf__open { transform-origin: center; animation: cf-blink 4.2s steps(1) infinite; }
   @keyframes cf-blink { 0%, 93% { transform: scaleY(1); } 94% { transform: scaleY(0.4); } 96% { transform: scaleY(0.08); } 98% { transform: scaleY(0.6); } }
-  .cf__brows { animation: cf-brows 7s steps(1) infinite; }
-  @keyframes cf-brows { 0%, 60% { transform: translateY(0); } 62%, 70% { transform: translateY(-6px); } 72% { transform: translateY(0); } }
   .cf--up .cf__pupils { animation: cf-look 10s steps(1) infinite; }
   @keyframes cf-look { 0% { transform: translate(-6px, -4px); } 45% { transform: translate(-3px, -5px); } 70% { transform: translate(-7px, -2px); } 90% { transform: translate(0, 0); } }
+
+  /* ---------- Moods: everything swaps instantly, like cartoon frames ---------- */
+  .m, .x, .cf__closed, .cf__lids, .cf__blush { display: none; }
+  .cf[data-mood='neutral'] .m--neutral,
+  .cf[data-mood='curious'] .m--curious,
+  .cf[data-mood='thinking'] .m--thinking,
+  .cf[data-mood='deep'] .m--deep,
+  .cf[data-mood='satisfied'] .m--satisfied,
+  .cf[data-mood='curious'] .x--curious,
+  .cf[data-mood='thinking'] .x--thinking,
+  .cf[data-mood='deep'] .x--deep,
+  .cf[data-mood='satisfied'] .x--satisfied,
+  .cf[data-mood='deep'] .cf__lids,
+  .cf[data-mood='satisfied'] .cf__closed,
+  .cf[data-mood='satisfied'] .cf__blush { display: inline; }
+  .cf[data-mood='satisfied'] .cf__open { display: none; }
+
+  .cf__brow { transform-origin: center; }
+  /* curious: both brows up, eyes a little wider, head tilts */
+  .cf[data-mood='curious'] .cf__brow { transform: translateY(-9px); }
+  .cf[data-mood='curious'] .cf__open { transform: scale(1.08); }
+  .cf[data-mood='curious'] .cf__head { animation: none; transform: rotate(4deg); }
+  /* thinking: one brow up, eyes up and to the side */
+  .cf[data-mood='thinking'] .cf__brow--l { transform: translateY(-10px) rotate(-6deg); }
+  .cf[data-mood='thinking'] .cf__brow--r { transform: translateY(2px) rotate(-4deg); }
+  .cf[data-mood='thinking'] .cf__pupils { transform: translate(-6px, -5px); }
+  .cf[data-mood='thinking'] .cf__head { animation: none; transform: rotate(-3deg); }
+  /* deep thinking: brows pulled together, heavy lids, looking down */
+  .cf[data-mood='deep'] .cf__brow--l { transform: translate(4px, 4px) rotate(12deg); }
+  .cf[data-mood='deep'] .cf__brow--r { transform: translate(-4px, 4px) rotate(-12deg); }
+  .cf[data-mood='deep'] .cf__pupils { transform: translate(-1px, 4px); }
+  .cf[data-mood='deep'] .cf__head { animation: none; transform: rotate(-5deg) translateY(4px); }
+  /* satisfied: brows relaxed up, happy eyes, a little bounce */
+  .cf[data-mood='satisfied'] .cf__brow { transform: translateY(-5px); }
+  .cf[data-mood='satisfied'] .cf__head { animation: cf-happy 0.5s steps(1) infinite; }
+  @keyframes cf-happy { 0% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+  .x--curious, .x--satisfied { transform-origin: center; animation: cf-pop 0.4s steps(2) both; }
+  @keyframes cf-pop { from { transform: scale(0.5); } to { transform: scale(1); } }
 </style>

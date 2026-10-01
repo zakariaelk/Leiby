@@ -4,8 +4,8 @@
 // portfolio; the pupil follows the cursor) or 'cartoon' (the cartoon version).
 import CartoonFace from './CartoonFace.astro';
 
-interface Props { variant?: 'line' | 'cartoon'; greeting?: boolean }
-const { variant = 'line', greeting = true } = Astro.props;
+interface Props { variant?: 'line' | 'cartoon'; look?: 'follow' | 'moods'; greeting?: boolean }
+const { variant = 'line', look = 'follow', greeting = true } = Astro.props;
 const greetings = [
   { text: 'Hello', lang: 'en' },
   { text: 'Bonjour', lang: 'fr' },
@@ -20,7 +20,7 @@ const greetings = [
   </svg>
 
   {variant === 'cartoon' ? (
-    <div class="hp__cartoon"><CartoonFace /></div>
+    <div class="hp__cartoon"><CartoonFace look={look} /></div>
   ) : (
     <svg class="hp__face" id="hpFace" viewBox="300 30 920 1200" fill="none" role="img" aria-label="Hand-drawn portrait of Zakaria El Khachia">
       <use href="/img/zakaria-face.svg#ze-face-lines" />

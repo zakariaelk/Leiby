@@ -1,0 +1,9 @@
+---
+import HomePage from '../../components/HomePage.astro';
+import { variants } from '../../lib/variant';
+
+export function getStaticPaths() {
+  return variants.map((variant) => ({ params: { variant } }));
+}
+---
+<HomePage />

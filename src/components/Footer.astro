@@ -3,6 +3,9 @@ import Wave from './Wave.astro';
 import GetInTouch from './GetInTouch.astro';
 import BridgeBuild from './BridgeBuild.astro';
 import settings from '../content/pages/settings.json';
+import { themeFor } from '../lib/variant';
+
+const { theme } = themeFor(Astro.url.pathname);
 
 const year = new Date().getFullYear();
 ---
@@ -23,7 +26,7 @@ const year = new Date().getFullYear();
         </div>
         <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
       </div>
-      <div class="contact__art"><BridgeBuild /></div>
+      {theme !== 'bridge' && <div class="contact__art"><BridgeBuild /></div>}
     </div>
   </div>
   <div class="site-footer__bar">

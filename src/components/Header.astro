@@ -1,17 +1,20 @@
 ---
 import Logo from './Logo.astro';
 import GetInTouch from './GetInTouch.astro';
+import { themeFor } from '../lib/variant';
+
+const { base } = themeFor(Astro.url.pathname);
 
 const nav = [
-  { href: '/#work', label: 'Work' },
-  { href: '/about/', label: 'About' },
+  { href: `${base}/#work`, label: 'Work' },
+  { href: `${base}/about/`, label: 'About' },
 ];
 const path = Astro.url.pathname;
 const isActive = (href: string) => href.startsWith('/') && !href.includes('#') && path.startsWith(href);
 ---
 <header class="site-header">
   <div class="container site-header__inner">
-    <a href="/" class="site-header__logo" aria-label="Zakaria El Khachia, home">
+    <a href={`${base}/`} class="site-header__logo" aria-label="Zakaria El Khachia, home">
       <Logo />
     </a>
 
@@ -67,10 +70,10 @@ const isActive = (href: string) => href.startsWith('/') && !href.includes('#') &
   .site-header {
     position: sticky; top: 0; z-index: 50;
     margin-bottom: calc(-1 * var(--header-h));
-    background: rgba(255, 196, 66, 0);
+    background: transparent;
     transition: background 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
   }
-  :global(.is-scrolled) .site-header { background: rgba(255, 196, 66, 0.97); box-shadow: 0 1px 0 var(--line); }
+  :global(.is-scrolled) .site-header { background: var(--header-bg); box-shadow: 0 1px 0 var(--line); }
   .site-header__inner {
     height: var(--header-h);
     display: flex; align-items: center; justify-content: space-between; gap: 1rem;

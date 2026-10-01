@@ -1,0 +1,24 @@
+---
+// Minimal line drawing: two banks, a deck built from both sides that meets in the middle,
+// a yellow keystone where they meet, then the arch that carries it. Nothing else.
+---
+<svg class="bl" viewBox="0 0 520 320" aria-hidden="true" fill="none" stroke="var(--ink)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 196h140v110" stroke-width="3" />
+  <path d="M510 196H370v110" stroke-width="3" />
+  <path class="bl__half bl__half--l" d="M150 196h110" stroke-width="5" pathLength="100" />
+  <path class="bl__half bl__half--r" d="M370 196H260" stroke-width="5" pathLength="100" />
+  <path class="bl__arch" d="M150 298Q260 166 370 298" stroke-width="2.5" pathLength="100" />
+  <rect class="bl__key" x="252" y="188" width="16" height="16" rx="2" fill="#ffc442" stroke-width="2.5" />
+</svg>
+
+<style>
+  .bl { width: 100%; height: auto; overflow: visible; }
+  .bl :global(*) { transform-box: fill-box; }
+  /* 9s loop: deck halves grow towards each other, keystone drops in, arch draws, hold, undo */
+  .bl__half { stroke-dasharray: 100; stroke-dashoffset: 100; animation: bl-half 9s var(--ease-out) infinite; }
+  @keyframes bl-half { 0%, 4% { stroke-dashoffset: 100; } 26%, 90% { stroke-dashoffset: 0; } 98%, 100% { stroke-dashoffset: 100; } }
+  .bl__key { transform-origin: center; animation: bl-key 9s var(--ease-bounce) infinite; }
+  @keyframes bl-key { 0%, 26% { transform: translateY(-40px) scale(0); opacity: 0; } 32%, 88% { transform: none; opacity: 1; } 92%, 100% { transform: scale(0); opacity: 0; } }
+  .bl__arch { stroke-dasharray: 100; stroke-dashoffset: 100; animation: bl-arch 9s var(--ease-out) infinite; }
+  @keyframes bl-arch { 0%, 34% { stroke-dashoffset: 100; } 52%, 88% { stroke-dashoffset: 0; } 94%, 100% { stroke-dashoffset: 100; } }
+</style>

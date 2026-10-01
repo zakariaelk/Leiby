@@ -16,6 +16,8 @@
   --coral-ink: #eb4410; /* saturated orange for text and links on light backgrounds */
   --blue: #2f6bff;
 
+  --header-bg: rgba(255, 196, 66, 0.97);
+
   /* City colours: Hassan II Mosque's green tiles, China red, the Erasmus Bridge's light blue */
   --casablanca: #0a7a4b;
   --beijing: #de2910;
@@ -46,6 +48,32 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* ----------------------------------------------------------
+   Black & white versions (/mono, /bridge): editorial, white body,
+   very light gray bands, yellow only as an accent (never a background).
+   ---------------------------------------------------------- */
+[data-theme='mono'],
+[data-theme='bridge'] {
+  --sun: #f4f4f2;            /* bands: hero, footer, page heads */
+  --paper: #ffffff;          /* body */
+  --ink: #141414;
+  --ink-soft: #5f5f5c;
+  --line: rgba(20, 20, 20, 0.12);
+  --coral: #ffc442;          /* accent: offset circles, hover shadows, dots */
+  --coral-ink: #141414;      /* accent text stays black */
+  --blue: #141414;
+  --header-bg: rgba(255, 255, 255, 0.96);
+  --casablanca: transparent; /* city icons go quiet: outline only */
+  --beijing: transparent;
+  --rotterdam: #141414;
+}
+[data-theme='mono'] .case-hero,
+[data-theme='bridge'] .case-hero { background: var(--sun) !important; }
+[data-theme='mono'] .glow,
+[data-theme='bridge'] .glow { display: none; }
+[data-theme='mono'] ::selection,
+[data-theme='bridge'] ::selection { background: #ffc442; color: #141414; }
 
 @media (max-width: 767px) {
   :root {

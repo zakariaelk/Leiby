@@ -1,0 +1,82 @@
+---
+// A tiny one-line Zakaria walking from Casablanca to Beijing to Rotterdam as the page scrolls.
+// Scrolling down walks him forward, scrolling up walks him back; standing still, he stands still.
+import Monument from './Monument.astro';
+
+interface Props { cities: string[] }
+const { cities } = Astro.props;
+---
+<div class="walk" aria-label={`Cities I've lived and worked in: ${cities.join(', ')}`} role="img">
+  <ol role="list" class="walk__stops" aria-hidden="true">
+    {cities.map((city) => (
+      <li><Monument city={city} size={26} /><span>{city}</span></li>
+    ))}
+  </ol>
+  <div class="walk__track" aria-hidden="true">
+    <span class="walk__guy" data-frame="stand">
+      <svg viewBox="0 0 24 40" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="6" r="4.2" />
+        <circle cx="8.6" cy="2.6" r="1.7" fill="var(--ink)" stroke="none" />
+        <path d="M12 10.5V24" />
+        <path class="f f--stand" d="M12 14l-3 8M12 14l3 8M12 24l-2 13M12 24l2 13" />
+        <path class="f f--a" d="M12 14l-5 6M12 14l5 5M12 24l-5 12M12 24l5 12" />
+        <path class="f f--b" d="M12 14l-2 7M12 14l2 7M12 24l-1 13M12 24l1.5 13" />
+      </svg>
+    </span>
+  </div>
+</div>
+
+<script>
+  const walk = document.querySelector<HTMLElement>('.walk');
+  const guy = walk?.querySelector<HTMLElement>('.walk__guy');
+  if (walk && guy) {
+    let last = -1;
+    let stillTimer: number | undefined;
+    // He arrives in Rotterdam just as the line slides under the header, so the whole walk stays in view
+    let distance = 1;
+    const measure = () => {
+      const header = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
+      const top = walk.getBoundingClientRect().top + window.scrollY;
+      distance = Math.max(120, top - header - 16);
+    };
+    const update = () => {
+      const p = Math.min(1, Math.max(0, window.scrollY / distance));
+      const px = p * walk.clientWidth;
+      guy.style.left = `calc(${p} * (100% - 22px))`;
+      if (last >= 0 && Math.abs(px - last) > 0.5) {
+        guy.dataset.frame = Math.floor(px / 9) % 2 ? 'a' : 'b';
+        guy.classList.toggle('is-back', px < last);
+        window.clearTimeout(stillTimer);
+        stillTimer = window.setTimeout(() => (guy.dataset.frame = 'stand'), 180);
+      }
+      last = px;
+    };
+    measure();
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', () => { measure(); update(); });
+  }
+</script>
+
+<style>
+  .walk { position: relative; margin-top: 2.5rem; max-width: 30rem; padding-top: 2.6rem; }
+  .walk__stops { display: flex; justify-content: space-between; font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--ink-soft); }
+  .walk__stops li { display: grid; justify-items: center; gap: 0.3rem; width: 0; white-space: nowrap; }
+  .walk__stops li:first-child { justify-items: start; }
+  .walk__stops li:last-child { justify-items: end; }
+  .walk__stops :global(.monument) { opacity: 0.6; }
+  .walk__track {
+    position: absolute; left: 0; right: 0; top: 0; height: 2.4rem;
+    border-bottom: 1.5px dashed var(--line);
+  }
+  .walk__guy {
+    position: absolute; bottom: 0; left: 0; width: 22px; height: 36px;
+  }
+  .walk__stops li:first-child, .walk__stops li:last-child { width: auto; }
+  .walk__guy svg { width: 100%; height: 100%; overflow: visible; }
+  .walk__guy.is-back svg { transform: scaleX(-1); }
+  .f { display: none; }
+  .walk__guy[data-frame='stand'] .f--stand,
+  .walk__guy[data-frame='a'] .f--a,
+  .walk__guy[data-frame='b'] .f--b { display: inline; }
+</style>

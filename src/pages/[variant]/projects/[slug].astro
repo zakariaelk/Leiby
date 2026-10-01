@@ -1,0 +1,16 @@
+---
+import CaseStudy from '../../../components/CaseStudy.astro';
+import { getProjects } from '../../../lib/data';
+import { variants } from '../../../lib/variant';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return variants.flatMap((variant) =>
+    projects.map((project, i) => ({
+      params: { variant, slug: project.id },
+      props: { project, next: projects[(i + 1) % projects.length], prev: projects[(i - 1 + projects.length) % projects.length] },
+    })),
+  );
+}
+---
+<CaseStudy {...Astro.props} />

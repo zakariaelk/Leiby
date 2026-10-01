@@ -1,12 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import { themeFor } from '../lib/variant';
 
 interface Props { project: CollectionEntry<'projects'>; delay?: number; sizes?: string }
 const { project, delay = 0, sizes = '(min-width: 700px) 50vw, 100vw' } = Astro.props;
 const { client, title, summary, cover, year } = project.data;
+const { base } = themeFor(Astro.url.pathname);
 ---
-<a href={`/projects/${project.id}/`} class="pcard" data-reveal style={`--delay:${delay}s`}>
+<a href={`${base}/projects/${project.id}/`} class="pcard" data-reveal style={`--delay:${delay}s`}>
   <div class="pcard__media">
     <Image src={cover} alt="" widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
     <span class="pcard__blob" aria-hidden="true"></span>

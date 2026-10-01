@@ -12,6 +12,19 @@ npm run dev
 - Site: http://localhost:4321
 - Content editor: https://leiby-design-build.netlify.app/keystatic (log in with GitHub; saves are commits to this repo)
 
+## Design versions
+
+The same content in three looks, side by side:
+
+| URL | Version |
+| --- | --- |
+| `/` | Yellow, hand-drawn portrait |
+| `/mono/` | Black & white, cartoon face with changing expressions |
+| `/bridge/` | Black & white, line bridge + a tiny walker crossing the cities on scroll |
+
+The versions are set by URL prefix (`src/lib/variant.ts`), colours by `[data-theme]` in `src/styles/global.css`.
+`/mono` and `/bridge` are hidden from search engines.
+
 ## Where things live
 
 | What | Where |

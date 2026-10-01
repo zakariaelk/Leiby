@@ -7,11 +7,15 @@ import HeroPortrait from './HeroPortrait.astro';
 import Monument from './Monument.astro';
 import ProjectCard from './ProjectCard.astro';
 import GetInTouch from './GetInTouch.astro';
+import BridgeLine from './BridgeLine.astro';
+import Walker from './Walker.astro';
+import { themeFor } from '../lib/variant';
 import home from '../content/pages/home.json';
 import { getProjects, inlineMarkup } from '../lib/data';
 
 interface Props { art?: 'line' | 'cartoon'; noindex?: boolean }
 const { art = 'line', noindex = false } = Astro.props;
+const { theme, base } = themeFor(Astro.url.pathname);
 
 const projects = await getProjects();
 const spotlight = projects.find((p) => p.data.featured) ?? projects[0];
@@ -27,18 +31,22 @@ const timeline = [
   <section class="hero bg-sun">
     <div class="glow hero__glow" aria-hidden="true"></div>
     <div class="container hero__grid">
-      <div class="hero__art"><HeroPortrait variant={art} /></div>
+      <div class="hero__art">
+        {theme === 'bridge' ? <BridgeLine /> : theme === 'mono' ? <HeroPortrait variant="cartoon" look="moods" /> : <HeroPortrait variant={art} />}
+      </div>
       <div class="hero__text">
         <p class="hero__intro" set:html={inlineMarkup(home.heroText)} />
         <div class="hero__actions">
           <a href="#work" class="btn">My work <span class="arrow arrow--down" aria-hidden="true">→</span></a>
           <GetInTouch variant="ghost" />
         </div>
-        <ol role="list" class="cities" aria-label="Cities I've lived and worked in">
-          {home.cities.map((city, i) => (
-            <li style={`--i:${i}`}><Monument city={city} size={34} />{city}</li>
-          ))}
-        </ol>
+        {theme === 'bridge' ? <Walker cities={home.cities} /> : (
+          <ol role="list" class="cities" aria-label="Cities I've lived and worked in">
+            {home.cities.map((city, i) => (
+              <li style={`--i:${i}`}><Monument city={city} size={34} />{city}</li>
+            ))}
+          </ol>
+        )}
       </div>
     </div>
   </section>
@@ -49,7 +57,7 @@ const timeline = [
     <div class="container">
       <h2 id="work-title" class="eyebrow">{home.workTitle}</h2>
 
-      <a href={`/projects/${spotlight.id}/`} class="spotlight">
+      <a href={`${base}/projects/${spotlight.id}/`} class="spotlight">
         <div class="spotlight__media">
           <Image src={spotlight.data.cover} alt="" widths={[640, 1024, 1440]} sizes="(min-width: 1000px) 60vw, 100vw" />
         </div>
@@ -84,7 +92,7 @@ const timeline = [
           </ol>
         </div>
       ))}
-      <a href="/about/" class="arrow-link cv__more">More about me <span class="arrow" aria-hidden="true">→</span></a>
+      <a href={`${base}/about/`} class="arrow-link cv__more">More about me <span class="arrow" aria-hidden="true">→</span></a>
     </div>
   </section>
 </Base>
@@ -110,6 +118,15 @@ const timeline = [
     box-shadow: 3px 3px 0 var(--coral);
   }
   .hero__intro :global(strong) { font-weight: var(--fw-bold); }
+  /* Black & white versions: a yellow marker stroke instead of the white label */
+  :global([data-theme='mono']) .hero__intro :global(mark),
+  :global([data-theme='bridge']) .hero__intro :global(mark) {
+    background: linear-gradient(transparent 58%, #ffc442 58%, #ffc442 92%, transparent 92%);
+    box-shadow: none; border-radius: 0;
+  }
+  :global([data-theme='mono']) .cities { font-size: 0.95rem; color: var(--ink-soft); }
+  :global([data-theme='mono']) .cities :global(.monument) { width: 24px; height: 24px; opacity: 0.6; }
+  :global([data-theme='mono']) .cities li + li::before { background: repeating-linear-gradient(90deg, var(--line) 0 3px, transparent 3px 8px); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; animation: rise 0.9s var(--ease-out) 0.25s both; }
 
   .cities { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 0; margin-top: 2.25rem; font-weight: var(--fw-medium); }
