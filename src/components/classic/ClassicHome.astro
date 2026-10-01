@@ -30,7 +30,7 @@ const intro = esc(home.heroText)
 ---
 <Classic bodyId="home" loader noindex={noindex}>
   <div class="boxed ze-home">
-    <section class="ze-hero">
+    <section class:list={['ze-hero', aside === 'cities' && 'ze-hero--aside']}>
       <div class="ze-hero-left">
         <div class="ze-face-mini"><HeroEye /></div>
         <h1 class="sr-only">{settings.name}, product designer</h1>
@@ -42,14 +42,20 @@ const intro = esc(home.heroText)
         </div>
       </div>
       {aside === 'cities' ? (
-        <ol class="ze-cities" aria-label="Cities I have lived in">
-          {home.cities.map((city, i) => (
-            <>
-              {i > 0 && <li class="ze-cities__dots" aria-hidden="true"></li>}
-              <li class="ze-cities__city">{city}</li>
-            </>
-          ))}
-        </ol>
+        <div class="ze-hero-aside">
+          <LangSwitch look="link" />
+          <ol class="ze-cities" aria-label="Cities I have lived in">
+            {home.cities.map((city, i) => (
+              <>
+                {i > 0 && <li class="ze-cities__dots" aria-hidden="true"></li>}
+                <li class="ze-cities__city">
+                  <span class="ze-cities__name">{city}</span>
+                  {home.cityYears?.[i] && <span class="ze-cities__year">{home.cityYears[i]}</span>}
+                </li>
+              </>
+            ))}
+          </ol>
+        </div>
       ) : (
         <LangSwitch />
       )}
@@ -138,20 +144,43 @@ const intro = esc(home.heroText)
   .ze-face-mini .ze-hero-eye { height: 75px !important; width: auto !important; }
   @media (max-width: 700px) { .ze-face-mini .ze-hero-eye { height: 64px !important; } }
 
-  /* Cities, written vertically on the right of the intro, read bottom to top */
+  /* Golden-ratio grid (desktop and tablet):
+     - across: the text column takes 61.8% of the width, the right column the other 38.2%
+     - down: the portrait block (face + space under it) is 38.2% of the hero's content height,
+       so the name sits on the golden line and the intro + links fill the other 61.8%
+     The right column mirrors it: language switcher level with the top of the portrait,
+     cities running the full height to the links' baseline. */
   .ze-hero { align-items: flex-end; }
+  .ze-hero--aside .ze-hero-left { flex: 0 0 61.8%; max-width: 61.8%; }
+  .ze-hero--aside .ze-face-mini { margin-bottom: 30px; }
+  .ze-hero-aside {
+    align-self: stretch; flex: none;
+    display: flex; gap: 28px;
+  }
+  .ze-hero-aside .ze-lang { align-self: flex-start; }
+  .ze-hero-aside .ze-cities { align-self: flex-end; }
+
+  /* Cities, written vertically, read bottom to top; the year sits under each name */
   .ze-cities {
     list-style: none; margin: 0; padding: 0;
-    display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px;
     writing-mode: vertical-rl; transform: rotate(180deg);
-    font-family: 'Outfit Variable', 'Outfit', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: 0.06em;
-    color: #666666; white-space: nowrap;
+    font-family: 'Outfit Variable', 'Outfit', sans-serif; font-size: 14px; line-height: 1.25; letter-spacing: 0.06em;
+    color: #101010; white-space: nowrap;
   }
-  .ze-cities__city { color: #101010; }
-  .ze-cities__dots { width: 0; height: 12px; border-left: 2px dotted #9a9a9a; }
+  .ze-cities__city { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .ze-cities__name { font-weight: 500; }
+  .ze-cities__year { font-weight: 100; font-size: 13px; letter-spacing: 0.08em; }
+  /* dotted line, centred on the city names' line */
+  .ze-cities__dots { width: 0; height: 12px; border-left: 2px dotted #9a9a9a; margin-block-start: calc(0.625em - 1px); }
   @media (max-width: 700px) {
-    .ze-cities { writing-mode: horizontal-tb; transform: none; margin-top: 4px; font-size: 14px; gap: 10px; }
-    .ze-cities__dots { height: 0; width: 16px; border-left: 0; border-top: 2px dotted #9a9a9a; }
+    .ze-hero--aside .ze-hero-left { flex: none; max-width: 100%; }
+    .ze-hero--aside .ze-face-mini { margin-bottom: 14px; }
+    .ze-hero-aside { display: contents; }
+    .ze-hero-aside .ze-lang { position: absolute; top: 32px; right: 0; }
+    .ze-hero-aside .ze-cities { align-self: flex-start; }
+    .ze-cities { writing-mode: horizontal-tb; transform: none; margin-top: 4px; gap: 10px; }
+    .ze-cities__dots { height: 0; width: 16px; border-left: 0; border-top: 2px dotted #9a9a9a; margin-block-start: calc(0.625em - 1px); }
   }
 
   /* The featured card's clip is now a video (was a GIF): same box as the image */

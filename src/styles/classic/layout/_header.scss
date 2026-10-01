@@ -148,7 +148,7 @@ header {
   display: block;
   text-decoration: none;
   color: inherit;
-  @include type-scale(3);
+  @include type-scale(5); // same size as the intro below it; weight sets it apart
   font-weight: $WeightMedium;
   line-height: 1.2;
 }

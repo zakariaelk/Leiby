@@ -112,6 +112,11 @@ export default config({
         }),
         shortIntro: fields.text({ label: 'Short intro (simple version)', multiline: true }),
         cities: fields.array(fields.text({ label: 'City' }), { label: 'Cities', itemLabel: (p) => p.value }),
+        cityYears: fields.array(fields.text({ label: 'Year' }), {
+          label: 'City years',
+          description: 'One per city, same order (shown under the cities on the home page)',
+          itemLabel: (p) => p.value,
+        }),
         workTitle: fields.text({ label: 'Work section title' }),
       },
     }),

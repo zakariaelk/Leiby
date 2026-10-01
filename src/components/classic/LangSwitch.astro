@@ -1,8 +1,12 @@
 ---
-// Language button for the top right of the home hero (/v2/). Black button with a soft
-// triangle; on hover it lifts off a gray copy of itself (the "detached" effect from the
-// yellow version). The site is English only for now: picking a language updates the
-// button and the checked item, the translations come later.
+// Language switcher for the home hero. Two looks:
+// - button (/v2/): black button with a soft triangle, pinned top right; on hover it lifts off
+//   a gray copy of itself (the "detached" effect from the yellow version)
+// - link (site root): a text link like "My work" / "Email me" with the same triangle
+// The site is English only for now: picking a language updates the label and the checked
+// item, the translations come later.
+interface Props { look?: 'button' | 'link' }
+const { look = 'button' } = Astro.props;
 const languages = [
   { code: 'en', label: 'English' },
   { code: 'fr', label: 'Français' },
@@ -11,7 +15,7 @@ const languages = [
   { code: 'zh-Hans', label: '中文' },
 ];
 ---
-<div class="ze-lang">
+<div class={`ze-lang ze-lang--${look}`}>
   <button type="button" class="ze-lang__btn" aria-haspopup="menu" aria-expanded="false" aria-controls="ze-lang-menu">
     <span class="sr-only">Language: </span><span class="ze-lang__current">English</span>
     <svg class="ze-lang__tri" viewBox="0 0 12 8" aria-hidden="true"><path d="M2 1.5h8L6 6.5z" /></svg>
@@ -69,11 +73,12 @@ const languages = [
 
 <style is:global>
   .ze-hero { position: relative; }
-  .ze-lang { position: absolute; top: 40px; right: 0; z-index: 5; }
-  @media (max-width: 991px) { .ze-lang { top: 36px; } }
-  @media (max-width: 700px) { .ze-lang { top: 32px; } }
+  .ze-lang { position: relative; z-index: 5; }
+  .ze-lang--button { position: absolute; top: 40px; right: 0; }
+  @media (max-width: 991px) { .ze-lang--button { top: 36px; } }
+  @media (max-width: 700px) { .ze-lang--button { top: 32px; } }
 
-  .ze-lang__btn {
+  .ze-lang--button .ze-lang__btn {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 9px 14px 9px 16px;
     border: 0; border-radius: 6px;
@@ -83,9 +88,9 @@ const languages = [
     box-shadow: 0 0 0 0 #d4d4d4;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .ze-lang__btn:hover,
-  .ze-lang.is-open .ze-lang__btn { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 0 #d4d4d4; }
-  .ze-lang__btn:active { transform: translate(0, 0); box-shadow: 0 0 0 0 #d4d4d4; }
+  .ze-lang--button .ze-lang__btn:hover,
+  .ze-lang--button.is-open .ze-lang__btn { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 0 #d4d4d4; }
+  .ze-lang--button .ze-lang__btn:active { transform: translate(0, 0); box-shadow: 0 0 0 0 #d4d4d4; }
   .ze-lang__btn:focus-visible { outline: 2px solid #101010; outline-offset: 3px; }
 
   .ze-lang__tri { width: 11px; height: 8px; transition: transform 0.2s ease; }

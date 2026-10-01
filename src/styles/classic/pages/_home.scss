@@ -785,3 +785,29 @@ a.ze-row:hover .ze-preview-alt {
     transition: transform .4s ease;
   }
 }
+
+// Language switcher, link look (site root): same type, weight and underline as the
+// intro links, with a small soft triangle next to the label. The dropdown card itself
+// is styled in components/classic/LangSwitch.astro.
+.ze-lang--link .ze-lang__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-weight: $WeightMedium;
+  line-height: 1.4;
+  @include type-scale(6);
+  cursor: pointer;
+
+  .ze-lang__current { @include link-line; }
+  .ze-lang__tri { width: 9px; height: 7px; margin-top: 1px; }
+
+  &:hover {
+    color: $accent;
+    .ze-lang__current { @include link-line-hover; }
+  }
+}
