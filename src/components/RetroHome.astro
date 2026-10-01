@@ -1,0 +1,169 @@
+---
+// Retro (70s hi-fi) home page. Hero = Zakaria's sketch: a rounded frame on dot-grid paper,
+// the intro on the left, the walk from Casablanca to Rotterdam on the right.
+// Work = record sleeves (Side A: case studies, Side B: earlier work); the vinyl slides out on hover.
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CityPath from './CityPath.astro';
+import { getProjects } from '../lib/data';
+
+const base = '/retro';
+const projects = await getProjects();
+const sideA = projects.filter((p) => p.data.tier === 'case');
+const sideB = projects.filter((p) => p.data.tier === 'earlier');
+const about = await getEntry('about', 'index');
+const notes = [...(about?.data.experience ?? []), ...(about?.data.education ?? [])];
+---
+<Base title="Product designer & builder">
+  <section class="r-hero">
+    <div class="container">
+      <div class="r-frame">
+        <div class="r-frame__text">
+          <p class="r-hi">Hi</p>
+          <h1 class="r-intro">I'm Zakaria, product designer &amp; builder, and here I share some of the projects, writing and music I worked on in the last 13 years.</h1>
+          <a href="#work" class="r-scribble">See the records <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="r-frame__map"><CityPath look="sketch" /></div>
+      </div>
+    </div>
+    <div class="r-stripes" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  </section>
+
+  <section id="work" class="section r-work" aria-labelledby="side-a">
+    <div class="container">
+      <h2 id="side-a" class="r-side"><span class="r-side__tag">Side A</span> Case studies</h2>
+      <ol role="list" class="r-sleeves r-sleeves--a">
+        {sideA.map((p, i) => (
+          <li>
+            <a href={`${base}/projects/${p.id}/`} class="r-sleeve">
+              <span class="r-sleeve__vinyl" aria-hidden="true"><span></span></span>
+              <span class="r-sleeve__cover">
+                <Image src={p.data.cover} alt="" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 90vw" />
+                <span class="r-sleeve__no">A{i + 1}</span>
+              </span>
+              <span class="r-sleeve__title">{p.data.title}</span>
+              <span class="r-sleeve__meta">{p.data.client} · {p.data.year}</span>
+              {p.data.problem && <span class="r-sleeve__line">{p.data.problem}</span>}
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <h2 class="r-side r-side--b"><span class="r-side__tag">Side B</span> Earlier work, 2017–2020</h2>
+      <ol role="list" class="r-sleeves r-sleeves--b">
+        {sideB.map((p, i) => (
+          <li>
+            <a href={`${base}/projects/${p.id}/`} class="r-sleeve r-sleeve--small">
+              <span class="r-sleeve__vinyl" aria-hidden="true"><span></span></span>
+              <span class="r-sleeve__cover">
+                <Image src={p.data.cover} alt="" widths={[300, 500]} sizes="(min-width: 900px) 16vw, 45vw" />
+                <span class="r-sleeve__no">B{i + 1}</span>
+              </span>
+              <span class="r-sleeve__title">{p.data.client}</span>
+              <span class="r-sleeve__meta">{p.data.year}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section r-notes" aria-labelledby="notes-title">
+    <div class="container r-notes__grid">
+      <h2 id="notes-title" class="r-notes__title">Liner notes</h2>
+      <ol role="list" class="r-notes__list">
+        {notes.map((n, i) => (
+          <li>
+            <span class="r-notes__no">{String(i + 1).padStart(2, '0')}</span>
+            <span class="r-notes__name">{n.name}</span>
+            <span class="r-notes__role">{n.role}</span>
+            <span class="r-notes__years">{n.years}</span>
+          </li>
+        ))}
+      </ol>
+      <a href={`${base}/about/`} class="r-scribble">Play some music on the About page <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Hero: the sketch ---------- */
+  .r-hero { padding-top: calc(var(--header-h) + clamp(1rem, 3vw, 2rem)); }
+  .r-frame {
+    position: relative; display: grid; gap: 2rem; align-items: center;
+    padding: clamp(1.75rem, 5vw, 4.5rem);
+    border: 3px solid var(--ink); border-radius: clamp(28px, 5vw, 64px);
+    background-color: var(--white);
+    background-image: radial-gradient(rgba(43, 29, 20, 0.22) 1.2px, transparent 1.4px);
+    background-size: 22px 22px;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  @media (min-width: 900px) { .r-frame { grid-template-columns: 1.1fr 1fr; } }
+  .r-hi { font-family: var(--font-display); font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem); line-height: 1; }
+  .r-intro { font-size: clamp(1.6rem, 1.1rem + 1.9vw, 2.9rem); line-height: 1.12; margin-top: 0.4rem; max-width: 20ch; font-weight: 700; }
+  .r-scribble {
+    display: inline-block; margin-top: 1.75rem; font-family: var(--font-hand); font-size: 1.6rem; font-weight: 600;
+    text-decoration: none; padding: 0.15rem 1.1rem 0.3rem; border: 2.5px solid var(--ink); border-radius: 60% 40% 55% 45% / 60% 50% 50% 40%;
+    transition: transform 0.2s steps(2), background 0.2s;
+  }
+  .r-scribble:hover { transform: rotate(-3deg); background: var(--sun); }
+  .r-frame__map { width: 100%; max-width: 520px; justify-self: center; }
+  @media (max-width: 899px) { .r-frame__map { padding-bottom: 2.75rem; } }
+
+  .r-stripes { display: grid; gap: 6px; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .r-stripes span { height: 12px; }
+  .r-stripes span:nth-child(1) { background: var(--sun); }
+  .r-stripes span:nth-child(2) { background: #f08a24; }
+  .r-stripes span:nth-child(3) { background: var(--coral); }
+  .r-stripes span:nth-child(4) { background: #7a3b1d; }
+
+  /* ---------- Sleeves ---------- */
+  .r-side { display: flex; align-items: baseline; gap: 1rem; font-size: var(--fs-h2); margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .r-side--b { margin-top: clamp(3.5rem, 6vw, 5.5rem); font-size: var(--fs-h3); }
+  .r-side__tag {
+    font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.6rem; border: 2px solid var(--ink); border-radius: 999px; transform: translateY(-0.4em);
+  }
+  .r-sleeves { display: grid; gap: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2.5rem); }
+  .r-sleeves--a { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+  .r-sleeves--b { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .r-sleeve { position: relative; display: grid; gap: 0.35rem; text-decoration: none; }
+  .r-sleeve__cover {
+    position: relative; z-index: 1; display: block; aspect-ratio: 1; overflow: hidden;
+    border: 3px solid var(--ink); border-radius: 6px; background: var(--white);
+    box-shadow: 6px 6px 0 var(--ink); margin-bottom: 0.6rem;
+  }
+  .r-sleeve__cover :global(img) { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.25) saturate(1.1); }
+  .r-sleeve__no {
+    position: absolute; left: 10px; top: 10px; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500;
+    background: var(--sun); border: 2px solid var(--ink); border-radius: 999px; padding: 0.1rem 0.5rem;
+  }
+  /* the record peeks out of the sleeve */
+  .r-sleeve__vinyl {
+    position: absolute; z-index: 0; top: 4%; left: 4%; width: 92%; aspect-ratio: 1; border-radius: 50%;
+    background: repeating-radial-gradient(circle, #1a1410 0 3px, #2b211a 3px 5px);
+    transition: transform 0.45s steps(4);
+  }
+  .r-sleeve__vinyl span { position: absolute; inset: 36%; border-radius: 50%; background: var(--coral); border: 6px solid #1a1410; }
+  .r-sleeve:hover .r-sleeve__vinyl, .r-sleeve:focus-visible .r-sleeve__vinyl { transform: translateX(34%) rotate(90deg); }
+  .r-sleeve__title { font-family: var(--font-display); font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: var(--fs-h3); line-height: 1.1; }
+  .r-sleeve--small .r-sleeve__title { font-size: 1.1rem; }
+  .r-sleeve__meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+  .r-sleeve__line { color: var(--ink-soft); margin-top: 0.3rem; max-width: 40ch; }
+  .r-sleeve:hover .r-sleeve__title { color: var(--coral-ink); }
+
+  /* ---------- Liner notes ---------- */
+  .r-notes { background: var(--white); border-block: 3px solid var(--ink); }
+  .r-notes__grid { display: grid; gap: 2rem; }
+  @media (min-width: 900px) { .r-notes__grid { grid-template-columns: 1fr 2fr; } .r-notes__grid > .r-scribble { grid-column: 2; justify-self: start; } }
+  .r-notes__title { font-size: var(--fs-h2); }
+  .r-notes__list li {
+    display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0.2rem 1rem; padding-block: 0.9rem;
+    border-bottom: 1.5px dashed var(--line); font-family: var(--font-mono); font-size: 0.92rem;
+  }
+  .r-notes__no { color: var(--coral-ink); }
+  .r-notes__name { font-weight: 500; }
+  .r-notes__years { color: var(--ink-soft); grid-row: 1; grid-column: 3; }
+  .r-notes__role { grid-column: 2 / -1; color: var(--ink-soft); font-family: var(--font); font-size: 0.98rem; }
+</style>

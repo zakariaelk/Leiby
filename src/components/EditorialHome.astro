@@ -1,0 +1,159 @@
+---
+// Editorial version: the home page reads like a long-form feature, not a newspaper front page.
+// A big serif headline and a table of contents, then each case study as a chapter: a sticky
+// chapter number on the left, the story and its facts in the margin on the right.
+// One full-bleed colour field breaks the rhythm halfway.
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { getProjects } from '../lib/data';
+
+const base = '/editorial';
+const projects = await getProjects();
+const chapters = projects.filter((p) => p.data.tier === 'case');
+const also = projects.filter((p) => p.data.tier === 'earlier');
+const about = await getEntry('about', 'index');
+const roman = ['I', 'II', 'III', 'IV', 'V'];
+// Short chapter titles, taken from what each case study is about
+const chapterTitle: Record<string, string> = {
+  'mitigating-risk-with-location-based-alerts': 'Alerts in the field',
+  'ngosafety-website-redesign': 'A brief without data',
+  'conflict-and-humanitarian-data-centre': 'A redesign nobody asked for',
+};
+const year = new Date().getFullYear();
+---
+<Base title="Product designer & builder">
+  <header class="e-open container">
+    <p class="e-kicker">A portfolio in three chapters · {year}</p>
+    <h1 class="e-title">Thirteen years, three cities, and <em>the work in between.</em></h1>
+    <div class="e-deck">
+      <p>Zakaria El Khachia is a product designer and builder. He designs safety tools for aid workers, data tools for analysts and, before that, websites for people in a hurry.</p>
+      <p class="e-byline">Casablanca · Beijing · Rotterdam</p>
+    </div>
+
+    <nav class="e-toc" aria-label="Chapters">
+      <p class="e-toc__label">Contents</p>
+      <ol role="list">
+        {chapters.map((p, i) => (
+          <li><a href={`#ch-${i + 1}`}><span class="e-toc__no">{roman[i]}</span><span class="e-toc__name">{chapterTitle[p.id] ?? p.data.title}</span><span class="e-toc__dots" aria-hidden="true"></span><span class="e-toc__meta">{p.data.client}, {p.data.year}</span></a></li>
+        ))}
+        <li><a href="#also"><span class="e-toc__no">—</span><span class="e-toc__name">Also, earlier work</span><span class="e-toc__dots" aria-hidden="true"></span><span class="e-toc__meta">2017–2020</span></a></li>
+      </ol>
+    </nav>
+  </header>
+
+  {chapters.map((p, i) => (
+    <>
+      <article id={`ch-${i + 1}`} class="e-chapter container">
+        <aside class="e-chapter__side">
+          <div class="e-chapter__sticky">
+            <p class="e-chapter__no">{roman[i]}</p>
+            <dl class="e-margin">
+              <div><dt>Project</dt><dd>{p.data.title}</dd></div>
+              <div><dt>Role</dt><dd>{p.data.role}</dd></div>
+              <div><dt>When</dt><dd>{p.data.duration ?? p.data.year}</dd></div>
+            </dl>
+          </div>
+        </aside>
+        <div class="e-chapter__body">
+          <p class="e-chapter__kicker">Chapter {roman[i]} · {p.data.client}</p>
+          <h2 class="e-chapter__title">{chapterTitle[p.id] ?? p.data.title}</h2>
+          {p.data.problem && <p class="e-chapter__lede">{p.data.problem}</p>}
+          <figure class="e-figure">
+            <Image src={p.data.cover} alt="" widths={[640, 1024, 1400]} sizes="(min-width: 1100px) 60vw, 100vw" />
+            <figcaption>{p.data.intro}</figcaption>
+          </figure>
+          <div class="e-cols">
+            {p.data.did && <p><span class="e-sc">What I did.</span> {p.data.did}</p>}
+            {p.data.result && <p><span class="e-sc">What changed.</span> {p.data.result}</p>}
+          </div>
+          {p.data.hard && <p class="e-hard"><span class="e-sc">What was hard.</span> {p.data.hard}</p>}
+          <a href={`${base}/projects/${p.id}/`} class="e-read">Read the chapter <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      {i === 1 && (
+        <section class="e-field" aria-label="Quote">
+          <blockquote>
+            <p>“Decisions were expected to be data-informed, but no reliable data existed.”</p>
+            <footer>From chapter II, on what the NGOSafety brief assumed</footer>
+          </blockquote>
+        </section>
+      )}
+    </>
+  ))}
+
+  <section id="also" class="e-also container" aria-labelledby="also-title">
+    <h2 id="also-title" class="e-also__title">Also, earlier work</h2>
+    <ul role="list" class="e-also__list">
+      {also.map((p) => (
+        <li><a href={`${base}/projects/${p.id}/`}><span class="e-also__name">{p.data.client}</span><em class="e-also__year">{p.data.year}</em><span class="e-also__line">{p.data.summary}</span></a></li>
+      ))}
+    </ul>
+    <p class="e-colophon">Before INSO: {about?.data.experience.slice(1).map((e) => `${e.name} (${e.years})`).join(', ')}. <a href={`${base}/about/`}>More about the author →</a></p>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Opening ---------- */
+  .e-open { padding-top: calc(var(--header-h) + clamp(2.5rem, 7vw, 6rem)); padding-bottom: clamp(3rem, 6vw, 5rem); }
+  .e-kicker { font-size: var(--fs-small); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  .e-title { font-size: clamp(3rem, 1.5rem + 7vw, 8.5rem); line-height: 0.95; letter-spacing: -0.02em; margin-top: 1rem; max-width: 14ch; }
+  .e-title em { font-style: italic; }
+  .e-deck { display: grid; gap: 1rem 3rem; margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+  @media (min-width: 900px) { .e-deck { grid-template-columns: minmax(0, 36rem) 1fr; align-items: end; } }
+  .e-deck p:first-child { font-size: var(--fs-lead); line-height: 1.5; }
+  .e-byline { font-size: var(--fs-small); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+
+  .e-toc { margin-top: clamp(3rem, 6vw, 5rem); max-width: 52rem; }
+  .e-toc__label { font-family: var(--font-display); font-style: italic; font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .e-toc a { display: grid; grid-template-columns: 2.5rem auto 1fr auto; align-items: baseline; gap: 0.75rem; padding-block: 0.7rem; border-top: 1px solid var(--line); text-decoration: none; }
+  .e-toc li:last-child a { border-bottom: 1px solid var(--line); }
+  .e-toc__no { font-family: var(--font-display); font-size: 1.3rem; }
+  .e-toc__name { font-family: var(--font-display); font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.9rem); line-height: 1.1; }
+  .e-toc__dots { border-bottom: 1px dotted var(--ink-soft); transform: translateY(-0.35em); min-width: 1rem; }
+  .e-toc__meta { font-size: var(--fs-small); color: var(--ink-soft); white-space: nowrap; }
+  .e-toc a:hover .e-toc__name { font-style: italic; }
+  @media (max-width: 599px) { .e-toc a { grid-template-columns: 2rem 1fr; } .e-toc__dots { display: none; } .e-toc__meta { grid-column: 2; } }
+
+  /* ---------- Chapters ---------- */
+  .e-chapter { display: grid; gap: 1.5rem 4rem; padding-block: clamp(3rem, 7vw, 6rem); border-top: 1px solid var(--ink); }
+  @media (min-width: 1000px) { .e-chapter { grid-template-columns: 15rem 1fr; } }
+  .e-chapter__sticky { position: sticky; top: calc(var(--header-h) + 2rem); }
+  .e-chapter__no { font-family: var(--font-display); font-size: clamp(5rem, 3rem + 8vw, 11rem); line-height: 0.8; }
+  .e-margin { display: grid; gap: 0.8rem; margin-top: 1.5rem; font-size: 0.9rem; }
+  .e-margin dt { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  .e-margin dd { margin: 0.1rem 0 0; }
+  @media (max-width: 999px) { .e-margin { grid-template-columns: repeat(3, auto); justify-content: start; gap: 0.5rem 1.5rem; } }
+  .e-chapter__body { max-width: 50rem; }
+  .e-chapter__kicker { font-size: var(--fs-small); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  .e-chapter__title { font-size: clamp(2.4rem, 1.4rem + 4vw, 5.2rem); margin-top: 0.6rem; }
+  .e-chapter__lede { font-family: var(--font-display); font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2.1rem); line-height: 1.25; margin-top: 1.5rem; }
+  .e-figure { margin: clamp(2rem, 4vw, 3rem) 0; }
+  .e-figure :global(img) { width: 100%; height: auto; }
+  .e-figure figcaption { font-size: var(--fs-small); color: var(--ink-soft); margin-top: 0.6rem; font-style: italic; }
+  .e-cols { display: grid; gap: 1rem 2.5rem; line-height: 1.7; }
+  @media (min-width: 760px) { .e-cols { grid-template-columns: 1fr 1fr; } }
+  .e-sc { font-variant: small-caps; letter-spacing: 0.06em; font-weight: 600; text-transform: lowercase; }
+  .e-hard { margin-top: 1.5rem; padding-left: 1.25rem; border-left: 3px solid var(--coral); line-height: 1.7; max-width: 42rem; }
+  .e-read { display: inline-flex; gap: 0.4em; margin-top: 2rem; font-family: var(--font-display); font-size: 1.5rem; font-style: italic; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+
+  /* ---------- Colour field ---------- */
+  .e-field { background: var(--coral); padding: clamp(4rem, 10vw, 9rem) var(--gutter); }
+  .e-field blockquote { max-width: 70rem; margin-inline: auto; }
+  .e-field p { font-family: var(--font-display); font-size: clamp(2.2rem, 1.2rem + 4.4vw, 6rem); line-height: 1; letter-spacing: -0.01em; }
+  .e-field footer { margin-top: 1.5rem; font-size: var(--fs-small); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* ---------- Also ---------- */
+  .e-also { padding-block: clamp(3rem, 7vw, 6rem); border-top: 1px solid var(--ink); }
+  .e-also__title { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.5rem); }
+  .e-also__list { display: grid; gap: 0 3rem; margin-top: 2rem; }
+  @media (min-width: 800px) { .e-also__list { grid-template-columns: 1fr 1fr; } }
+  .e-also__list a { display: grid; grid-template-columns: 1fr auto; gap: 0.2rem 1rem; padding-block: 1rem; border-top: 1px solid var(--line); text-decoration: none; }
+  .e-also__name { font-family: var(--font-display); font-size: 1.6rem; line-height: 1.1; }
+  .e-also__year { font-family: var(--font-display); color: var(--ink-soft); font-size: 1.2rem; }
+  .e-also__line { grid-column: 1 / -1; color: var(--ink-soft); font-size: 0.95rem; }
+  .e-also__list a:hover .e-also__name { font-style: italic; }
+  .e-colophon { margin-top: 2.5rem; color: var(--ink-soft); font-style: italic; }
+  .e-colophon a { color: var(--ink); }
+</style>

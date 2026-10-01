@@ -1,0 +1,182 @@
+---
+// UX version, for a recruiter or design lead with five minutes and 100 portfolios open.
+// Hero = the sketch, cleaned up: plain intro + a career map with years.
+// Work = one scannable index. Each row opens in place (problem, what I did, result, what was hard),
+// so the work can be judged without leaving the page.
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CityPath from './CityPath.astro';
+import GetInTouch from './GetInTouch.astro';
+import { getProjects } from '../lib/data';
+
+const base = '/ux';
+const projects = await getProjects();
+const about = await getEntry('about', 'index');
+const experience = about?.data.experience ?? [];
+const education = about?.data.education ?? [];
+---
+<Base title="Product designer & builder">
+  <section class="u-hero container">
+    <div class="u-hero__text">
+      <h1 class="u-title">Hi, I'm Zakaria, product designer &amp; builder. Here I share projects, writing and music from the last 13 years.</h1>
+      <ul role="list" class="u-proof">
+        <li><strong>13+ years</strong> web and mobile</li>
+        <li><strong>30+ projects</strong> led at PBB Creative, Beijing</li>
+        <li><strong>Now at INSO:</strong> safety tools used in 22 countries</li>
+      </ul>
+      <div class="u-actions">
+        <a href="#work" class="btn">See the work <span class="arrow arrow--down" aria-hidden="true">→</span></a>
+        <GetInTouch variant="ghost" />
+      </div>
+    </div>
+    <div class="u-hero__map">
+      <CityPath look="clean" stops={[
+        { city: 'Casablanca', native: 'الدار البيضاء', note: 'Where it started' },
+        { city: 'Beijing', native: '北京', note: '2014–2021 · PBB Creative' },
+        { city: 'Rotterdam', note: 'Now · INSO' },
+      ]} />
+    </div>
+  </section>
+
+  <section id="work" class="u-section container" aria-labelledby="work-title">
+    <div class="u-head">
+      <h2 id="work-title" class="u-h2">Work</h2>
+      <div class="u-filter" role="group" aria-label="Filter work">
+        <button type="button" data-filter="all" aria-pressed="true">All <span>{projects.length}</span></button>
+        <button type="button" data-filter="case" aria-pressed="false">Case studies <span>{projects.filter((p) => p.data.tier === 'case').length}</span></button>
+        <button type="button" data-filter="earlier" aria-pressed="false">Websites <span>{projects.filter((p) => p.data.tier === 'earlier').length}</span></button>
+      </div>
+    </div>
+    <p class="u-hint">Open a row for the short version; full case studies take about 5 minutes.</p>
+
+    <ol role="list" class="u-index">
+      {projects.map((p, i) => {
+        const facts = [
+          { label: 'Problem', value: p.data.problem },
+          { label: 'What I did', value: p.data.did },
+          { label: 'Result', value: p.data.result },
+          { label: 'What was hard', value: p.data.hard },
+        ].filter((f) => f.value);
+        return (
+          <li class="u-item" data-tier={p.data.tier}>
+            <button type="button" class="u-row" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`u-detail-${p.id}`}>
+              <span class="u-row__year">{p.data.year}</span>
+              <span class="u-row__name">{p.data.title}</span>
+              <span class="u-row__type">{p.data.tier === 'case' ? 'Case study' : 'Website'}</span>
+              <span class="u-row__role">{p.data.role}</span>
+              <span class="u-row__toggle" aria-hidden="true"></span>
+            </button>
+            <div class="u-detail" id={`u-detail-${p.id}`} hidden={i !== 0}>
+              <div class="u-detail__img"><Image src={p.data.cover} alt="" widths={[400, 700]} sizes="(min-width: 900px) 320px, 100vw" /></div>
+              <div>
+                {facts.length > 0 ? (
+                  <dl class="u-facts">{facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}</dl>
+                ) : (
+                  <p class="u-summary">{p.data.summary}</p>
+                )}
+                <a href={`${base}/projects/${p.id}/`} class="arrow-link u-read">{p.data.tier === 'case' ? 'Read the case study' : 'See the project'} <span class="arrow" aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+
+  <section class="u-section container u-cv" aria-label="Experience and education">
+    {[{ t: 'Experience', rows: experience }, { t: 'Education', rows: education }].map((g) => (
+      <div>
+        <h2 class="u-h2">{g.t}</h2>
+        <ul role="list">
+          {g.rows.map((r) => <li><span class="u-cv__name">{r.name}</span><span class="u-cv__role">{r.role}</span><span class="u-cv__years">{r.years}</span></li>)}
+        </ul>
+      </div>
+    ))}
+    <p class="u-music">Outside work I make music. <a href={`${base}/about/`} class="arrow-link">Play a record on the About page <span class="arrow" aria-hidden="true">→</span></a></p>
+  </section>
+</Base>
+
+<script>
+  const items = [...document.querySelectorAll<HTMLElement>('.u-item')];
+  items.forEach((item) => {
+    const btn = item.querySelector<HTMLButtonElement>('.u-row')!;
+    const detail = item.querySelector<HTMLElement>('.u-detail')!;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      detail.hidden = !open;
+    });
+  });
+  const filters = [...document.querySelectorAll<HTMLButtonElement>('.u-filter button')];
+  filters.forEach((f) => f.addEventListener('click', () => {
+    filters.forEach((o) => o.setAttribute('aria-pressed', String(o === f)));
+    const v = f.dataset.filter;
+    items.forEach((i) => { i.hidden = v !== 'all' && i.dataset.tier !== v; });
+  }));
+</script>
+
+<style>
+  .u-hero { display: grid; gap: 2rem 4rem; align-items: center; padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 5rem)); padding-bottom: clamp(2rem, 5vw, 4rem); }
+  @media (min-width: 960px) { .u-hero { grid-template-columns: 1.15fr 1fr; } }
+  .u-title { font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3.1rem); line-height: 1.12; letter-spacing: -0.035em; max-width: 22ch; }
+  .u-proof { display: grid; gap: 0.4rem; margin-top: 1.5rem; color: var(--ink-soft); }
+  .u-proof li { padding-left: 1.1rem; position: relative; }
+  .u-proof li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 1.5px var(--ink); }
+  .u-proof strong { color: var(--ink); font-weight: var(--fw-bold); }
+  .u-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+  .u-hero__map { width: 100%; max-width: 480px; justify-self: center; }
+
+  .u-section { padding-block: clamp(2.5rem, 5vw, 4rem); }
+  .u-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--ink); }
+  .u-h2 { font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.9rem); letter-spacing: -0.02em; }
+  .u-filter { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .u-filter button { padding: 0.45rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--line); font-weight: var(--fw-medium); font-size: 0.92rem; min-height: 40px; }
+  .u-filter button span { color: var(--ink-soft); margin-left: 0.2rem; }
+  .u-filter button[aria-pressed='true'] { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .u-filter button[aria-pressed='true'] span { color: rgba(255, 255, 255, 0.7); }
+  .u-hint { font-size: var(--fs-small); color: var(--ink-soft); margin-top: 0.75rem; }
+
+  .u-index { margin-top: 0.5rem; }
+  .u-item { border-bottom: 1px solid var(--line); }
+  .u-row {
+    width: 100%; display: grid; align-items: baseline; gap: 0.2rem 1.25rem; text-align: left; padding-block: 1.1rem;
+    grid-template-columns: 1fr auto; grid-template-areas: 'name toggle' 'meta meta';
+  }
+  @media (min-width: 800px) { .u-row { grid-template-columns: 4rem 1fr 8rem 12rem 1.5rem; grid-template-areas: 'year name type role toggle'; } }
+  .u-row__year { grid-area: year; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .u-row__name { grid-area: name; font-weight: var(--fw-bold); font-size: 1.12rem; }
+  .u-row__type { grid-area: type; color: var(--ink-soft); font-size: 0.92rem; }
+  .u-row__role { grid-area: role; color: var(--ink-soft); font-size: 0.92rem; }
+  @media (max-width: 799px) {
+    .u-row__year, .u-row__type { display: none; }
+    .u-row__role { grid-area: meta; }
+  }
+  .u-row__toggle { grid-area: toggle; width: 1.5rem; height: 1.5rem; position: relative; align-self: center; }
+  .u-row__toggle::before, .u-row__toggle::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; background: var(--ink); translate: -50% -50%; transition: rotate 0.2s; }
+  .u-row__toggle::after { rotate: 90deg; }
+  .u-row[aria-expanded='true'] .u-row__toggle::after { rotate: 0deg; }
+  .u-row:hover .u-row__name { text-decoration: underline; text-decoration-color: var(--coral); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+  .u-detail[hidden] { display: none; }
+  .u-detail { display: grid; gap: 1.5rem; padding: 0.25rem 0 1.75rem; }
+  @media (min-width: 800px) { .u-detail { grid-template-columns: 320px 1fr; padding-left: 5.25rem; } }
+  .u-detail__img { border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 10; background: var(--sun); }
+  .u-detail__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .u-facts { display: grid; gap: 0.7rem; max-width: 62ch; }
+  .u-facts div { display: grid; gap: 0.1rem 1rem; }
+  @media (min-width: 600px) { .u-facts div { grid-template-columns: 7.5rem 1fr; } }
+  .u-facts dt { font-weight: var(--fw-bold); font-size: 0.92rem; }
+  .u-facts dd { margin: 0; color: var(--ink-soft); }
+  .u-facts div:last-child dd { color: var(--ink); background: linear-gradient(transparent 62%, rgba(255, 196, 66, 0.55) 62%); }
+  .u-summary { color: var(--ink-soft); max-width: 55ch; }
+  .u-read { margin-top: 1.1rem; }
+
+  .u-cv { display: grid; gap: 2.5rem; }
+  @media (min-width: 900px) { .u-cv { grid-template-columns: 1fr 1fr; } .u-music { grid-column: 1 / -1; } }
+  .u-cv .u-h2 { padding-bottom: 0.8rem; border-bottom: 2px solid var(--ink); }
+  .u-cv li { display: grid; grid-template-columns: 1fr auto; gap: 0.1rem 1rem; padding-block: 0.85rem; border-bottom: 1px solid var(--line); }
+  .u-cv__name { font-weight: var(--fw-bold); }
+  .u-cv__years { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .u-cv__role { grid-column: 1 / -1; color: var(--ink-soft); font-size: 0.95rem; }
+  .u-music { color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+</style>

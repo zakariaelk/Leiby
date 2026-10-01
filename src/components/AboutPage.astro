@@ -3,6 +3,7 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from './PageHero.astro';
 import Journey from './Journey.astro';
+import RecordPlayer from './RecordPlayer.astro';
 import home from '../content/pages/home.json';
 import { themeFor } from '../lib/variant';
 
@@ -12,15 +13,30 @@ const about = await getEntry('about', 'index');
 if (!about) throw new Error('About page content is missing');
 const { Content } = await render(about);
 const { title, intro, experience, education, languages } = about.data;
+// Retro and UX open the About page with the record player from the sketch
+const music = theme === 'retro' || theme === 'ux';
 const groups = [
   { title: 'Experience', rows: experience },
   { title: 'Education', rows: education },
 ];
 ---
 <Base title="About" description={intro}>
-  <PageHero eyebrow="About" title={title} intro={intro}>
-    {theme === 'simple' ? <p class="about-cities">{home.cities.join(' → ')}</p> : <div slot="art"><Journey cities={home.cities} /></div>}
-  </PageHero>
+  {music ? (
+    <section class="music-hero">
+      <div class="container music-hero__grid">
+        <div>
+          <p class="eyebrow">About</p>
+          <h1 class="music-hero__title">Outside work and personal duties, I enjoy making and experimenting with music, sounds and instruments.</h1>
+          <p class="lead music-hero__intro">{intro}</p>
+        </div>
+        <RecordPlayer />
+      </div>
+    </section>
+  ) : (
+    <PageHero eyebrow="About" title={title} intro={intro}>
+      {theme === 'simple' ? <p class="about-cities">{home.cities.join(' → ')}</p> : <div slot="art"><Journey cities={home.cities} /></div>}
+    </PageHero>
+  )}
 
   <section class="section">
     <div class="container about__grid">
@@ -54,6 +70,12 @@ const groups = [
 </Base>
 
 <style>
+  .music-hero { padding: calc(var(--header-h) + clamp(2rem, 5vw, 4rem)) 0 clamp(2.5rem, 5vw, 4rem); background: var(--paper); }
+  .music-hero__grid { display: grid; gap: 2.5rem 4rem; align-items: center; }
+  @media (min-width: 960px) { .music-hero__grid { grid-template-columns: 1fr 1fr; } }
+  .music-hero__title { font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.2rem); line-height: 1.1; max-width: 18ch; }
+  .music-hero__intro { margin-top: 1.25rem; max-width: 42ch; color: var(--ink-soft); }
+  :global([data-theme='retro']) .music-hero { background-image: radial-gradient(rgba(43, 29, 20, 0.2) 1.2px, transparent 1.4px); background-size: 22px 22px; }
   .about-cities { margin-top: 1.25rem; color: var(--ink-soft); font-weight: var(--fw-medium); }
   .section { padding-top: clamp(2rem, 4vw, 3.5rem); }
   .about__grid { display: grid; gap: 3rem; }

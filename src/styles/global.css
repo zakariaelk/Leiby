@@ -26,6 +26,10 @@
   /* Type */
   --font: 'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-arabic: 'Reem Kufi Variable', 'Reem Kufi', 'Noto Kufi Arabic', sans-serif;
+  --font-display: var(--font);
+  --fw-display: var(--fw-bold);
+  --font-hand: 'Caveat Variable', 'Caveat', cursive;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --fs-h1: clamp(2.5rem, 1.5rem + 4vw, 5rem);
   --fs-h2: clamp(2rem, 1.35rem + 2.6vw, 3.75rem);
   --fs-h3: clamp(1.35rem, 1.15rem + 0.8vw, 1.9rem);
@@ -83,6 +87,67 @@
 [data-theme='mono'] ::selection,
 [data-theme='bridge'] ::selection { background: #ffc442; color: #141414; }
 
+/* ----------------------------------------------------------
+   Retro (/retro): 70s hi-fi. Cream paper, warm browns, mustard and orange,
+   a soft chunky serif. Bands use the mustard yellow, like the current footer.
+   ---------------------------------------------------------- */
+[data-theme='retro'] {
+  --sun: #ffc442;
+  --paper: #f4e9d6;
+  --white: #fffaf0;
+  --ink: #2b1d14;
+  --ink-soft: #6b5443;
+  --line: rgba(43, 29, 20, 0.18);
+  --coral: #e4572e;
+  --coral-ink: #b8401c;
+  --blue: #2a7f78;
+  --header-bg: rgba(244, 233, 214, 0.96);
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --fw-display: 800;
+}
+[data-theme='retro'] h1, [data-theme='retro'] h2, [data-theme='retro'] h3 { font-variation-settings: 'SOFT' 100, 'WONK' 1; letter-spacing: -0.02em; }
+[data-theme='retro'] .glow { display: none; }
+
+/* UX (/ux): the recruiter's version. White, ink, yellow only as a marker. */
+[data-theme='ux'] {
+  --sun: #f4f4f2;
+  --paper: #ffffff;
+  --ink: #141414;
+  --ink-soft: #5f5f5c;
+  --line: rgba(20, 20, 20, 0.12);
+  --coral: #ffc442;
+  --coral-ink: #141414;
+  --blue: #141414;
+  --header-bg: rgba(255, 255, 255, 0.97);
+  --casablanca: transparent;
+  --beijing: transparent;
+  --rotterdam: #141414;
+}
+[data-theme='ux'] .glow, [data-theme='ux'] .wave { display: none; }
+
+/* Editorial (/editorial): a long-form feature. Warm off-white, a big serif, one colour field. */
+[data-theme='editorial'] {
+  --sun: #f6f3ec;
+  --paper: #f6f3ec;
+  --white: #fffdf8;
+  --ink: #121212;
+  --ink-soft: #5c5850;
+  --line: rgba(18, 18, 18, 0.14);
+  --coral: #ffc442;
+  --coral-ink: #121212;
+  --blue: #121212;
+  --header-bg: rgba(246, 243, 236, 0.96);
+  --font: 'Instrument Sans', system-ui, sans-serif;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --fw-display: 400;
+  --casablanca: transparent;
+  --beijing: transparent;
+  --rotterdam: #121212;
+}
+[data-theme='editorial'] h1, [data-theme='editorial'] h2, [data-theme='editorial'] h3 { letter-spacing: -0.01em; line-height: 1; }
+[data-theme='editorial'] .glow, [data-theme='editorial'] .wave { display: none; }
+[data-theme='editorial'] .case-hero, [data-theme='ux'] .case-hero, [data-theme='retro'] .case-hero { background: var(--sun) !important; }
+
 @media (max-width: 767px) {
   :root {
     --header-h: 68px;
@@ -111,7 +176,7 @@ img, video { height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; }
 a { color: inherit; }
-h1, h2, h3, h4 { line-height: 1.05; font-weight: var(--fw-bold); letter-spacing: -0.03em; text-wrap: balance; }
+h1, h2, h3, h4 { line-height: 1.05; font-family: var(--font-display); font-weight: var(--fw-display); letter-spacing: -0.03em; text-wrap: balance; }
 p { text-wrap: pretty; }
 ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 ::selection { background: var(--ink); color: var(--sun); }

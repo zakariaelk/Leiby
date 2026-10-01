@@ -1,0 +1,174 @@
+---
+// From Zakaria's sketch: a dotted path from Casablanca (bottom right) through Beijing to
+// Rotterdam (top left), with a one-line walker who walks it when the map comes into view.
+// `look`: 'sketch' (hand-drawn, boiling lines, handwritten labels) or 'clean' (thin lines, facts).
+import Monument from './Monument.astro';
+
+interface Stop { city: string; native?: string; note?: string }
+interface Props { look?: 'sketch' | 'clean'; stops?: Stop[] }
+const {
+  look = 'sketch',
+  stops = [
+    { city: 'Casablanca', native: 'الدار البيضاء' },
+    { city: 'Beijing', native: '北京' },
+    { city: 'Rotterdam' },
+  ],
+} = Astro.props;
+// Positions in the 600 × 560 drawing (Casablanca, Beijing, Rotterdam)
+const points = [
+  { x: 510, y: 470 },
+  { x: 330, y: 300 },
+  { x: 140, y: 150 },
+];
+const legA = 'M510 470C470 420 420 330 330 300';
+const legB = 'M330 300C240 270 160 250 140 150';
+---
+<div class:list={['cp', `cp--${look}`]} role="img" aria-label={`Path from ${stops.map((s) => s.city).join(' to ')}`}>
+  <svg class="cp__svg" viewBox="0 0 600 560" aria-hidden="true">
+    <defs>
+      <filter id="cpBoil" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="3">
+          <animate attributeName="seed" values="3;7;12" dur="0.42s" calcMode="discrete" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" scale={look === 'sketch' ? 3 : 0} />
+      </filter>
+    </defs>
+    <g filter="url(#cpBoil)">
+      <path class="cp__leg" id="cpLegA" d={legA} />
+      <path class="cp__leg" id="cpLegB" d={legB} />
+      {points.map((p, i) => <circle class:list={['cp__dot', i === 0 && 'cp__dot--start']} cx={p.x} cy={p.y} r={i === 0 ? 9 : 5} />)}
+      <!-- the walker, drawn with one line; frames swap while walking -->
+      <g class="cp__walker" transform={`translate(${points[0].x} ${points[0].y})`}>
+        <g class="cp__flip">
+          <g transform="scale(1.7) translate(-12 -46)" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="7" r="5.5" />
+            <circle cx="7.6" cy="2.6" r="2.2" fill="var(--ink)" stroke="none" />
+            <path d="M12 12.5V29" />
+            <path class="wf wf--stand" d="M12 17l-4 9M12 17l4 9M12 29l-3 15M12 29l3 15" />
+            <path class="wf wf--a" d="M12 17l-6 7M12 17l6 6M12 29l-6 14M12 29l6 14" />
+            <path class="wf wf--b" d="M12 17l-2 9M12 17l2 9M12 29l-1 15M12 29l2 15" />
+            <path class="wf wf--wave" d="M12 17l-4 9M12 17l7-9M12 29l-3 15M12 29l3 15" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  {stops.map((s, i) => (
+    <div class:list={['cp__stop', `cp__stop--${i}`]} style={`--x:${(points[i].x / 600) * 100}%;--y:${(points[i].y / 560) * 100}%`}>
+      <Monument city={s.city} size={look === 'sketch' ? 46 : 34} />
+      <span class="cp__name">{s.city}</span>
+      {s.native && <span class="cp__native" lang={s.city === 'Beijing' ? 'zh' : 'ar'}>{s.native}</span>}
+      {s.note && <span class="cp__note">{s.note}</span>}
+    </div>
+  ))}
+
+  <button type="button" class="cp__replay">Walk it again</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.cp').forEach((map) => {
+    const walker = map.querySelector<SVGGElement>('.cp__walker');
+    const flip = map.querySelector<SVGGElement>('.cp__flip');
+    const legs = [map.querySelector<SVGPathElement>('#cpLegA'), map.querySelector<SVGPathElement>('#cpLegB')];
+    const replay = map.querySelector<HTMLButtonElement>('.cp__replay');
+    if (!walker || !flip || legs.some((l) => !l)) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer: number | undefined;
+
+    const place = (pt: DOMPoint, frame: string, back: boolean) => {
+      walker.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
+      walker.dataset.frame = frame;
+      flip.setAttribute('transform', back ? 'scale(-1 1)' : '');
+    };
+    const end = () => {
+      const last = legs[1]!;
+      place(last.getPointAtLength(last.getTotalLength()), 'wave', true);
+      map.classList.add('is-arrived');
+    };
+    const walk = () => {
+      window.clearTimeout(timer);
+      map.classList.remove('is-arrived');
+      if (reduce) return end();
+      let leg = 0, d = 0, step = 0;
+      const speed = 9; // px per frame, ~10 frames per second: deliberately choppy
+      const tick = () => {
+        const path = legs[leg]!;
+        const len = path.getTotalLength();
+        d = Math.min(len, d + speed);
+        const a = path.getPointAtLength(d);
+        const b = path.getPointAtLength(Math.min(len, d + 1));
+        place(a, step++ % 2 ? 'a' : 'b', b.x < a.x);
+        if (d < len) { timer = window.setTimeout(tick, 100); return; }
+        if (leg === 0) {
+          // a short stop in Beijing
+          leg = 1; d = 0;
+          walker.dataset.frame = 'stand';
+          timer = window.setTimeout(tick, 900);
+          return;
+        }
+        end();
+      };
+      tick();
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { walk(); io.disconnect(); }
+    }, { threshold: 0.4 });
+    io.observe(map);
+    replay?.addEventListener('click', walk);
+  });
+</script>
+
+<style>
+  .cp { position: relative; width: 100%; aspect-ratio: 600 / 560; container-type: inline-size; }
+  .cp__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .cp__leg { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 2 11; }
+  .cp__dot { fill: var(--ink); }
+  .cp__dot--start { fill: var(--ink); }
+  .wf { display: none; }
+  .cp__walker[data-frame='a'] .wf--a,
+  .cp__walker[data-frame='b'] .wf--b,
+  .cp__walker[data-frame='wave'] .wf--wave,
+  .cp__walker:not([data-frame]) .wf--stand,
+  .cp__walker[data-frame='stand'] .wf--stand { display: inline; }
+  .cp.is-arrived .wf--wave { animation: cp-wave 0.6s steps(1) infinite; }
+  @keyframes cp-wave { 50% { transform: rotate(-8deg); transform-origin: 12px 17px; } }
+
+  .cp__stop {
+    position: absolute; left: var(--x); top: var(--y);
+    display: grid; justify-items: center; gap: 0.15rem; text-align: center;
+    transform: translate(-50%, 14px);
+  }
+  .cp__stop :global(.monument) { order: -1; margin-bottom: 0.2rem; }
+  /* Rotterdam: label sits high enough for the walker to stand on the dot below it */
+  .cp__stop--2 { transform: translate(-50%, calc(-100% - 15cqw)); }
+  .cp__stop :global(.monument) { width: clamp(24px, 8cqw, 46px); height: auto; }
+  .cp__stop--1 { transform: translate(-6%, -112%); justify-items: start; text-align: left; }
+  .cp__name { font-weight: var(--fw-bold); line-height: 1.1; }
+  .cp__native { font-size: 0.95em; line-height: 1.1; }
+  .cp__native:lang(ar) { font-family: var(--font-arabic); }
+  .cp__note { font-size: var(--fs-small); color: var(--ink-soft); max-width: 15ch; line-height: 1.3; }
+  .cp__replay {
+    position: absolute; right: 0; top: 0; font-size: var(--fs-small); font-weight: var(--fw-medium);
+    text-decoration: underline; text-underline-offset: 3px; opacity: 0; transition: opacity 0.3s;
+  }
+  .cp.is-arrived .cp__replay, .cp__replay:focus-visible { opacity: 1; }
+
+  /* Sketch: hand-written labels, slightly tilted, like the drawing */
+  .cp--sketch .cp__name { font-family: var(--font-hand); font-size: clamp(1rem, 6cqw, 2.1rem); font-weight: 600; }
+  .cp--sketch .cp__native { font-family: var(--font-hand); font-size: clamp(0.85rem, 4.4cqw, 1.5rem); }
+  .cp--sketch .cp__native:lang(ar) { font-family: var(--font-arabic); font-size: clamp(0.75rem, 3.4cqw, 1.05rem); }
+  .cp--sketch .cp__stop--0 { rotate: -8deg; }
+  .cp--sketch .cp__stop--2 .cp__name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .cp--sketch .cp__replay { font-family: var(--font-hand); font-size: 1.3rem; }
+
+  /* Clean: thinner, quieter */
+  .cp--clean .cp__leg { stroke-width: 1.6; stroke-dasharray: 1 8; stroke: var(--ink-soft); }
+  .cp--clean .cp__stop :global(.monument) { opacity: 0.75; }
+  .cp--clean .cp__name { font-size: clamp(0.85rem, 3.4cqw, 1rem); }
+  .cp--clean .cp__native { font-size: clamp(0.78rem, 3cqw, 0.9rem); color: var(--ink-soft); }
+  .cp--clean .cp__note { font-size: clamp(0.72rem, 2.8cqw, 0.9rem); }
+  /* Clean: Rotterdam's label to the left, so the walker and the label never touch */
+  .cp--clean .cp__stop--2 { transform: translate(calc(-100% - 6cqw), -70%); justify-items: end; text-align: right; }
+</style>

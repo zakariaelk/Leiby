@@ -1,0 +1,214 @@
+---
+// Interactive turntable from Zakaria's About sketch. Pick a sleeve, press power: the tonearm
+// swings in, the record spins and a short loop plays. Until real tracks exist, each record is
+// generated in the browser with Web Audio (nothing autoplays, nothing is downloaded).
+const records = [
+  { id: 'casablanca', title: 'Casablanca', note: 'Hijaz scale, oud-like plucks', label: '#e4572e' },
+  { id: 'beijing', title: 'Beijing', note: 'Pentatonic, soft bells', label: '#ffc442' },
+  { id: 'rotterdam', title: 'Rotterdam', note: 'Lo-fi chords and bass', label: '#2a7f78' },
+  { id: 'late-shift', title: 'Late shift', note: 'Slow ambient pads', label: '#9b6bff' },
+];
+---
+<div class="rp" data-record="casablanca">
+  <div class="rp__deck">
+    <svg class="rp__svg" viewBox="0 0 420 340" aria-hidden="true">
+      <rect class="rp__plinth" x="6" y="6" width="408" height="328" rx="22" />
+      <g class="rp__disc">
+        <circle cx="180" cy="170" r="138" fill="#141414" />
+        <circle cx="180" cy="170" r="122" fill="none" stroke="#2c2c2c" stroke-width="1.5" />
+        <circle cx="180" cy="170" r="106" fill="none" stroke="#2c2c2c" stroke-width="1.5" />
+        <circle cx="180" cy="170" r="90" fill="none" stroke="#2c2c2c" stroke-width="1.5" />
+        <circle cx="180" cy="170" r="74" fill="#3a3a3a" />
+        <circle class="rp__label" cx="180" cy="170" r="50" />
+        <path d="M150 140a42 42 0 0 1 30-12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" />
+        <circle cx="180" cy="170" r="5" fill="#141414" />
+      </g>
+      <!-- tonearm pivots at the top right -->
+      <g class="rp__arm">
+        <circle cx="362" cy="62" r="24" class="rp__pivot" />
+        <path d="M362 62 360 230 336 268" fill="none" stroke="#e4572e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="320" y="262" width="26" height="14" rx="3" fill="#141414" transform="rotate(-30 333 269)" />
+      </g>
+    </svg>
+    <div class="rp__controls">
+      <button type="button" class="rp__power" aria-pressed="false">
+        <span class="rp__led" aria-hidden="true"></span><span class="rp__power-label">Play</span>
+      </button>
+      <p class="rp__now" aria-live="polite"><span class="rp__now-title">Casablanca</span> <span class="rp__now-note">Hijaz scale, oud-like plucks</span></p>
+    </div>
+  </div>
+
+  <div class="rp__crate">
+    <button type="button" class="rp__nav rp__nav--prev" aria-label="Previous records">‹</button>
+    <ul role="list" class="rp__sleeves">
+      {records.map((r, i) => (
+        <li>
+          <button type="button" class="rp__sleeve" data-id={r.id} data-title={r.title} data-note={r.note} data-label={r.label} aria-pressed={i === 0 ? 'true' : 'false'} style={`--label:${r.label}`}>
+            <span class="rp__cover" aria-hidden="true"><span class="rp__cover-disc"></span></span>
+            <span class="rp__sleeve-title">{r.title}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <button type="button" class="rp__nav rp__nav--next" aria-label="More records">›</button>
+  </div>
+  <p class="rp__fineprint">These records are sketches generated in your browser. Real tracks coming later.</p>
+</div>
+
+<script>
+  type Rec = { id: string };
+  const SONGS: Record<string, { bpm: number; scale: number[]; root: number; voice: OscillatorType; pad?: boolean; bass?: boolean; seed: number }> = {
+    casablanca: { bpm: 96, root: 146.83, scale: [0, 1, 4, 5, 7, 8, 10, 12], voice: 'triangle', seed: 3 }, // D Hijaz
+    beijing: { bpm: 84, root: 261.63, scale: [0, 2, 4, 7, 9, 12, 14], voice: 'sine', seed: 7 },          // C pentatonic
+    rotterdam: { bpm: 104, root: 174.61, scale: [0, 3, 5, 7, 10, 12], voice: 'sawtooth', bass: true, seed: 11 },
+    'late-shift': { bpm: 64, root: 196.0, scale: [0, 2, 3, 7, 10, 12], voice: 'sine', pad: true, seed: 5 },
+  };
+
+  document.querySelectorAll<HTMLElement>('.rp').forEach((rp) => {
+    const power = rp.querySelector<HTMLButtonElement>('.rp__power')!;
+    const label = rp.querySelector<SVGCircleElement>('.rp__label')!;
+    const nowTitle = rp.querySelector<HTMLElement>('.rp__now-title')!;
+    const nowNote = rp.querySelector<HTMLElement>('.rp__now-note')!;
+    const sleeves = [...rp.querySelectorAll<HTMLButtonElement>('.rp__sleeve')];
+    const list = rp.querySelector<HTMLElement>('.rp__sleeves')!;
+    let ctx: AudioContext | null = null;
+    let master: GainNode | null = null;
+    let loop: number | undefined;
+    let playing = false;
+    let current = sleeves[0].dataset.id!;
+
+    const rand = (seed: number) => () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+    const note = (freq: number, t: number, dur: number, type: OscillatorType, vol: number, filter = 2400) => {
+      if (!ctx || !master) return;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const f = ctx.createBiquadFilter();
+      f.type = 'lowpass'; f.frequency.value = filter;
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(f).connect(g).connect(master);
+      o.start(t); o.stop(t + dur + 0.05);
+    };
+
+    const crackle = () => {
+      if (!ctx || !master) return;
+      const len = ctx.sampleRate * 2;
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() < 0.0008 ? (Math.random() * 2 - 1) * 0.6 : (Math.random() * 2 - 1) * 0.01;
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const g = ctx.createGain(); g.gain.value = 0.35;
+      src.connect(g).connect(master); src.start();
+      return src;
+    };
+
+    let noise: AudioBufferSourceNode | undefined;
+    const start = () => {
+      ctx ??= new AudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
+      master = ctx.createGain(); master.gain.value = 0.22; master.connect(ctx.destination);
+      noise = crackle();
+      const song = SONGS[current];
+      const r = rand(song.seed);
+      const beat = 60 / song.bpm / 2; // eighth notes
+      const pattern = Array.from({ length: 16 }, () => (r() < 0.68 ? song.scale[Math.floor(r() * song.scale.length)] : null));
+      let step = 0;
+      let t = ctx.currentTime + 0.1;
+      const schedule = () => {
+        if (!ctx) return;
+        while (t < ctx.currentTime + 0.3) {
+          const deg = pattern[step % 16];
+          const f = (d: number) => song.root * Math.pow(2, d / 12);
+          if (deg !== null) note(f(deg), t, song.pad ? beat * 6 : beat * 1.6, song.voice, song.voice === 'sawtooth' ? 0.08 : 0.22, song.voice === 'sawtooth' ? 1200 : 3000);
+          if (song.bass && step % 4 === 0) note(f(song.scale[step % 8 < 4 ? 0 : 2]) / 2, t, beat * 3, 'triangle', 0.3, 600);
+          if (song.pad && step % 8 === 0) [0, 3, 7].forEach((s) => note(f(s) / 2, t, beat * 9, 'sine', 0.08, 900));
+          t += beat; step++;
+        }
+      };
+      schedule();
+      loop = window.setInterval(schedule, 100);
+    };
+    const stop = () => {
+      window.clearInterval(loop);
+      noise?.stop();
+      if (master && ctx) { master.gain.setTargetAtTime(0, ctx.currentTime, 0.05); }
+      master = null;
+    };
+
+    const setPlaying = (on: boolean) => {
+      playing = on;
+      rp.classList.toggle('is-playing', on);
+      power.setAttribute('aria-pressed', String(on));
+      power.querySelector('.rp__power-label')!.textContent = on ? 'Stop' : 'Play';
+      on ? start() : stop();
+    };
+    power.addEventListener('click', () => setPlaying(!playing));
+
+    sleeves.forEach((s) => s.addEventListener('click', () => {
+      sleeves.forEach((o) => o.setAttribute('aria-pressed', String(o === s)));
+      current = s.dataset.id!;
+      rp.dataset.record = current;
+      label.style.fill = s.dataset.label!;
+      nowTitle.textContent = s.dataset.title!;
+      nowNote.textContent = s.dataset.note!;
+      rp.classList.remove('is-swap'); void rp.offsetWidth; rp.classList.add('is-swap');
+      if (playing) { stop(); start(); }
+    }));
+    label.style.fill = sleeves[0].dataset.label!;
+
+    rp.querySelector('.rp__nav--prev')?.addEventListener('click', () => list.scrollBy({ left: -160, behavior: 'smooth' }));
+    rp.querySelector('.rp__nav--next')?.addEventListener('click', () => list.scrollBy({ left: 160, behavior: 'smooth' }));
+  });
+</script>
+
+<style>
+  .rp { width: 100%; max-width: 520px; margin-inline: auto; }
+  .rp__deck { position: relative; }
+  .rp__svg { width: 100%; height: auto; overflow: visible; }
+  .rp__plinth { fill: var(--white); stroke: var(--ink); stroke-width: 3; }
+  .rp__pivot { fill: var(--white); stroke: var(--ink); stroke-width: 3; }
+  .rp__disc { transform-origin: 180px 170px; animation: rp-spin 1.8s linear infinite paused; }
+  .rp.is-playing .rp__disc { animation-play-state: running; }
+  @keyframes rp-spin { to { transform: rotate(360deg); } }
+  .rp__arm { transform-origin: 362px 62px; transform: rotate(-24deg); transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1); }
+  .rp.is-playing .rp__arm { transform: rotate(0deg); }
+  .rp.is-swap .rp__disc { animation: rp-swap 0.35s steps(3), rp-spin 1.8s linear infinite; }
+  .rp:not(.is-playing).is-swap .rp__disc { animation: rp-swap 0.35s steps(3); }
+  @keyframes rp-swap { 0% { opacity: 0.2; transform: translateX(-30px); } 100% { opacity: 1; transform: none; } }
+
+  .rp__controls { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+  .rp__power {
+    display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.1rem; min-height: 44px;
+    border: 2px solid var(--ink); border-radius: 999px; background: var(--white); font-weight: var(--fw-bold);
+    box-shadow: 3px 3px 0 var(--ink); transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .rp__power:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .rp__led { width: 10px; height: 10px; border-radius: 50%; background: #b9b2a6; }
+  .rp.is-playing .rp__led { background: #3ee66b; box-shadow: 0 0 8px #3ee66b; }
+  .rp__now { font-size: var(--fs-small); line-height: 1.3; }
+  .rp__now-title { font-weight: var(--fw-bold); display: block; }
+  .rp__now-note { color: var(--ink-soft); }
+
+  .rp__crate { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.5rem; margin-top: 1.5rem; }
+  .rp__nav { width: 36px; height: 36px; border-radius: 50%; font-size: 1.6rem; line-height: 1; display: grid; place-items: center; }
+  .rp__nav:hover { background: var(--line); }
+  .rp__sleeves { display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 6px 4px 10px; }
+  .rp__sleeves::-webkit-scrollbar { display: none; }
+  .rp__sleeves li { scroll-snap-align: start; flex: none; }
+  .rp__sleeve { display: grid; gap: 0.4rem; justify-items: center; width: 96px; font-size: 0.85rem; font-weight: var(--fw-medium); }
+  .rp__cover {
+    position: relative; width: 96px; aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden;
+    background: var(--white); transition: transform 0.25s steps(2);
+  }
+  .rp__cover-disc {
+    position: absolute; inset: 14%; border-radius: 50%;
+    background: radial-gradient(circle, var(--label) 0 26%, #3a3a3a 27% 40%, #141414 41%);
+  }
+  .rp__sleeve:hover .rp__cover { transform: translateY(-4px) rotate(-2deg); }
+  .rp__sleeve[aria-pressed='true'] .rp__cover { box-shadow: 0 0 0 3px var(--label); }
+  .rp__fineprint { margin-top: 0.75rem; font-size: 0.8rem; color: var(--ink-soft); }
+</style>

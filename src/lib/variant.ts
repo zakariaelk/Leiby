@@ -1,6 +1,6 @@
 // Design versions living side by side. The yellow site is served at the root;
 // the other versions live under their own prefix (/mono, /bridge, /simple).
-export const variants = ['mono', 'bridge', 'simple'] as const;
+export const variants = ['mono', 'bridge', 'simple', 'retro', 'ux', 'editorial'] as const;
 export type Theme = 'yellow' | (typeof variants)[number];
 
 export function themeFor(pathname: string): { theme: Theme; base: string } {

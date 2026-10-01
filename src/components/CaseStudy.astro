@@ -136,7 +136,7 @@ const showShort = theme === 'simple' && inShort.length > 0;
   @media (min-width: 1024px) { .case-meta { grid-template-columns: 1fr; gap: 0.9rem; } }
   .case-meta div { border-top: 2px solid var(--ink); padding-top: 0.6rem; }
   .case-meta dt { font-size: var(--fs-small); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; }
-  .case-meta dd { margin: 0.2rem 0 0; font-weight: var(--fw-medium); }
+  .case-meta dd { margin: 0.2rem 0 0; font-weight: var(--fw-medium); overflow-wrap: anywhere; }
 
   .case-cover { position: relative; }
   .case-cover__bg { position: absolute; inset: -1px 0 auto; height: 50%; display: grid; grid-template-rows: 1fr auto; }

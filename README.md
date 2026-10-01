@@ -22,9 +22,12 @@ The same content in three looks, side by side:
 | `/mono/` | Black & white, cartoon face with changing expressions |
 | `/bridge/` | Black & white, line bridge + a tiny walker crossing the cities on scroll |
 | `/simple/` | Content first, built to be skimmed: problem → what I did → result, plus “what was hard” on each case study |
+| `/retro/` | 70s hi-fi: Zakaria's sketched hero (walk from Casablanca to Rotterdam), projects as record sleeves, record player on About |
+| `/ux/` | For recruiters: clean career map, one expandable work index, record player on About |
+| `/editorial/` | Long-form feature: serif headline, contents, case studies as chapters, one colour-field quote |
 
 The versions are set by URL prefix (`src/lib/variant.ts`), colours by `[data-theme]` in `src/styles/global.css`.
-`/mono`, `/bridge` and `/simple` are hidden from search engines.
+All versions except `/` are hidden from search engines.
 
 ## Where things live
 

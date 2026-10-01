@@ -1,11 +1,16 @@
 ---
 import HomePage from '../../components/HomePage.astro';
 import SimpleHome from '../../components/SimpleHome.astro';
+import RetroHome from '../../components/RetroHome.astro';
+import UxHome from '../../components/UxHome.astro';
+import EditorialHome from '../../components/EditorialHome.astro';
 import { variants } from '../../lib/variant';
 
 export function getStaticPaths() {
   return variants.map((variant) => ({ params: { variant } }));
 }
 const { variant } = Astro.params;
+const pages = { simple: SimpleHome, retro: RetroHome, ux: UxHome, editorial: EditorialHome } as const;
+const Page = pages[variant as keyof typeof pages] ?? HomePage;
 ---
-{variant === 'simple' ? <SimpleHome /> : <HomePage />}
+<Page />
