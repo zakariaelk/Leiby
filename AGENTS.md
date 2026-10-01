@@ -1,3 +1,12 @@
+# zakariaelk.com portfolio
+Design rules for case study pages (read before changing any layout):
+@docs/case-study-design-brief-for-claude-code.md
+
+Rules:
+- Don't rewrite or shorten the wording. Content lives in docs/inso-app-case-study-content.md.
+- Show every [CONFIRM] marker as a visibly flagged placeholder so I don't miss it.
+- Ask before changing the stack or adding dependencies.
+
 ## Development
 
 When starting the dev server, use background mode:
@@ -20,3 +29,5 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+

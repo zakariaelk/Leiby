@@ -9,11 +9,15 @@ import { getProjects } from '../../lib/data';
 
 export async function getStaticPaths() {
   const projects = await getProjects();
-  return projects.map((project, i) => ({
-    params: { slug: project.id },
-    // "Up next" follows the home page order and wraps around
-    props: { project, next: projects[(i + 1) % projects.length] },
-  }));
+  // Story-template case studies have their own route ([...story].astro), so this page never
+  // pulls their styles in and they never pull in the WordPress-port theme.
+  return projects
+    .map((project, i) => ({
+      params: { slug: project.id },
+      // "Up next" follows the home page order and wraps around
+      props: { project, next: projects[(i + 1) % projects.length] },
+    }))
+    .filter(({ props }) => props.project.data.layout !== 'story');
 }
 
 const { project, next } = Astro.props;

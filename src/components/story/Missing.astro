@@ -1,0 +1,6 @@
+---
+// Visible placeholder for an image that still has to be made or fixed
+interface Props { file: string; label?: string }
+const { file, label = 'Missing image' } = Astro.props;
+---
+<div class="cs-missing" role="note"><strong>{label}:</strong> {file}</div>

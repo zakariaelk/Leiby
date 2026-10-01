@@ -1,5 +1,7 @@
 import { defineMarkdocConfig, component } from '@astrojs/markdoc/config';
 
+const story = (name) => component(`./src/components/story/${name}.astro`);
+
 export default defineMarkdocConfig({
   tags: {
     carousel: {
@@ -13,6 +15,49 @@ export default defineMarkdocConfig({
         src: { type: String, required: true },
         alt: { type: String },
       },
+    },
+
+    // Case study blocks (story template, see docs/case-study-design-brief-for-claude-code.md)
+    glance: { render: story('Glance') },
+    stats: {
+      render: story('Stats'),
+      attributes: { variant: { type: String, matches: ['panel', 'strip'] }, label: { type: String } },
+    },
+    stat: {
+      render: story('Stat'),
+      selfClosing: true,
+      attributes: { value: { type: String, required: true }, label: { type: String, required: true } },
+    },
+    scope: { render: story('Scope') },
+    need: { render: story('Need') },
+    friction: { render: story('Friction') },
+    move: { render: story('Move'), attributes: { label: { type: String } } },
+    result: { render: story('Result'), attributes: { value: { type: String }, label: { type: String } } },
+    figure: {
+      render: story('Figure'),
+      selfClosing: true,
+      attributes: {
+        src: { type: String, required: true },
+        alt: { type: String, required: true },
+        caption: { type: String },
+        frame: { type: String, matches: ['', 'before', 'after', 'compare'] },
+        size: { type: String, matches: ['wide', 'text', 'half'] },
+        notes: { type: String },
+      },
+    },
+    pair: { render: story('Pair'), attributes: { caption: { type: String } } },
+    quote: { render: story('Quote'), attributes: { by: { type: String, required: true } } },
+    reflection: { render: story('Reflection') },
+    confirm: {
+      render: story('Confirm'),
+      inline: true,
+      selfClosing: true,
+      attributes: { note: { type: String, required: true }, label: { type: String } },
+    },
+    missing: {
+      render: story('Missing'),
+      selfClosing: true,
+      attributes: { file: { type: String, required: true }, label: { type: String } },
     },
   },
 });

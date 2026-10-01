@@ -1,0 +1,36 @@
+---
+// A visual with a job. Wider than the text column by default; "text" keeps it in the column,
+// "half" is used inside a before/after pair. frame: before (grey) | after (blue) | compare
+// (one visual holding both, grey left and blue right). Videos play only while on screen and
+// never with reduced motion.
+import { Image, getImage } from 'astro:assets';
+import { assetImage, posterFor } from '../../lib/media';
+
+interface Props { src: string; alt: string; caption?: string; frame?: string; size?: string; notes?: string }
+const { src, alt, caption, frame = '', size = 'wide', notes } = Astro.props;
+const isVideo = /\.mp4$/i.test(src);
+const img = isVideo ? undefined : assetImage(src);
+if (!isVideo && !img) throw new Error(`Figure: image not found in src/assets: ${src}`);
+const poster = isVideo ? posterFor(src) : undefined;
+const posterImg = poster ? await getImage({ src: poster, format: 'webp', width: 1280 }) : undefined;
+const sizes = size === 'half' ? '(min-width: 1200px) 560px, (min-width: 760px) 46vw, 100vw'
+  : size === 'text' ? '(min-width: 760px) 640px, 100vw'
+  : '(min-width: 1200px) 1140px, 100vw';
+const noteList = notes?.split('|').map((s) => s.trim()).filter(Boolean) ?? [];
+const label = frame === 'before' ? 'Before' : frame === 'after' ? 'After' : '';
+---
+<figure class:list={['cs-figure', `cs-figure--${size}`, frame && `cs-frame--${frame}`]}>
+  {label && <p class="cs-frame__label">{label}</p>}
+  {frame === 'compare' && <p class="cs-frame__labels" aria-hidden="true"><span>Before</span><span>After</span></p>}
+  <div class="cs-media">
+    {isVideo ? (
+      <video class="cs-video" muted loop playsinline preload="none" poster={posterImg?.src} width={poster?.width} height={poster?.height} aria-label={alt}>
+        <source src={src} type="video/mp4" />
+      </video>
+    ) : (
+      <Image src={img!} alt={alt} widths={[640, 960, 1280, 1680]} sizes={sizes} loading="lazy" decoding="async" />
+    )}
+  </div>
+  {noteList.length > 0 && <ol class="cs-notes" aria-label="What changed">{noteList.map((n) => <li>{n}</li>)}</ol>}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

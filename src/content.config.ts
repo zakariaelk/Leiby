@@ -14,6 +14,7 @@ const projects = defineCollection({
       sector: z.string().optional(),
       role: z.string().optional(),
       duration: z.string().optional(),
+      team: z.string().optional(),
       year: z.string(),
       link: z.string().optional(),
       cover: image(),
@@ -21,6 +22,8 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       // Skim layer: one sentence each, shown on cards and at the top of the case study
       tier: z.enum(['case', 'earlier']).default('case'),
+      // Page template for /work/<slug>/: the WordPress-port layout or the story layout
+      layout: z.enum(['classic', 'story']).default('classic'),
       problem: z.string().optional(),
       did: z.string().optional(),
       result: z.string().optional(),

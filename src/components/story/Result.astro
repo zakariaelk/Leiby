@@ -1,0 +1,10 @@
+---
+// A measured outcome: optional large number with its label (sample size included), then the text
+interface Props { value?: string; label?: string }
+const { value, label } = Astro.props;
+---
+<aside class="cs-callout cs-result" aria-label="Result">
+  <p class="cs-callout__label" aria-hidden="true">Result</p>
+  {value && <p class="cs-result__figure"><span class="cs-stat__value">{value}</span> <span class="cs-stat__label">{label}</span></p>}
+  <slot />
+</aside>

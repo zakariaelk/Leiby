@@ -1,0 +1,16 @@
+---
+// Case studies on the story template (layout: story in the CMS). Same /work/<slug>/ URLs as the
+// classic ones in [slug].astro, which skips these.
+import CaseStory from '../../components/story/CaseStory.astro';
+import { getProjects } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects
+    .map((project, i) => ({ params: { story: project.id }, props: { project, next: projects[(i + 1) % projects.length] } }))
+    .filter(({ props }) => props.project.data.layout === 'story');
+}
+
+const { project, next } = Astro.props;
+---
+<CaseStory project={project} next={next} />

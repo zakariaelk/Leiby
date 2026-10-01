@@ -1,5 +1,5 @@
 import { config, collection, singleton, fields } from '@keystatic/core';
-import { block, wrapper } from '@keystatic/core/content-components';
+import { block, wrapper, inline } from '@keystatic/core/content-components';
 
 const video = block({
   label: 'Video',
@@ -14,13 +14,57 @@ const carousel = wrapper({
   schema: { caption: fields.text({ label: 'Caption' }) },
 });
 
+// Case study blocks (story template). Each one tells the reader something specific:
+// see docs/case-study-design-brief-for-claude-code.md
+const imagePath = (label: string) =>
+  fields.text({ label, description: 'Image: path in src/assets (projects/<slug>/file.jpg). Video: /media/projects/<slug>/file.mp4' });
+const storyBlocks = {
+  glance: wrapper({ label: 'At a glance panel', schema: {} }),
+  stats: wrapper({
+    label: 'Key numbers',
+    schema: {
+      variant: fields.select({ label: 'Layout', options: [{ label: 'Panel (stacked)', value: 'panel' }, { label: 'Strip (in a row)', value: 'strip' }], defaultValue: 'panel' }),
+      label: fields.text({ label: 'Accessible name', defaultValue: 'Key numbers' }),
+    },
+  }),
+  stat: block({ label: 'Key number', schema: { value: fields.text({ label: 'Number' }), label: fields.text({ label: 'Label (include the sample size)' }) } }),
+  scope: wrapper({ label: 'Role and scope list', schema: {} }),
+  need: wrapper({ label: 'Need (the user’s pain point)', schema: {} }),
+  friction: wrapper({ label: 'Friction (max 3 sentences)', schema: {} }),
+  move: wrapper({ label: 'What I did', schema: { label: fields.text({ label: 'Label', defaultValue: 'What I did' }) } }),
+  result: wrapper({
+    label: 'Result (max 3 sentences)',
+    schema: { value: fields.text({ label: 'Large number (optional)' }), label: fields.text({ label: 'Number label, with sample size' }) },
+  }),
+  figure: block({
+    label: 'Figure',
+    schema: {
+      src: imagePath('Image or video'),
+      alt: fields.text({ label: 'Alt text (what changed, not “screenshot”)', multiline: true }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+      frame: fields.select({
+        label: 'Frame',
+        options: [{ label: 'None', value: '' }, { label: 'Before (grey)', value: 'before' }, { label: 'After (blue)', value: 'after' }, { label: 'Before and after in one visual', value: 'compare' }],
+        defaultValue: '',
+      }),
+      size: fields.select({ label: 'Width', options: [{ label: 'Wide', value: 'wide' }, { label: 'Text column', value: 'text' }, { label: 'Half (inside a pair)', value: 'half' }], defaultValue: 'wide' }),
+      notes: fields.text({ label: 'Annotations (separate with |)', multiline: true }),
+    },
+  }),
+  pair: wrapper({ label: 'Before / after pair', schema: { caption: fields.text({ label: 'Caption' }) } }),
+  quote: wrapper({ label: 'Tester quote', schema: { by: fields.text({ label: 'Role and country only' }) } }),
+  reflection: wrapper({ label: 'Reflection (two lists)', schema: {} }),
+  confirm: inline({ label: 'Confirm flag', schema: { note: fields.text({ label: 'What to confirm' }), label: fields.text({ label: 'Label', defaultValue: 'Confirm' }) } }),
+  missing: block({ label: 'Missing image flag', schema: { file: fields.text({ label: 'What is needed' }), label: fields.text({ label: 'Label', defaultValue: 'Missing image' }) } }),
+};
+
 const body = (dir: string) =>
   fields.markdoc({
     label: 'Content',
     options: {
       image: { directory: `src/assets/${dir}`, publicPath: `../../assets/${dir}/` },
     },
-    components: { video, carousel },
+    components: { video, carousel, ...storyBlocks },
   });
 
 const timeline = (label: string) =>
@@ -60,11 +104,20 @@ export default config({
         sector: fields.text({ label: 'Sector' }),
         role: fields.text({ label: 'Role' }),
         duration: fields.text({ label: 'Duration' }),
+        team: fields.text({ label: 'Team', multiline: true }),
         year: fields.text({ label: 'Year' }),
         link: fields.url({ label: 'Live link' }),
         cover: fields.image({ label: 'Cover image', directory: 'src/assets/projects', publicPath: '../../assets/projects/' }),
         order: fields.integer({ label: 'Order', defaultValue: 99 }),
         featured: fields.checkbox({ label: 'Featured (large card at the top)', defaultValue: false }),
+        layout: fields.select({
+          label: 'Page template',
+          options: [
+            { label: 'Classic (side menu)', value: 'classic' },
+            { label: 'Story (rail, at a glance, callouts)', value: 'story' },
+          ],
+          defaultValue: 'classic',
+        }),
         tier: fields.select({
           label: 'Type',
           options: [
@@ -93,7 +146,7 @@ export default config({
               { label: 'Items', itemLabel: (p) => p.fields.label.value },
             ),
           }),
-          { label: 'Side menu', itemLabel: (p) => p.fields.group.value || 'Sections' },
+          { label: 'Side menu / section rail (short labels)', itemLabel: (p) => p.fields.group.value || 'Sections' },
         ),
         content: body('projects'),
       },

@@ -1,0 +1,61 @@
+---
+// Shell for story case studies: slim header with the name in roman and Arabic calligraphy,
+// contact footer. Loads only the story stylesheet (not the WordPress-port theme).
+import '@fontsource-variable/outfit';
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '../styles/story.css';
+import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
+import newsreaderLatin from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import ArabicName from '../components/story/ArabicName.astro';
+import settings from '../content/pages/settings.json';
+
+interface Props { title: string; description?: string }
+const { title, description = '' } = Astro.props;
+const fullTitle = `${title} | ${settings.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={settings.name} />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Kept out of search while the page still shows [CONFIRM] flags (docs/case-study-todo.md) -->
+    <meta name="robots" content="noindex" />
+    <!-- The two fonts the first screen needs (title and body), fetched before the CSS asks for them -->
+    <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={newsreaderLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="/img/favicon/zakaria-logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/favicon/zakaria-logo-144.png" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-head" id="top">
+      <a href="/" class="site-head__name">
+        <span>{settings.name}</span>
+        <ArabicName />
+      </a>
+      <a href={`mailto:${settings.email}`} class="site-head__email">{settings.email}</a>
+    </header>
+
+    <slot />
+
+    <footer class="site-foot" aria-labelledby="get-in-touch">
+      <div class="site-foot__inner">
+        <h2 id="get-in-touch" class="site-foot__title">Get in touch</h2>
+        <p class="site-foot__text">Do you have a project in mind? Let’s collaborate!</p>
+        <p class="site-foot__links">
+          <a href={`mailto:${settings.email}`} class="site-foot__email">{settings.email}</a>
+          <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

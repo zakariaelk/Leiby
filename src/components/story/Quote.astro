@@ -1,0 +1,6 @@
+---
+// A tester's words, anonymised: role and country only
+interface Props { by: string }
+const { by } = Astro.props;
+---
+<figure class="cs-quote"><blockquote><slot /></blockquote><figcaption>{by}</figcaption></figure>

@@ -1,0 +1,6 @@
+---
+// Visible flag for anything the author still has to confirm. Remove the tag once resolved.
+interface Props { note: string; label?: string }
+const { note, label = 'Confirm' } = Astro.props;
+---
+<mark class="cs-confirm"><strong>{label}:</strong> {note}</mark>

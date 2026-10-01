@@ -1,0 +1,6 @@
+---
+// Key numbers: in the At a glance panel (stacked) or as the closing strip (in a row)
+interface Props { variant?: 'panel' | 'strip'; label?: string }
+const { variant = 'panel', label = 'Key numbers' } = Astro.props;
+---
+<ul class:list={['cs-stats', `cs-stats--${variant}`]} aria-label={label}><slot /></ul>

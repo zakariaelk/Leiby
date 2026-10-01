@@ -1,0 +1,6 @@
+---
+// "What I did": part of the body, with a small run-in label
+interface Props { label?: string }
+const { label = 'What I did' } = Astro.props;
+---
+<div class="cs-move"><p class="cs-move__label">{label}</p><slot /></div>
