@@ -54,7 +54,8 @@
    very light gray bands, yellow only as an accent (never a background).
    ---------------------------------------------------------- */
 [data-theme='mono'],
-[data-theme='bridge'] {
+[data-theme='bridge'],
+[data-theme='simple'] {
   --sun: #f4f4f2;            /* bands: hero, footer, page heads */
   --paper: #ffffff;          /* body */
   --ink: #141414;
@@ -69,9 +70,16 @@
   --rotterdam: #141414;
 }
 [data-theme='mono'] .case-hero,
-[data-theme='bridge'] .case-hero { background: var(--sun) !important; }
+[data-theme='bridge'] .case-hero,
+[data-theme='simple'] .case-hero { background: var(--sun) !important; }
 [data-theme='mono'] .glow,
-[data-theme='bridge'] .glow { display: none; }
+[data-theme='bridge'] .glow,
+[data-theme='simple'] .glow { display: none; }
+/* Simple: no decoration at all, white everywhere, hairlines instead of bands */
+[data-theme='simple'] { --sun: #ffffff; --header-bg: rgba(255, 255, 255, 0.97); }
+[data-theme='simple'] .wave { display: none; }
+[data-theme='simple'].js [data-reveal] { opacity: 1; transform: none; transition: none; }
+[data-theme='simple'] .btn:hover { transform: none; box-shadow: none; text-decoration: underline; }
 [data-theme='mono'] ::selection,
 [data-theme='bridge'] ::selection { background: #ffc442; color: #141414; }
 

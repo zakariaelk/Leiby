@@ -19,6 +19,12 @@ const projects = defineCollection({
       cover: image(),
       order: z.number().default(99),
       featured: z.boolean().default(false),
+      // Skim layer: one sentence each, shown on cards and at the top of the case study
+      tier: z.enum(['case', 'earlier']).default('case'),
+      problem: z.string().optional(),
+      did: z.string().optional(),
+      result: z.string().optional(),
+      hard: z.string().optional(),
     }),
 });
 

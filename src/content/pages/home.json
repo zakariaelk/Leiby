@@ -1,5 +1,10 @@
 {
   "heroText": "I'm a *product designer* and builder with 13+ years of experience in designing web and mobile interfaces. Most recently at **INSO**, I designed and shipped safety tools for NGO workers in conflict zones.",
-  "cities": ["Casablanca", "Beijing", "Rotterdam"],
+  "shortIntro": "13+ years designing web and mobile interfaces. Most recently at INSO, I designed and shipped safety tools for NGO workers in conflict zones.",
+  "cities": [
+    "Casablanca",
+    "Beijing",
+    "Rotterdam"
+  ],
   "workTitle": "Selected work"
 }

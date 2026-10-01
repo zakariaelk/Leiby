@@ -9,8 +9,8 @@ const { theme } = themeFor(Astro.url.pathname);
 
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer" id="contact">
-  <Wave color="var(--sun)" />
+<footer class:list={['site-footer', theme === 'simple' && 'site-footer--simple']} id="contact">
+  {theme !== 'simple' && <Wave color="var(--sun)" />}
   <div class="bg-sun">
     <div class="container contact">
       <div class="contact__text-col">
@@ -19,14 +19,14 @@ const year = new Date().getFullYear();
         <p class="lead contact__text" data-reveal>{settings.contactText}</p>
 
         <div class="contact__actions" data-reveal>
-          <GetInTouch />
+          {theme === 'simple' ? <a class="contact__email" href={`mailto:${settings.email}`}>{settings.email}</a> : <GetInTouch />}
           <a href={settings.linkedin} class="social-btn" target="_blank" rel="noopener" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.05c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5c0-1.2-.02-2.73-1.66-2.73-1.67 0-1.92 1.3-1.92 2.64V21h-4V9.75Z"/></svg>
           </a>
         </div>
         <p class="contact__status"><span class="dot" aria-hidden="true"></span>{settings.availability}</p>
       </div>
-      {theme !== 'bridge' && <div class="contact__art"><BridgeBuild /></div>}
+      {theme !== 'bridge' && theme !== 'simple' && <div class="contact__art"><BridgeBuild /></div>}
     </div>
   </div>
   <div class="site-footer__bar">
@@ -60,6 +60,13 @@ const year = new Date().getFullYear();
   .contact__art { width: 100%; max-width: 380px; justify-self: end; }
   @media (max-width: 899px) { .contact__art { max-width: 280px; } }
 
+  .site-footer--simple .contact { padding-block: clamp(2.5rem, 5vw, 4rem); border-top: 1px solid var(--ink); }
+  .site-footer--simple .contact__title { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem); max-width: 24ch; }
+  .site-footer--simple .contact__text { display: none; }
+  .contact__email {
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.6rem); font-weight: var(--fw-bold); letter-spacing: -0.02em;
+    text-decoration-thickness: 2px; text-underline-offset: 5px; text-decoration-color: var(--coral); word-break: break-word;
+  }
   .site-footer__bar { font-size: var(--fs-small); color: rgba(255, 255, 255, 0.75); background: var(--ink); }
   .site-footer__bar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; padding-block: 1.1rem; }
 </style>

@@ -21,9 +21,10 @@ The same content in three looks, side by side:
 | `/` | Yellow, hand-drawn portrait |
 | `/mono/` | Black & white, cartoon face with changing expressions |
 | `/bridge/` | Black & white, line bridge + a tiny walker crossing the cities on scroll |
+| `/simple/` | Content first, built to be skimmed: problem → what I did → result, plus “what was hard” on each case study |
 
 The versions are set by URL prefix (`src/lib/variant.ts`), colours by `[data-theme]` in `src/styles/global.css`.
-`/mono` and `/bridge` are hidden from search engines.
+`/mono`, `/bridge` and `/simple` are hidden from search engines.
 
 ## Where things live
 

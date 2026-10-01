@@ -8,7 +8,7 @@ import { themeFor } from '../lib/variant';
 
 interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; prev: CollectionEntry<'projects'> }
 const { project, next, prev } = Astro.props;
-const { base } = themeFor(Astro.url.pathname);
+const { base, theme } = themeFor(Astro.url.pathname);
 const { Content, headings } = await render(project);
 const d = project.data;
 const toc = headings.filter((h) => h.depth === 2);
@@ -17,6 +17,14 @@ const meta = [
   { label: 'Role', value: d.role },
   { label: 'Duration', value: d.duration },
 ].filter((m) => m.value);
+// The skim layer, shown first in the simple version
+const inShort = [
+  { label: 'Problem', value: d.problem },
+  { label: 'What I did', value: d.did },
+  { label: 'Result', value: d.result },
+  { label: 'What was hard', value: d.hard },
+].filter((r) => r.value);
+const showShort = theme === 'simple' && inShort.length > 0;
 ---
 <Base title={d.title} description={d.intro}>
   <section class="case-hero bg-sun">
@@ -41,6 +49,15 @@ const meta = [
     </div>
   </section>
 
+  {showShort && (
+    <section class="container in-short" aria-labelledby="in-short-title">
+      <h2 id="in-short-title" class="in-short__label">In short</h2>
+      <dl>
+        {inShort.map((r) => <div><dt>{r.label}</dt><dd>{r.value}</dd></div>)}
+      </dl>
+    </section>
+  )}
+
   <div class="case-cover">
     <div class="case-cover__bg" aria-hidden="true"><div class="bg-sun"></div><Wave /></div>
         <div class="container">
@@ -61,6 +78,7 @@ const meta = [
         </nav>
       )}
       <article class="prose">
+        {showShort && <p class="full-story">The full story</p>}
         <Content />
       </article>
     </div>
@@ -97,6 +115,15 @@ const meta = [
 </script>
 
 <style>
+  .in-short { padding-block: 0 clamp(2rem, 4vw, 3rem); }
+  .in-short__label { font-size: var(--fs-small); font-weight: var(--fw-bold); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); padding-bottom: 0.9rem; border-bottom: 1px solid var(--ink); }
+  .in-short dl { display: grid; max-width: 60rem; }
+  .in-short dl div { display: grid; gap: 0.2rem 2rem; padding-block: 1rem; border-bottom: 1px solid var(--line); }
+  @media (min-width: 700px) { .in-short dl div { grid-template-columns: 10rem 1fr; } }
+  .in-short dt { font-weight: var(--fw-bold); }
+  .in-short dd { margin: 0; font-size: var(--fs-lead); line-height: 1.45; }
+  .full-story { font-size: var(--fs-small); font-weight: var(--fw-bold); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); padding-bottom: 0.9rem; border-bottom: 1px solid var(--ink); margin-bottom: 2rem; }
+
   .case-hero { position: relative; padding-top: calc(var(--header-h) + clamp(1.5rem, 4vw, 3.5rem)); padding-bottom: clamp(2rem, 4vw, 3rem); background: radial-gradient(55% 90% at 95% 0%, rgba(255, 90, 54, 0.28), rgba(255, 90, 54, 0) 70%), var(--sun); }
   .case-hero__grid { display: grid; gap: 2rem 4rem; align-items: end; }
   @media (min-width: 1024px) { .case-hero__grid { grid-template-columns: 1.6fr 1fr; } }

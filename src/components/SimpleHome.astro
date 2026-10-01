@@ -1,0 +1,136 @@
+---
+// The "simple" version of the home page, built to be skimmed in under a minute:
+// who I am, three case studies that lead with the problem, earlier work as a list, experience.
+// No illustrations, no animation, nothing hidden: the email is plain text.
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import settings from '../content/pages/settings.json';
+import home from '../content/pages/home.json';
+import { getProjects } from '../lib/data';
+
+const base = '/simple';
+const projects = await getProjects();
+const cases = projects.filter((p) => p.data.tier === 'case');
+const earlier = projects.filter((p) => p.data.tier === 'earlier');
+const about = await getEntry('about', 'index');
+const experience = about?.data.experience ?? [];
+const intro = home.shortIntro;
+const [, ...past] = home.cities.slice().reverse();
+const now = home.cities[home.cities.length - 1];
+---
+<Base title="Product designer & builder">
+  <section class="s-hero container">
+    <h1 class="s-hero__title">Product designer and builder.</h1>
+    <p class="s-hero__intro">{intro}</p>
+    <p class="s-hero__where">Based in {now}. Before that, {past.join(' and ')}.</p>
+    <p class="s-hero__links">
+      <a href="#work" class="arrow-link">Case studies <span class="arrow arrow--down" aria-hidden="true">→</span></a>
+      <a href={`mailto:${settings.email}`} class="arrow-link">{settings.email}</a>
+    </p>
+  </section>
+
+  <section id="work" class="s-section container" aria-labelledby="cases-title">
+    <h2 id="cases-title" class="s-label">Case studies</h2>
+    <ol role="list" class="s-cases">
+      {cases.map((p) => (
+        <li>
+          <a href={`${base}/projects/${p.id}/`} class="s-case">
+            <div class="s-case__img">
+              <Image src={p.data.cover} alt="" widths={[400, 640, 900]} sizes="(min-width: 900px) 360px, 100vw" />
+            </div>
+            <div class="s-case__body">
+              <p class="s-case__meta">{p.data.client} · {p.data.role} · {p.data.year}</p>
+              <h3 class="s-case__title">{p.data.title}</h3>
+              <dl class="s-case__facts">
+                {p.data.problem && <div><dt>Problem</dt><dd>{p.data.problem}</dd></div>}
+                {p.data.did && <div><dt>What I did</dt><dd>{p.data.did}</dd></div>}
+                {p.data.result && <div><dt>Result</dt><dd>{p.data.result}</dd></div>}
+              </dl>
+              <span class="s-case__more">Read the case study <span class="arrow" aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="s-section container" aria-labelledby="earlier-title">
+    <h2 id="earlier-title" class="s-label">Earlier work, 2017–2020</h2>
+    <ul role="list" class="s-rows">
+      {earlier.map((p) => (
+        <li>
+          <a href={`${base}/projects/${p.id}/`} class="s-row">
+            <span class="s-row__name">{p.data.client}</span>
+            <span class="s-row__desc">{p.data.summary}</span>
+            <span class="s-row__year">{p.data.year}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="s-section container" aria-labelledby="exp-title">
+    <h2 id="exp-title" class="s-label">Experience</h2>
+    <ul role="list" class="s-rows">
+      {experience.map((e) => (
+        <li class="s-row">
+          <span class="s-row__name">{e.name}</span>
+          <span class="s-row__desc">{e.role}</span>
+          <span class="s-row__year">{e.years}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="s-more"><a href={`${base}/about/`} class="arrow-link">More about me <span class="arrow" aria-hidden="true">→</span></a></p>
+  </section>
+</Base>
+
+<style>
+  .s-hero { padding-top: calc(var(--header-h) + clamp(2.5rem, 7vw, 6rem)); padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .s-hero > * { max-width: 52rem; }
+  .s-hero__title { font-size: clamp(2.1rem, 1.4rem + 2.6vw, 3.4rem); letter-spacing: -0.04em; }
+  .s-hero__intro { margin-top: 1.25rem; font-size: var(--fs-lead); line-height: 1.5; max-width: 40ch; }
+  .s-hero__where { margin-top: 0.75rem; color: var(--ink-soft); }
+  .s-hero__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin-top: 1.75rem; font-weight: var(--fw-medium); }
+  .s-hero__links a { background-size: 100% 1px; }
+  .s-hero__links a:hover { background-size: 100% 2px; }
+
+  .s-section { padding-block: clamp(2rem, 4vw, 3.5rem); }
+  .s-label {
+    font-size: var(--fs-small); font-weight: var(--fw-bold); letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); padding-bottom: 0.9rem; border-bottom: 1px solid var(--ink);
+  }
+
+  /* Case studies: image on the side, facts first */
+  .s-cases { display: grid; }
+  .s-case {
+    display: grid; gap: 1.25rem; padding-block: clamp(1.5rem, 3vw, 2.25rem);
+    border-bottom: 1px solid var(--line); text-decoration: none;
+  }
+  @media (min-width: 900px) { .s-case { grid-template-columns: 360px 1fr; gap: clamp(2rem, 4vw, 3.5rem); align-items: start; } }
+  .s-case__img { overflow: hidden; border-radius: 10px; background: var(--sun); aspect-ratio: 16 / 10; }
+  /* Phones: title and facts first, the picture after */
+  @media (max-width: 899px) { .s-case__img { order: 2; aspect-ratio: 16 / 9; } }
+  .s-case__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .s-case__meta { font-size: var(--fs-small); color: var(--ink-soft); }
+  .s-case__title { font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.9rem); letter-spacing: -0.025em; margin-top: 0.35rem; }
+  .s-case:hover .s-case__title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--coral); }
+  .s-case__facts { display: grid; gap: 0.6rem; margin-top: 1rem; max-width: 62ch; }
+  .s-case__facts div { display: grid; gap: 0.1rem 1.25rem; }
+  @media (min-width: 600px) { .s-case__facts div { grid-template-columns: 6.5rem 1fr; } }
+  .s-case__facts dt { font-size: var(--fs-small); font-weight: var(--fw-bold); padding-top: 0.15em; }
+  .s-case__facts dd { margin: 0; color: var(--ink-soft); }
+  .s-case__more { display: inline-flex; gap: 0.4em; margin-top: 1.1rem; font-weight: var(--fw-medium); }
+
+  /* Plain rows for earlier work and experience */
+  .s-row {
+    display: grid; gap: 0.15rem 1.5rem; padding-block: 0.9rem; border-bottom: 1px solid var(--line);
+    grid-template-columns: 1fr auto; grid-template-areas: 'name year' 'desc desc'; text-decoration: none;
+  }
+  @media (min-width: 800px) { .s-row { grid-template-columns: 12rem 1fr auto; grid-template-areas: 'name desc year'; align-items: baseline; } }
+  a.s-row:hover .s-row__name { text-decoration: underline; text-underline-offset: 3px; }
+  .s-row__name { grid-area: name; font-weight: var(--fw-bold); }
+  .s-row__desc { grid-area: desc; color: var(--ink-soft); }
+  .s-row__year { grid-area: year; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .s-more { margin-top: 1.5rem; }
+</style>

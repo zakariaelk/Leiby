@@ -3,11 +3,13 @@ import Logo from './Logo.astro';
 import GetInTouch from './GetInTouch.astro';
 import { themeFor } from '../lib/variant';
 
-const { base } = themeFor(Astro.url.pathname);
+const { base, theme } = themeFor(Astro.url.pathname);
+const simple = theme === 'simple';
 
 const nav = [
   { href: `${base}/#work`, label: 'Work' },
   { href: `${base}/about/`, label: 'About' },
+  ...(simple ? [{ href: '#contact', label: 'Contact' }] : []),
 ];
 const path = Astro.url.pathname;
 const isActive = (href: string) => href.startsWith('/') && !href.includes('#') && path.startsWith(href);
@@ -24,7 +26,7 @@ const isActive = (href: string) => href.startsWith('/') && !href.includes('#') &
           <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
         ))}
       </ul>
-      <GetInTouch class="site-nav__cta" />
+      {!simple && <GetInTouch class="site-nav__cta" />}
     </nav>
 
     <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">
@@ -40,7 +42,7 @@ const isActive = (href: string) => href.startsWith('/') && !href.includes('#') &
           <li style={`--i:${i}`}><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label} <span class="arrow" aria-hidden="true">→</span></a></li>
         ))}
       </ul>
-      <GetInTouch variant="light" class="mobile-menu__cta" />
+      {!simple && <GetInTouch variant="light" class="mobile-menu__cta" />}
       <svg class="mobile-menu__shape" viewBox="0 0 200 200" aria-hidden="true">
         <circle cx="146" cy="66" r="54" fill="var(--coral)" />
         <circle cx="140" cy="60" r="54" fill="var(--sun)" />

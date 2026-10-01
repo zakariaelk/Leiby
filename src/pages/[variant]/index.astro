@@ -1,9 +1,11 @@
 ---
 import HomePage from '../../components/HomePage.astro';
+import SimpleHome from '../../components/SimpleHome.astro';
 import { variants } from '../../lib/variant';
 
 export function getStaticPaths() {
   return variants.map((variant) => ({ params: { variant } }));
 }
+const { variant } = Astro.params;
 ---
-<HomePage />
+{variant === 'simple' ? <SimpleHome /> : <HomePage />}
