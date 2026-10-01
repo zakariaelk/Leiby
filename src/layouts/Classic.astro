@@ -1,0 +1,125 @@
+---
+// The zakariaelk.com layout, ported from the WordPress theme (header.php + footer.php).
+// Same markup and class names, so the original SCSS applies unchanged.
+// jQuery, Bootstrap, anime.js, TweenMax and three.js are gone: the few behaviours still in
+// use live in one small script at the bottom.
+import '@fontsource-variable/outfit';
+import '../styles/classic/classic.scss';
+import Loader from '../components/classic/Loader.astro';
+import settings from '../content/pages/settings.json';
+
+interface Props { title?: string; description?: string; bodyId: 'home' | 'work'; loader?: boolean }
+const {
+  title,
+  description = 'Product designer with a frontend development background, working across agencies and humanitarian contexts',
+  bodyId,
+  loader = false,
+} = Astro.props;
+const fullTitle = title ? `${title} | ${settings.name}` : `${settings.name} | Product designer`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="Product Designer, UX Designer, UI Designer, Frontend Developer, Netherlands" />
+    <meta name="author" content={settings.name} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/img/favicon/zakaria-logo-57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/favicon/zakaria-logo-72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/favicon/zakaria-logo-144.png" />
+    <link rel="icon" href="/img/favicon/zakaria-logo.png" />
+    <style is:global>
+      /* Bootstrap used to provide these basics; the theme relied on them */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      img, video { max-width: 100%; }
+      html.no-scroll, html.ze-loading { overflow: hidden; }
+    </style>
+  </head>
+  <body id={bodyId}>
+    {loader && <Loader />}
+
+    <div class="site-wrapper">
+      {bodyId !== 'home' && (
+        <header class="boxed-flex ze-header ze-header--slim">
+          <a href="/" class="ze-slim-name">{settings.name}<span class="ze-slim-role">Product designer</span></a>
+          <a href={`mailto:${settings.email}`} class="ze-slim-email">{settings.email}</a>
+        </header>
+      )}
+
+      <main class="page-content">
+        <slot />
+
+        <section id="about">
+          <div class="about-container boxed">
+            <div class="ze-section-label ze-contact-label">Get in touch</div>
+            <div class="footer-outro">
+              <p>Do you have a project in mind? <strong>Let’s collaborate!</strong></p>
+            </div>
+            <div class="contact-info">
+              <a href={`mailto:${settings.email}`} class="email">{settings.email}</a>
+              <div class="social">
+                <a href={settings.linkedin} class="linkedin" target="_blank" rel="noopener"><img src="/img/svg/linkedin.svg" alt="Zakaria El Khachia on LinkedIn" width="32" height="32" /></a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer></footer>
+    </div>
+
+    <script>
+      // Header + scroll indicator state (was updateOnScroll in app.js)
+      const header = document.querySelector('header');
+      const indic = document.querySelector('.scroll-indic');
+      const onScroll = () => {
+        const scrolled = window.scrollY > 0;
+        header?.classList.toggle('scrolled', scrolled);
+        indic?.classList.toggle('scrolled', scrolled);
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Reveal on scroll: the contact band and case-study visuals fade in (adds .on, like app.js did)
+      const reveal = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('on'); reveal.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -100px 0px' });
+      document.querySelectorAll('#about, .visual-content img, .visual-content .wp-video, .md-body img, .md-body video').forEach((el) => reveal.observe(el));
+
+      // Image lightbox for case-study visuals
+      const imgs = document.querySelectorAll<HTMLImageElement>('.md-body img');
+      if (imgs.length) {
+        const modal = document.createElement('div');
+        modal.className = 'img-modal';
+        modal.innerHTML = '<div class="img-modal__backdrop"></div><button class="img-modal__close" aria-label="Close image">&times;</button><figure class="img-modal__figure"><img class="img-modal__img" alt=""></figure>';
+        document.body.appendChild(modal);
+        const modalImg = modal.querySelector<HTMLImageElement>('.img-modal__img')!;
+        const largest = (img: HTMLImageElement) => {
+          if (!img.srcset) return img.currentSrc || img.src;
+          return img.srcset.split(',').map((s) => s.trim().split(' ')).sort((a, b) => parseInt(b[1]) - parseInt(a[1]))[0][0];
+        };
+        const close = () => { modal.classList.remove('is-open'); document.documentElement.classList.remove('no-scroll'); modalImg.src = ''; };
+        imgs.forEach((img) => {
+          if (img.closest('.carousel-chapter')) return;
+          img.style.cursor = 'zoom-in';
+          img.addEventListener('click', () => {
+            modalImg.src = largest(img);
+            modalImg.alt = img.alt;
+            modal.classList.add('is-open');
+            document.documentElement.classList.add('no-scroll');
+          });
+        });
+        modal.querySelector('.img-modal__close')?.addEventListener('click', close);
+        modal.addEventListener('click', (e) => { const t = e.target as HTMLElement; if (t === modal || t.classList.contains('img-modal__backdrop')) close(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
+      }
+    </script>
+  </body>
+</html>

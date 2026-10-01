@@ -1,0 +1,83 @@
+/*     
+    Name: _variables.scss    
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+/* Colors */
+
+$deep_black: #000000;
+$black: #101010;
+$ligh-gray: #d9d9d9;
+$white: #ffffff;
+$bg-gray: #f9f9f9;
+$gray: #666666;
+$orange: #eb5e28;
+$hero-bg-gray: #f7f7f7; // flat full-bleed case-study hero band background
+
+/* Fonts */
+
+// Sans (UI / body) — Outfit, loaded via Google Fonts in header.php
+$FontZh: "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+$FontMedium: "Outfit Variable", "Outfit", "Trebuchet MS", Arial, sans-serif;
+$FontRegular: "Outfit Variable", "Outfit", "Trebuchet MS", Arial, sans-serif;
+$FontLight: "Outfit Variable", "Outfit", "Trebuchet MS", Arial, sans-serif;
+
+// Weight companions — Outfit is one family loaded at multiple weights,
+// so font-weight must be set alongside these (unlike the old cera*/*.ttf per-weight files).
+// Medium (500) is the heaviest weight used anywhere — there is deliberately no bold.
+$WeightMedium: 500;
+$WeightRegular: 400;
+$WeightLight: 300;
+
+// Serif (display / identity moments) — Fraunces, loaded via Google Fonts in header.php
+$FontSerif: "Fraunces", "Georgia", serif;
+
+// Arabic calligraphy mark (name lockup only) — Amiri, loaded via Google Fonts in header.php
+$FontArabic: "Amiri", "Traditional Arabic", serif;
+
+/* Semantic accent */
+$marker-peach: #ffdeb9; // hand-drawn marker highlight (home intro)
+
+
+$accent: $black; // was $orange (terracotta) — switched to black per the redesign review.
+                  // $orange is kept above, just unused, in case it's wanted again later.
+
+/* Transforms */
+
+$t-all: all 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+$t-left: left 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+$t-transform: transform 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+$t-width: width 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+$t-fill: fill 0.25s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+/* Breakpoints */
+
+$max-small-phone: "screen and (max-width : 340px)";
+$max-phone: "screen and (max-width : 600px)";
+$max-tablet: "screen and (max-width : 991px)";
+$max-small-laptop: "screen and (max-width : 1140px)";
+$max-laptop: "screen and (max-width : 1280px)";
+$max-desktop: "screen and (max-width : 1480px)";
+
+$min-small-phone: "screen and (min-width : 340px)";
+$min-phone: "screen and (min-width : 600px)";
+$min-tablet: "screen and (min-width : 991px)";
+$min-small-laptop: "screen and (min-width : 1024px)";
+$min-laptop: "screen and (min-width : 1280px)";
+$min-desktop: "screen and (min-width : 1480px)";
+$min-large-screen: "screen and (min-width : 1550px)";
+
+// Type scale — the single source for the .size-1 … .size-7 classes in
+// base/_typo.scss and the type-scale() mixin in abstracts/_mixins.scss.
+// A (min, max) pair is fluid via fluid-font-size(); a single value is fixed.
+// Breakpoints not listed for a step inherit the previous one.
+$type-scale: (
+  1: (base: (36px, 42px), laptop: (32px, 36px), small-laptop: (32px, 36px), tablet: (42px, 48px), phone: (42px, 48px)),
+  2: (base: (32px, 36px), laptop: (28px, 32px), small-laptop: (24px, 32px), tablet: (36px, 42px), phone: (36px, 42px)),
+  3: (base: (24px, 32px), laptop: (24px, 28px), small-laptop: (21px, 24px), tablet: (24px, 36px), phone: 24px),
+  4: (base: (21px, 24px), laptop: (21px, 24px), small-laptop: (18px, 21px), phone: 21px),
+  5: (base: (18px, 21px), laptop: 18px, small-laptop: 18px, phone: 18px),
+  6: (base: (14px, 18px), laptop: 16px, small-laptop: 16px, phone: 14px),
+  7: (base: (12px, 14px), laptop: 14px, small-laptop: 14px, phone: 12px)
+);

@@ -1,0 +1,43 @@
+---
+// Fade carousel for a set of images in a case study (the WordPress theme's Bootstrap carousel,
+// rebuilt without Bootstrap). Images cross-fade every 3 seconds; arrows step through them.
+interface Props { caption?: string }
+const { caption } = Astro.props;
+---
+<figure class="carousel-chapter" data-carousel>
+  {caption && <figcaption class="carousel-desc"><p>{caption}</p></figcaption>}
+  <div class="carousel-stage"><slot /></div>
+  <button type="button" class="carousel-control carousel-control--prev" aria-label="Previous image">‹</button>
+  <button type="button" class="carousel-control carousel-control--next" aria-label="Next image">›</button>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((c) => {
+    const imgs = [...c.querySelectorAll<HTMLImageElement>('.carousel-stage img')];
+    if (imgs.length < 2) return;
+    let i = 0;
+    const show = (n: number) => {
+      i = (n + imgs.length) % imgs.length;
+      imgs.forEach((img, k) => img.classList.toggle('is-active', k === i));
+    };
+    show(0);
+    let timer = window.setInterval(() => show(i + 1), 3000);
+    const restart = () => { window.clearInterval(timer); timer = window.setInterval(() => show(i + 1), 3000); };
+    c.querySelector('.carousel-control--prev')?.addEventListener('click', () => { show(i - 1); restart(); });
+    c.querySelector('.carousel-control--next')?.addEventListener('click', () => { show(i + 1); restart(); });
+  });
+</script>
+
+<style>
+  .carousel-chapter { position: relative; margin: 2em 0; }
+  .carousel-stage { display: grid; }
+  .carousel-stage :global(p) { display: contents; }
+  .carousel-stage :global(img) { grid-area: 1 / 1; width: 100%; height: auto; opacity: 0; transition: opacity 0.8s ease; }
+  .carousel-stage :global(img.is-active), .carousel-stage :global(img:only-child) { opacity: 1; }
+  .carousel-control {
+    position: absolute; top: 50%; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.85); font-size: 1.6rem; line-height: 1; cursor: pointer; border: 0;
+  }
+  .carousel-control--prev { left: 10px; }
+  .carousel-control--next { right: 10px; }
+</style>

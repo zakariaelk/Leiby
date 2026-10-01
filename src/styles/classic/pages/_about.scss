@@ -1,0 +1,179 @@
+/*     
+    Name: _about.scss    
+    Author: Zakaria El Khachia
+    Client: Zakaria Elk
+*/
+
+#about {
+  width: 100%;
+  height: auto;
+  display: table;
+
+  // Redesign: the whole section is a full-bleed dark band, set apart from
+  // the rest of the (white) site — was $bg-gray with a rounded bottom.
+  background: $black;
+  margin-top: 120px;
+  color: $white;
+
+  // Was flat 120px at every width — too much on tablet/mobile, same class
+  // of issue found across the rest of the site during this pass.
+  @media #{$max-tablet} {
+    margin-top: 90px;
+  }
+
+  @media #{$max-phone} {
+    margin-top: 64px;
+  }
+
+  // @media #{$max-tablet} {
+  //   height: 90vh;
+  // }
+
+  // @media #{$max-phone} {
+  //   height: 100vh;
+  // }
+
+  .about-container {
+    max-width: 1480px; // deliberately wider than the site's 1240px .boxed
+    padding: 96px 3rem 88px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px; // drives every gap in this stack (label → outro → email/social) equally
+    margin: 0 auto;
+    text-align: center;
+    background-color: transparent;
+    border-radius: 0;
+
+    // Intermediate step — was a single jump straight from 96px to 48px.
+    @media #{$max-tablet} {
+      padding: 72px 2rem 64px;
+    }
+
+    @media #{$max-phone} {
+      padding: 48px 1.5rem;
+      text-align: center;
+    }
+
+    // .ze-section-label modifier used here (see pages/_home.scss for the base rule)
+    .ze-contact-label {
+      margin: 0;
+      text-align: center;
+      color: $white;
+      opacity: .55;
+    }
+
+    .footer-outro {
+      font-size: 28px;
+      font-weight: $WeightMedium;
+      padding: 0;
+      margin: 0;
+      color: $white;
+
+      // Intermediate step — was a single 11px jump straight to phone size.
+      @media #{$max-tablet} {
+        font-size: 22px;
+      }
+
+      @media #{$max-phone} {
+        font-size: 17px;
+      }
+
+      // Neutralize the WYSIWYG field's own <p> margins so row-gap above is
+      // the only thing controlling this spacing.
+      p {
+        margin: 0;
+        text-align: center;
+      }
+    }
+
+    .eyebrow {
+      text-align: center;
+    }
+
+
+    .intro {
+      @extend .size-4;
+      line-height: 1.5;
+      text-align: center;
+      display: inline-block;
+
+      @media #{$max-phone} {
+        text-align: left;
+        font-size: 21px;
+      }
+
+      .mark {
+        @include font-medium;
+        transition: all 0.5s ease 1s;
+      }
+
+      .guitar {
+        transform-origin: center;
+        animation: waddle 1.2s infinite;
+        display: inline-block;
+        font-size: 1.7rem;
+        padding-left: 0.2rem;
+      }
+
+      br {
+        @media #{$max-tablet} {
+          display: none;
+        }
+      }
+    }
+
+    .contact-info {
+      display: block;
+      margin: auto;
+      text-align: center;
+      // transform: translateY(200px);
+
+      @media #{$max-phone} {
+        // transform: translateY(70px);
+      }
+
+      .email {
+        font-size: 15px;
+        color: $white;
+        text-decoration: underline;
+        transition: all 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
+        display: block;
+
+        &:hover {
+          // $accent is black now — can't use it here, the background is
+          // black too. Keep the skew, drop the (now-invisible) color swap.
+          color: $white;
+          transform: skewX(-10deg);
+        }
+      }
+
+      .social {
+        margin-top: 1rem;
+
+        a {
+          padding: 0 0.5rem;
+
+          &:hover {
+            img {
+              transform: scale(1.05);
+            }
+          }
+
+          img {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+            filter: invert(1); // dark-line icons need to flip white on this dark band
+          }
+        }
+      }
+    }
+  }
+
+  &.on {
+    .about-container .intro .mark {
+      // text-shadow: -0.025rem -0.025rem 0 #000000, 0.025rem -0.025rem 0 #000000, -0.025rem 0.025rem 0 #000000, 0.025rem 0.025rem 0 #000000;
+      @include font-medium;
+    }
+  }
+}

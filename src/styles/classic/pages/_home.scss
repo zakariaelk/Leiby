@@ -1,0 +1,781 @@
+/*     
+    Name: _welcome.scss    
+    Author: Zakaria El Khachia
+    Client: Zakaria Elk
+*/
+
+.mobile-avatar {
+  display: none;
+
+  @media #{$max-tablet} {
+    display: block;
+    opacity: 0;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    float: right;
+    margin: 0rem 2rem 3rem;    
+    transition: $t-all;
+  }
+}
+
+// #home {
+  .ripple-overlay {
+    @include trbl(0, 0, 0, 0);
+    @include size(0%, 0%);
+    position: relative;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    backdrop-filter: saturate(180%) blur(10px);
+  }
+  .side-visual {
+    @include size(28%, 56%);
+    min-width: 300px;
+    min-height: 600px;
+    position: relative !important;
+    opacity: 0;
+    transition: all 1s ease;
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @media #{$max-desktop} {
+      min-width: 350px;
+      min-height: 450px;
+    }
+
+    @media #{$max-laptop} {      
+      width: 450px;
+      height: 450px;
+      min-width: 300px;
+      min-height: 400px;
+    }
+
+    @media #{$max-small-laptop} {      
+      width: 350px;
+      height: 350px;
+      min-width: 250px;
+      min-height: 350px;
+    }
+
+    @media #{$max-tablet} {
+      display: none;
+      width: 250px;
+      height: 350px;
+      min-width: 250px;
+      min-height: 250px;
+      max-width: 250px;
+      max-height: 250px;
+    }
+
+    @media #{$max-phone} {
+      display: none;
+      width: 150px;
+      height: 150px;
+      min-width: 150px;
+      min-height: 150px;
+      max-width: 150px;
+      max-height: 150px;
+    }
+
+    &.on {
+      opacity: 1;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      right: -100px;
+    }
+
+    canvas {
+      height: 100%;
+      display: block;
+    }
+
+    &.scrolled {
+      top: 40%;
+      right: -80px;
+      transform: translateY(-40%);
+    }
+  }
+
+  .home-hero-wrapper {    
+    position: relative;
+    // margin-top: 100px;
+    margin-bottom: 130px;
+
+    @media #{$max-desktop} {
+      margin-bottom: 110px;
+    }    
+
+    @media #{$max-laptop} {
+      margin-bottom: 100px;
+    }        
+
+    @media #{$max-small-laptop} {
+      margin-bottom: 80px;
+    }
+
+    @media #{$max-tablet} {
+      margin-top: 120px;
+      margin-bottom: 00px;
+      row-gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    @media #{$max-phone} {
+      row-gap: 1rem;
+      justify-content: flex-end;
+    }
+  }
+
+  #home-welcome {
+    position: relative;
+
+    // width: 100%;
+    // height: 60vh;
+    // margin-bottom: 200px;
+
+    @media #{$max-laptop} {
+      // margin-bottom: 220px;
+    }
+
+    @media #{$max-phone} {
+      // margin-bottom: 140px;
+    }
+
+    .welcome-content {
+      @include size(100%, 100%);
+      display: flex;
+      align-items: center;
+
+      .welcome-statement {
+        width: 100%;
+        padding: 0 2rem 0 0;
+        z-index: 1;
+        position: relative;
+        // left: 0;
+        // top: 400px;
+        // transform: translate3d(0, -50%, 0);
+
+        @media #{$max-laptop} {
+          // top: 350px;
+        }
+        
+        @media #{$max-small-laptop} {
+          // width: 100%;
+          // top: 10%;
+          // padding: 0 2rem 0 0;
+          // position: relative;
+          // transform: translate3d(0, 0%, 0);
+        }
+
+        @media #{$max-tablet} {
+          // width: 100%;
+          // padding: 0;
+          // position: relative;
+          // top: 0%;
+          // transform: translate3d(0, 0, 0);
+        }
+
+        @media #{$max-phone} {          
+          // width: 100%;          
+          // backdrop-filter: blur(10px);
+          // border-radius: 10px;
+          padding: 0;
+        }
+
+        div {
+          position: relative;
+          // overflow: hidden;
+
+          &.dynamic-welcome {
+            display: none;
+            // height: 60px;
+            @extend .size-3;
+            @include font-medium;
+            letter-spacing: -1px;
+            margin-bottom: 0.3rem;
+            // line-height: 1.2;
+
+            @media #{$max-laptop} {
+              // height: 50px;
+              margin-bottom: 0.1rem;
+            }        
+
+            @media #{$max-tablet} {
+              height: auto;
+              overflow: visible;
+              margin-bottom: 1rem;
+              // // line-height: 0;
+            }
+
+            // @media #{$max-phone} {
+            //   font-size: 28px;
+            //   line-height: 1.2;
+              margin-bottom: 0.5rem;
+            //   letter-spacing: -1px;
+            // }
+
+            span {
+              i {
+                font-style: normal;                
+                // position: absolute;
+
+                &.left-eye {
+                  transform: rotate(-15deg);
+                  transform-origin: 100% 0%;
+                }
+
+                &.right-eye {
+                  transform: rotate(15deg);
+                  transform-origin: 160% 210%;
+                }
+              }
+            }
+          }
+
+          &.static-welcome {          
+            margin-bottom: 1rem;
+            // height: 200px;   
+
+            @media #{$max-laptop} {
+              // height: 220px;
+            }    
+
+            @media #{$max-small-laptop} {
+              // height: 180px;
+            }
+
+            @media #{$max-tablet} {
+              overflow: visible;
+            }
+
+            @media #{$max-phone} {              
+              width: 100%;                               
+            }            
+            
+              p{            
+              @extend .size-4;
+              line-height: 150%;
+              @include font-regular;  
+
+                // @media #{$max-small-laptop} { 
+                //   font-size: 24px;
+                // }              
+              
+                // @media #{$max-tablet} { 
+                //   font-size: 28px;
+                // }
+
+                // @media #{$max-phone} {
+                //   font-size: 21px;
+                // }                
+              }
+
+
+            a{
+              @include font-medium;
+            }
+          }
+
+          span {
+            // position: absolute;
+            opacity: 0;
+            // transform: translate3d(0, 100px, 0);
+            transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+            @media #{$max-tablet} {
+              // position: relative;
+              line-height: 1.1;
+            }
+          }
+        }
+
+        .link-container {
+
+          display: flex;
+          flex-direction: row;
+          column-gap: 1rem;
+          margin-top: 2rem;
+
+          .hero-link {
+            position: relative;
+            @include font-regular;
+            text-decoration: underline;
+            display: block;
+            opacity: 0;
+            // transform: translate3d(0, 0, 0);
+            // transition: all 0.3s ease;
+
+            &:hover {
+              color: $accent;
+              transform: translate3d(0.2rem, 0, 0) skewX(-10deg);
+
+              @media #{$max-tablet} {
+                transform: translate3d(0rem, 0.6rem, 0) skewX(-10deg);
+              }
+            }
+
+            @media #{$max-tablet} {
+              transform: translate3d(0rem, 0.6rem, 0);
+            }
+          }          
+        }
+
+        &.on {
+          span {
+            opacity: 1;
+            // transform: translate3d(0, 0, 0);
+          }
+        }        
+
+      }
+    }
+  }
+// }
+
+.home-work-list {
+  opacity: 0;
+  transition: $t-all;
+}
+
+/**
+ * Redesign home page (index.php): hero row, intro text, and the
+ * work/experience/education row tables.
+ */
+
+.ze-home {
+  padding-bottom: 0;
+
+  @media (max-width: 700px) {
+    padding-bottom: 8px;
+  }
+}
+
+// Hero: name + intro on the left, hand-drawn illustration on the right,
+// height-matched (via JS, see template-parts/hero-eye.php), right-aligned
+// within the boxed container.
+.ze-hero {
+  margin-top: 64px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+
+  // Desktop: illustration sits on the text block's baseline instead of its top.
+  @media #{$min-tablet} {
+    align-items: flex-end;
+  }
+
+  @media (max-width: 700px) {
+    margin-top: 40px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.ze-hero-left {
+  max-width: 740px;
+
+  @media (max-width: 700px) {
+    max-width: 100%;
+  }
+}
+
+.ze-hero-visual {
+  flex-shrink: 0;
+
+  // Desktop only (same cutoff as the 70% illustration size in
+  // template-parts/hero-eye.php): nudged 3rem lower. A transform moves only
+  // the illustration — the text beside it and the layout below don't shift.
+  @media #{$min-tablet} {
+    transform: translateY(3rem);
+  }
+
+  // Stacked above the name (in flow, so it can't overlap the text) and
+  // mirrored so the face looks into the page, toward the name below it.
+  @media (max-width: 700px) {
+    order: -1;
+    transform: scaleX(-1);
+  }
+}
+
+.ze-hero-eye {
+  display: block;
+  width: auto;
+  height: 190px; // fallback; JS syncs this exactly to the intro block's height
+
+  // Fixed size above the name, roughly half its desktop height — not
+  // height-matched to the intro block (that's desktop-only — see
+  // syncHeight() bailing out below 700px in template-parts/hero-eye.php).
+  @media (max-width: 700px) {
+    height: 80px;
+  }
+}
+
+.ze-intro-text {
+  margin-top: 18px;
+
+  @media (max-width: 700px) {
+    margin-top: 12px;
+  }
+
+  // Same step as the case-study paragraphs (.section-chapter on single-work).
+  &,
+  p {
+    @include type-scale(5);
+    font-weight: $WeightLight;
+    line-height: 1.6;
+  }
+
+  b,
+  strong,
+  a {
+    font-weight: $WeightMedium;
+  }
+
+  // Marker highlight behind the phrase (class name kept from the ACF
+  // content). src/img/svg/marker-highlight.svg is the shape, used as a mask
+  // so the colour lives here. It's "drawn" left → right by sliding a second,
+  // gradient mask layer across it (the shape itself is never scaled), then
+  // the words go bold. Triggered by .is-drawn, added in src/js/app.js once
+  // the page loader is out of the way.
+  .crayon-underline {
+    position: relative;
+    display: inline-block; // keeps the phrase on one line + trims the trailing space
+    isolation: isolate;    // lets the highlight sit behind the letters
+    padding: 0 0.3em;      // breathing room between the letters and the edges
+    margin: 0 -0.1em;
+    transition: font-weight 0.35s ease;
+
+    &:after {
+      content: "";
+      position: absolute;
+      inset: 0.08em 0 -0.02em;
+      z-index: -1;
+      background-color: $marker-peach;
+      // Two mask layers, intersected: the reveal gradient × the marker shape.
+      -webkit-mask-image: linear-gradient(90deg, #000 47%, transparent 53%), url("/img/svg/marker-highlight.svg");
+      mask-image: linear-gradient(90deg, #000 47%, transparent 53%), url("/img/svg/marker-highlight.svg");
+      -webkit-mask-size: 220% 100%, 100% 100%;
+      mask-size: 220% 100%, 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: 100% 0, 0 0; // reveal layer fully hidden
+      mask-position: 100% 0, 0 0;
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+    }
+
+    &.is-drawn {
+      font-weight: $WeightMedium;
+      transition-delay: 0.6s; // bolds as the marker finishes
+
+      &:after {
+        animation: markerReveal 0.75s cubic-bezier(.45, .05, .3, 1) forwards;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &,
+      &.is-drawn {
+        transition: none;
+      }
+
+      &.is-drawn:after {
+        animation: none;
+        -webkit-mask-position: 0 0, 0 0;
+        mask-position: 0 0, 0 0;
+      }
+    }
+  }
+}
+
+@keyframes markerReveal {
+  to {
+    -webkit-mask-position: 0 0, 0 0;
+    mask-position: 0 0, 0 0;
+  }
+}
+
+.ze-intro-links {
+  margin-top: 18px;
+  display: flex;
+  gap: 20px;
+  @include type-scale(6); // one step below .ze-intro-text
+
+  a {
+    @include link-line;
+    font-weight: $WeightMedium;
+    color: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: $accent;
+      @include link-line-hover;
+    }
+  }
+}
+
+.ze-section-label {
+  @include type-scale(7);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: $WeightMedium;
+  margin: 60px 0 10px;
+  opacity: .45;
+
+  @media (max-width: 700px) {
+    margin: 44px 0 8px;
+  }
+}
+
+// Row tables (work / experience / education)
+
+.ze-tbl {
+  border-top: 1px solid #eee;
+}
+
+.ze-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+
+  // Bounded to the 701-1000px range on purpose: this used to be a plain
+  // `max-width: 1000px`, which — because `.ze-row .ze-row-desc` (two
+  // classes) outranks the plain `.ze-row-desc { display: block; }` rule
+  // below at 700px — kept the description permanently hidden the whole way
+  // down to mobile, so none of that rule's mobile styling ever actually ran.
+  @media (max-width: 1000px) and (min-width: 701px) {
+    .ze-row-desc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    display: block;
+    padding: 18px 0;
+  }
+}
+
+.ze-row-name {
+  @include type-scale(5);
+  font-weight: $WeightMedium;
+  white-space: nowrap;
+  min-width: 230px;
+  transition: color .25s;
+
+  @media (max-width: 1000px) {
+    min-width: 0;
+  }
+
+  @media (max-width: 700px) {
+    display: block;
+    white-space: normal;
+    min-width: 0;
+  }
+}
+
+a.ze-row:hover .ze-row-name {
+  text-decoration: underline;
+}
+
+.ze-row-desc {
+  @include type-scale(5);
+  font-weight: $WeightLight;
+  color: #4a4a4a;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  p {
+    display: inline;
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    display: block;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    margin: 4px 0 6px;
+  }
+}
+
+.ze-row-meta {
+  @include type-scale(6);
+  font-weight: $WeightLight;
+  white-space: nowrap;
+  color: #757575;
+
+  @media (max-width: 700px) {
+    display: block;
+  }
+}
+
+// Hover preview — absolute overlay, no layout shift
+
+.ze-preview {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  width: 48%;
+  z-index: 60;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity .3s, transform .35s cubic-bezier(.215, .61, .355, 1);
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .18);
+  }
+
+  // Cycle cover 1 → cover 2 → back on hover
+  img.ze-preview-alt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+  }
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
+
+a.ze-row:hover .ze-preview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+a.ze-row:hover .ze-preview-alt {
+  animation: zePreviewSwap 5s ease-in-out 0.2s infinite;
+}
+
+@keyframes zePreviewSwap {
+  0%, 28%   { opacity: 0; }
+  36%, 72%  { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+
+// Featured work — pulled from the sticky post (see index.php). The whole
+// card is a single link (no nested title/image anchors). Sits between the
+// hero and "Selected work". No padding on the card itself — the visual
+// sits flush against the card's edges; only .ze-featured-text below carries
+// its own small 10px left/right padding.
+.ze-featured {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  background: $bg-gray;
+  margin-top: 32px;
+  text-decoration: none;
+  color: inherit;
+
+  @media (max-width: 900px) {
+    gap: 32px;
+  }
+
+  // Stack breakpoint moved from 700px to $max-tablet (991px) — visual on
+  // top, text underneath (order set on the two children below).
+  @media #{$max-tablet} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  &:hover {
+    .ze-featured-cta {
+      color: $accent;
+      @include link-line-hover;
+    }
+
+    .ze-featured-visual img {
+      transform: scale(1.02);
+    }
+  }
+}
+
+.ze-featured-text {
+  flex: 0 0 38%;
+  max-width: 420px;
+  // Was flat 10px left/right at every width — bumped up on big screens,
+  // tighter again once the card gets narrower.
+  padding: 0 40px;
+
+  @media #{$max-laptop} {
+    padding: 0 20px;
+  }
+
+  @media #{$max-tablet} {
+    max-width: 100%;
+    order: 2;
+    padding: 0 20px 20px 20px;
+  }
+}
+
+.ze-featured-eyebrow {
+  @extend .eyebrow;
+}
+
+// type-scale() mixin rather than @extend .size-N, so this card isn't tied
+// to the .size-N selectors the single-project hero overrides.
+.ze-featured-title {
+  @include type-scale(3);
+  font-weight: $WeightMedium;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+
+.ze-featured-desc {
+  @include type-scale(5);
+  font-weight: $WeightRegular;
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.ze-featured-cta {
+  @include font-regular;
+  @include type-scale(5); // same step as .ze-featured-desc above it
+  @include link-line;
+  display: inline-block;
+  transition: color .25s;
+}
+
+// Shows one image at a time. With 2+ images in featured_post_visuals this
+// class lands on the Bootstrap carousel-fade wrapper itself (see index.php);
+// with 0-1 it's a plain div around a single <img>. The `img` rule below is a
+// descendant selector, so it covers both the plain <img> and the carousel's
+// nested `.carousel-item img` without needing two separate rules.
+.ze-featured-visual {
+  display: block;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+
+  @media #{$max-tablet} {
+    order: 1;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform .4s ease;
+  }
+}

@@ -1,0 +1,176 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass mixins.
+// -----------------------------------------------------------------------------
+
+/* Mixins */
+
+// ==== Media Queries Breakpoints ==== //
+
+@mixin laptop {
+  @media (max-width: #{$laptop}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: #{$mobile}) {
+    @content;
+  }
+}
+
+// ===== Width & Height ===== //
+
+@mixin size($w, $h) {
+  @if ($w && $h) {
+    width: $w;
+    height: $h;
+  } @else if($w) {
+    width: $w;
+  } @else {
+    height: $h;
+  }
+}
+
+// ===== Top, Right, Bottom, Left ===== //
+
+@mixin trbl($t, $r, $b, $l) {
+  top: $t;
+  right: $r;
+  bottom: $b;
+  left: $l;
+}
+
+// ===== Fluid Typography ===== //
+
+// Constants
+
+$vp-large: 1600px;
+$vp-small: 320px;
+
+@mixin fluid-font-size($minFontSize, $maxFontSize, $minViewport: $vp-small, $maxViewport: $vp-large) {
+  $slope: ($minFontSize - $maxFontSize) / ($minViewport - $maxViewport);
+  $base: $maxFontSize - $slope * $maxViewport;
+
+  font-size: $minFontSize;
+
+  @media (min-width: $minViewport) {
+    font-size: calc(#{$base} + 100vw * #{$slope});
+  }
+
+  @media (min-width: $maxViewport) {
+    font-size: $maxFontSize;
+  }
+}
+
+// Link underline: a plain line in the link's own text colour (currentColor,
+// so it always matches) — used instead of text-decoration for control over
+// offset/weight. The only hover change is +1px of height plus a soft glow in
+// the same colour. Hover state is set by the caller.
+@mixin link-line {
+  position: relative;
+  text-decoration: none;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.04em);
+    height: 1px;
+    background-color: currentColor;
+    box-shadow: 0 0 0 transparent;
+    transition: height 0.25s ease, box-shadow 0.25s ease;
+  }
+}
+
+@mixin link-line-hover {
+  &:after {
+    height: 2px;
+    box-shadow: 0 2px 6px rgba($black, 0.25);
+  }
+}
+
+// One step of the type scale ($type-scale in abstracts/_variables.scss) —
+// outputs exactly what the matching .size-N class in base/_typo.scss does,
+// breakpoint steps included. Use this instead of a hard-coded font-size.
+@mixin type-size($value) {
+  @if length($value) == 2 {
+    @include fluid-font-size(nth($value, 1), nth($value, 2));
+  } @else {
+    font-size: $value;
+  }
+}
+
+@mixin type-scale($step) {
+  $sizes: map-get($type-scale, $step);
+  $breakpoints: (
+    laptop: $max-laptop,
+    small-laptop: $max-small-laptop,
+    tablet: $max-tablet,
+    phone: $max-phone
+  );
+
+  @include type-size(map-get($sizes, base));
+
+  @each $name, $query in $breakpoints {
+    @if map-has-key($sizes, $name) {
+      @media #{$query} {
+        @include type-size(map-get($sizes, $name));
+      }
+    }
+  }
+}
+
+// Vertical owl
+@mixin owl($margin-top) {
+  > * {
+    margin: 0;
+  }
+  > * + * {
+    margin-top: $margin-top + px;
+  }
+}
+
+// Horizontal owl
+@mixin howl($margin-left) {
+  > * {
+    margin: 0;
+  }
+  > * + * {
+    margin-left: $margin-left + px;
+  }
+}
+
+// ===== Type weights =====
+// Plus Jakarta Sans is one family loaded at multiple weights (unlike the old
+// cera*/*.ttf per-weight files), so family + weight must always travel together.
+
+@mixin font-medium {
+  font-family: $FontMedium;
+  font-weight: $WeightMedium;
+}
+
+@mixin font-regular {
+  font-family: $FontRegular;
+  font-weight: $WeightRegular;
+}
+
+@mixin font-light {
+  font-family: $FontLight;
+  font-weight: $WeightLight;
+}
+
+// Display serif — Fraunces
+@mixin font-display($weight: 400, $italic: false) {
+  font-family: $FontSerif;
+  font-weight: $weight;
+  @if $italic {
+    font-style: italic;
+  }
+}

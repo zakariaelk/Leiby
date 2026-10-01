@@ -29,7 +29,7 @@ const {
 const fullTitle = title ? `${title} | Zakaria El Khachia` : 'Zakaria El Khachia | Product designer & builder';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const { theme } = themeFor(Astro.url.pathname);
-const hideFromSearch = noindex || theme !== 'yellow';
+const hideFromSearch = true; // only the zakariaelk.com port at the root is indexed
 ---
 <!doctype html>
 <html lang="en" data-theme={theme}>

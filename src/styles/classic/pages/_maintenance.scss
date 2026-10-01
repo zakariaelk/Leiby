@@ -1,0 +1,36 @@
+.maintenance-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $black;
+  color: $white;
+  padding: 2rem;
+  text-align: center;
+
+  .maintenance-message {
+    max-width: 600px;
+
+    h1 {
+      @extend .size-2;
+    }
+
+    .signature {
+      margin-top: 2rem;
+      text-align: right;
+      font-style: italic;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Responsive tweaks
+@media (max-width: 600px) {
+  .maintenance-container .maintenance-message h1 {
+    font-size: 28px;
+  }
+
+  .maintenance-container .maintenance-message .signature {
+    font-size: 18px;
+  }
+}

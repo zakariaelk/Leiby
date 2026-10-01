@@ -1,0 +1,96 @@
+// Adapter: the case-study body now comes from Markdoc (plain h2/h3/p/img/blockquote/table),
+// not WordPress blocks. These rules give that markup the same look the theme gave
+// .section-title, .subsection-title, .visual-content, .wp-caption-text and .statement-block.
+
+#work .md-body {
+  > article > * + h2 { margin-top: 40px; }
+  > article > h2:first-child { margin-top: 0; }
+
+  h2 {
+    @include fluid-font-size(20px, 24px);
+    font-weight: $WeightMedium;
+    margin-bottom: 24px;
+    scroll-margin-top: 40px;
+
+    @media #{$max-laptop} { margin-bottom: 22px; }
+    @media #{$max-small-laptop} { margin-bottom: 20px; }
+    @media #{$max-phone} { margin-bottom: 16px; }
+
+    &:after { content: ""; display: inline-block; vertical-align: top; margin-left: 2px; animation: fadeChevron 1s infinite; }
+    &.active:after { content: "_"; opacity: 1; }
+  }
+
+  h3 {
+    @include fluid-font-size(18px, 20px);
+    font-weight: $WeightMedium;
+    margin: 28px 0 18px;
+    scroll-margin-top: 40px;
+    @media #{$max-tablet} { @include fluid-font-size(16px, 18px); }
+  }
+
+  p { margin-bottom: 0.5rem; font-weight: $WeightLight; max-width: 720px; }
+  strong, b { font-weight: $WeightMedium; }
+  a { text-decoration: underline; }
+
+  ul, ol { margin-left: 1rem; margin-bottom: 2rem; }
+  ul { list-style: disc; }
+  ol { list-style: decimal; }
+  li { margin-bottom: 0.75rem; list-style-position: outside; font-weight: $WeightLight; }
+
+  // Visuals: framed images (and the GIFs that are now videos), fading in when reached
+  p:has(> img) { max-width: none; margin-top: 1rem; margin-bottom: 2rem; }
+  img, .media-video video {
+    max-width: 1140px;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    display: block;
+    padding: 1rem;
+    background-color: $bg-gray;
+    box-shadow: 1px 1px 3px 2px #f3f3f3;
+    opacity: 0;
+    transition: all 0.4s ease 0.2s;
+    &.on { opacity: 1; }
+  }
+  .media-video { margin: 1rem 0 2rem; }
+
+  // Captions: an italic line right after a visual, or a video's own caption
+  p:has(> img) + p > em:only-child,
+  figcaption {
+    display: block;
+    font-size: 16px;
+    font-style: normal;
+    @include font-regular;
+    color: $gray;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+  }
+  .media-video figcaption { margin-top: 0.5rem; }
+
+  // Statement block
+  blockquote {
+    display: block;
+    padding: 1.4rem 1.6rem 2rem 1.6rem;
+    border-left: 6px solid $accent;
+    background: $bg-gray;
+    margin: 0 0 40px;
+    @include font-regular;
+    @include fluid-font-size(18px, 21px);
+    line-height: 1.6;
+    p { margin: 0; font-weight: inherit; font-size: inherit; }
+    @media #{$max-tablet} { padding: 1.5rem; }
+  }
+
+  // Tables: first row is the header band
+  table { margin: 2rem 0; border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid $black; padding: 0.5rem; @include font-regular; vertical-align: middle; text-align: left; }
+  thead th { padding: 1rem; @include font-medium; background-color: $bg-gray; text-align: center; }
+  // the theme styles the first table row as a header; with a real <thead>, body rows stay plain
+  table tbody tr:first-child td { padding: 0.5rem; @include font-regular; background-color: transparent; text-align: left; }
+
+  // Carousel images keep the frame; only the active one shows
+  .carousel-chapter .carousel-stage img { opacity: 0; }
+  .carousel-chapter .carousel-stage img.is-active,
+  .carousel-chapter .carousel-stage img:only-child { opacity: 1; }
+  .carousel-desc p { @include font-regular; color: $gray; font-size: 16px; }
+}

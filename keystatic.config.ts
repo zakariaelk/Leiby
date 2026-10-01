@@ -1,5 +1,5 @@
 import { config, collection, singleton, fields } from '@keystatic/core';
-import { block } from '@keystatic/core/content-components';
+import { block, wrapper } from '@keystatic/core/content-components';
 
 const video = block({
   label: 'Video',
@@ -9,13 +9,18 @@ const video = block({
   },
 });
 
+const carousel = wrapper({
+  label: 'Carousel',
+  schema: { caption: fields.text({ label: 'Caption' }) },
+});
+
 const body = (dir: string) =>
   fields.markdoc({
     label: 'Content',
     options: {
       image: { directory: `src/assets/${dir}`, publicPath: `../../assets/${dir}/` },
     },
-    components: { video },
+    components: { video, carousel },
   });
 
 const timeline = (label: string) =>
@@ -72,6 +77,24 @@ export default config({
         did: fields.text({ label: 'In short: what I did', multiline: true }),
         result: fields.text({ label: 'In short: the result', multiline: true }),
         hard: fields.text({ label: 'In short: what was hard / what I would do differently', multiline: true }),
+        featuredVideo: fields.text({ label: 'Featured card video (path in public/, e.g. /media/…mp4)' }),
+        previews: fields.array(
+          fields.image({ label: 'Preview image', directory: 'src/assets/projects', publicPath: '../../assets/projects/' }),
+          { label: 'Hover previews (home list, 2 images)' },
+        ),
+        menu: fields.array(
+          fields.object({
+            group: fields.text({ label: 'Group title (optional)' }),
+            items: fields.array(
+              fields.object({
+                label: fields.text({ label: 'Menu label' }),
+                heading: fields.text({ label: 'Heading it jumps to (exact text)' }),
+              }),
+              { label: 'Items', itemLabel: (p) => p.fields.label.value },
+            ),
+          }),
+          { label: 'Side menu', itemLabel: (p) => p.fields.group.value || 'Sections' },
+        ),
         content: body('projects'),
       },
     }),

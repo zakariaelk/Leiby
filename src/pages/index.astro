@@ -1,4 +1,150 @@
 ---
-import HomePage from '../components/HomePage.astro';
+// zakariaelk.com home page, ported from the WordPress theme (index.php).
+// Changes from the original: the portrait is small and sits above the name, and the
+// cities run vertically on the right of the intro (Casablanca → Beijing → Rotterdam).
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Classic from '../layouts/Classic.astro';
+import HeroEye from '../components/classic/HeroEye.astro';
+import home from '../content/pages/home.json';
+import settings from '../content/pages/settings.json';
+import { getProjects } from '../lib/data';
+
+const projects = await getProjects();
+const featured = projects.find((p) => p.data.featured) ?? projects[0];
+const rows = projects.filter((p) => p !== featured);
+const about = await getEntry('about', 'index');
+const experience = about?.data.experience ?? [];
+const education = about?.data.education ?? [];
+
+// Intro from the CMS: *phrase* gets the marker highlight, **word** is bold
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const intro = esc(home.heroText)
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\*(.+?)\*/g, '<span class="crayon-underline">$1</span>');
 ---
-<HomePage art="character" />
+<Classic bodyId="home" loader>
+  <div class="boxed ze-home">
+    <section class="ze-hero">
+      <div class="ze-hero-left">
+        <div class="ze-face-mini"><HeroEye /></div>
+        <h1 class="sr-only">{settings.name}, product designer</h1>
+        <a href="/" class="ze-name" aria-hidden="true">{settings.name}</a>
+        <div class="ze-intro-text"><p set:html={intro} /></div>
+        <div class="ze-intro-links">
+          <a href="#work-list">My work</a>
+          <a href="#" class="ze-email-reveal" data-email={settings.email}>Email me</a>
+        </div>
+      </div>
+      <ol class="ze-cities" aria-label="Cities I have lived in">
+        {home.cities.map((city, i) => (
+          <>
+            {i > 0 && <li class="ze-cities__dots" aria-hidden="true"></li>}
+            <li class="ze-cities__city">{city}</li>
+          </>
+        ))}
+      </ol>
+    </section>
+
+    <a href={`/work/${featured.id}/`} class="ze-featured">
+      <div class="ze-featured-text">
+        <div class="ze-featured-eyebrow">Featured work</div>
+        <h2 class="ze-featured-title">{featured.data.headline}</h2>
+        <p class="ze-featured-desc">{featured.data.intro}</p>
+        <span class="ze-featured-cta">Read the case</span>
+      </div>
+      <div class="ze-featured-visual">
+        {featured.data.featuredVideo ? (
+          <video src={featured.data.featuredVideo} autoplay muted loop playsinline preload="metadata" aria-label={featured.data.title}></video>
+        ) : (
+          <Image src={featured.data.cover} alt={featured.data.title} widths={[640, 1024, 1400]} sizes="(min-width: 992px) 60vw, 100vw" />
+        )}
+      </div>
+    </a>
+
+    <div class="ze-section-label" id="work-list">Selected work</div>
+    <div class="ze-tbl ze-work-tbl">
+      {rows.map((p) => (
+        <a class="ze-row ze-row--link" href={`/work/${p.id}/`}>
+          {p.data.previews.length > 0 && (
+            <span class="ze-preview" aria-hidden="true">
+              <Image src={p.data.previews[0]} alt="" widths={[640, 960]} sizes="560px" loading="lazy" />
+              {p.data.previews[1] && <Image class="ze-preview-alt" src={p.data.previews[1]} alt="" widths={[640, 960]} sizes="560px" loading="lazy" />}
+            </span>
+          )}
+          <span class="ze-row-name">{p.data.client}</span>
+          <span class="ze-row-desc">{p.data.intro}</span>
+          <span class="ze-row-meta">{p.data.year}</span>
+        </a>
+      ))}
+    </div>
+
+    <div class="ze-section-label">Experience</div>
+    <div class="ze-tbl">
+      {experience.map((e) => (
+        <div class="ze-row"><span class="ze-row-name">{e.name}</span><span class="ze-row-desc">{e.role}</span><span class="ze-row-meta">{e.years.replace('-', '–')}</span></div>
+      ))}
+    </div>
+
+    <div class="ze-section-label">Education</div>
+    <div class="ze-tbl">
+      {education.map((e) => (
+        <div class="ze-row"><span class="ze-row-name">{e.name}</span><span class="ze-row-desc">{e.role}</span><span class="ze-row-meta">{e.years}</span></div>
+      ))}
+    </div>
+  </div>
+</Classic>
+
+<script>
+  // "Email me" turns into the address (as before)
+  const reveal = document.querySelector<HTMLAnchorElement>('.ze-email-reveal');
+  reveal?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const email = reveal.dataset.email!;
+    reveal.textContent = email;
+    reveal.href = `mailto:${email}`;
+    reveal.classList.add('revealed');
+  }, { once: true });
+
+  // Marker highlight under "product designer", drawn once the loader is gone
+  const underline = document.querySelector('.ze-intro-text .crayon-underline');
+  if (underline) {
+    const draw = () => window.setTimeout(() => underline.classList.add('is-drawn'), 400);
+    const root = document.documentElement;
+    if (!root.classList.contains('ze-loading')) draw();
+    else {
+      const mo = new MutationObserver(() => {
+        if (!root.classList.contains('ze-loading')) { mo.disconnect(); draw(); }
+      });
+      mo.observe(root, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
+</script>
+
+<style is:global>
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Small portrait above the name, mirrored so it looks into the page */
+  .ze-face-mini { margin-bottom: 14px; transform: scaleX(-1); transform-origin: center; width: max-content; }
+  .ze-face-mini .ze-hero-eye { height: 96px !important; width: auto !important; }
+  @media (max-width: 700px) { .ze-face-mini .ze-hero-eye { height: 72px !important; } }
+
+  /* Cities, written vertically on the right of the intro, read bottom to top */
+  .ze-hero { align-items: flex-end; }
+  .ze-cities {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: 'Outfit Variable', 'Outfit', sans-serif; font-weight: 300; font-size: 15px; letter-spacing: 0.06em;
+    color: #666666; white-space: nowrap;
+  }
+  .ze-cities__city { color: #101010; }
+  .ze-cities__dots { width: 0; height: 26px; border-left: 2px dotted #9a9a9a; }
+  @media (max-width: 700px) {
+    .ze-cities { writing-mode: horizontal-tb; transform: none; margin-top: 4px; font-size: 15px; gap: 10px; }
+    .ze-cities__dots { height: 0; width: 28px; border-left: 0; border-top: 2px dotted #9a9a9a; }
+  }
+
+  /* The featured card's clip is now a video (was a GIF): same box as the image */
+  .ze-featured-visual video { display: block; width: 100%; height: 100%; object-fit: cover; }
+</style>

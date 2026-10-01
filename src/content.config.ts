@@ -25,6 +25,13 @@ const projects = defineCollection({
       did: z.string().optional(),
       result: z.string().optional(),
       hard: z.string().optional(),
+      // Classic (zakariaelk.com) version: hover previews on the home list, grouped side menu
+      previews: z.array(image()).default([]),
+      featuredVideo: z.string().optional(),
+      menu: z.array(z.object({
+        group: z.string().default(''),
+        items: z.array(z.object({ label: z.string(), heading: z.string() })),
+      })).default([]),
     }),
 });
 

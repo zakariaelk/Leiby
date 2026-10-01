@@ -12,13 +12,19 @@ npm run dev
 - Site: http://localhost:4321
 - Content editor: https://leiby-design-build.netlify.app/keystatic (log in with GitHub; saves are commits to this repo)
 
+## The site
+
+The root (`/` and `/work/<project>/`) is **zakariaelk.com**, ported from the WordPress theme:
+same markup and SCSS (`src/styles/classic/`), same URLs, without jQuery/Bootstrap/three.js.
+Layout: `src/layouts/Classic.astro`; pages: `src/pages/index.astro`, `src/pages/work/[slug].astro`.
+
 ## Design versions
 
-The same content in three looks, side by side:
+Explorations of the same content, side by side (hidden from search engines):
 
 | URL | Version |
 | --- | --- |
-| `/` | Yellow, hand-drawn portrait |
+| `/yellow/` | Yellow, hand-drawn portrait |
 | `/mono/` | Black & white, cartoon face with changing expressions |
 | `/bridge/` | Black & white, line bridge + a tiny walker crossing the cities on scroll |
 | `/simple/` | Content first, built to be skimmed: problem → what I did → result, plus “what was hard” on each case study |
@@ -27,7 +33,7 @@ The same content in three looks, side by side:
 | `/editorial/` | Long-form feature: serif headline, contents, case studies as chapters, one colour-field quote |
 
 The versions are set by URL prefix (`src/lib/variant.ts`), colours by `[data-theme]` in `src/styles/global.css`.
-All versions except `/` are hidden from search engines.
+
 
 ## Where things live
 

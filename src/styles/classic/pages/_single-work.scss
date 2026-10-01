@@ -1,0 +1,795 @@
+/*
+    Name: _single-work.scss
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+#work {
+
+  /* 1. Project Hero */
+
+  // Full-bleed band, same idea as #about's dark band at the bottom of the
+  // page (pages/_about.scss) — background spans edge-to-edge of the
+  // viewport while .hero-content (.boxed) inside keeps the content itself
+  // centered/padded as before.
+  // Single source of truth for the hero band — this used to be split across
+  // this nested rule and a second flat `#work .project-hero` rule further
+  // down the file (with `!important` needed to make the flat one win, since
+  // it had lower specificity despite coming later). Merged into one rule so
+  // the cascade alone decides it.
+  .project-hero {
+    width: 100%;
+    background: $hero-bg-gray; // flat — no more per-post/dynamic color
+    padding-top: 60px;
+    padding-bottom: 80px;
+    margin-bottom: 40px;
+
+    @media #{$max-phone} {
+      padding-top: 24px;
+      padding-bottom: 32px;
+    }
+  }
+
+  .hero-content {
+    @include size(100%, 100%);
+
+    .container-l {
+      @include size(100%, 100%);
+
+      @media #{$max-tablet} {
+        align-content: center;
+      }
+    }
+
+    .banner-txt {
+      align-self: center;
+      opacity: 0;
+      transform: translate3d(0, 30px, 0);
+      transition: transform 0.6s ease, opacity 0.3s ease 0.1s;
+      padding-right: 2rem;
+
+      @media #{$max-tablet} {
+        margin-bottom: 2rem;
+        padding-right: 0;
+      }
+
+      &.on {
+        opacity: 1;
+        transform: translate3d(0, 0px, 0);
+      }
+
+      // Project title — the page's one real <h1>, so it stays the largest
+      // heading-level text on this template (above .section-title's 20–24px
+      // and .subsection-title). One fluid range, capped at 34px.
+      h1 {
+        @include fluid-font-size(26px, 34px);
+        font-weight: $WeightMedium;
+        line-height: 1.15;
+        margin-bottom: 14px;
+      }
+
+      .desc {
+        @include fluid-font-size(18px, 21px);
+        width: 90%;
+        max-width: 500px;
+        font-weight: $WeightLight;
+        color: #3a3a3a;
+        line-height: 1.55;
+        margin-bottom: 20px;
+
+        @media #{$max-laptop} {
+          margin-bottom: 15px;
+        }
+
+        @media #{$max-tablet} {
+          @include fluid-font-size(16px, 18px);
+        }
+
+        @media #{$max-phone} {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+
+      .discover {
+        position: relative;
+        @include fluid-font-size(14px, 15px);
+        @include font-regular;
+        text-decoration: underline;
+        display: block;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: $accent;
+          transform: translate3d(0.2rem, 0, 0) skewX(-10deg);
+        }
+
+        span {
+          transform: rotate(90deg);
+        }
+      }
+
+      // Case-study hero meta (sector/role/duration/link) — lives under the
+      // intro text, left of the visual. Was mistakenly nested under
+      // .cover-container below (a leftover from an earlier layout — the
+      // markup in single.php has always put .project-meta inside
+      // .banner-txt, so that copy never actually matched anything).
+      // One column now — each .meta-element is a full-width row (4 rows:
+      // sector, role, duration, take-a-look) rather than a 2-column grid.
+      .project-meta {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 480px;
+        margin-top: 32px;
+
+        @media #{$max-tablet} {
+          max-width: 100%;
+        }
+
+        @media #{$max-phone} {
+          gap: 16px;
+          margin-top: 24px;
+          margin-bottom: 8px;
+        }
+
+        .meta-element {
+          display: flex;
+          flex-direction: row;
+          column-gap: 0.35rem;
+          align-items: flex-start;
+
+          // .meta-label now carries what .meta-content used to look like
+          // (bold, 16px) — no more small uppercase eyebrow treatment.
+          .meta-label {
+            @include type-scale(6); // one step below the hero .desc (18–21px)
+            font-weight: $WeightMedium;
+            display: flex;
+            column-gap: 0.5rem;
+            min-width: 100px;
+            margin-bottom: 0;
+          }
+
+          // .meta-content now matches the case-study body copy exactly —
+          // same size/weight as .section-chapter's own text (see below) —
+          // instead of its own separate bold/16px treatment.
+          .meta-content {
+            @include type-scale(6); // matches .meta-label
+            font-weight: $WeightLight;
+            display: flex;
+            column-gap: 0.5rem;
+          }
+
+          // "Take a look" row — same label/content look as the rows above,
+          // with the content being the project link plus an up-right
+          // "opens in a new tab" icon sized and weighted like the text.
+          // Only rendered by single.php when project_link is set.
+          .meta-link {
+            align-items: center;
+            column-gap: 0.15rem;
+
+            // Same underline as the home page links, under the text only
+            // (not the icon); grows + gains a soft shadow on hover.
+            .label {
+              @include link-line;
+            }
+
+            // Sits 4px lower at rest so it lines up with the text, then
+            // moves up 4px and right 4px on hover.
+            .arrow {
+              display: inline-flex;
+              transform: translateY(4px);
+              transition: transform 0.25s ease;
+
+              svg {
+                width: 1em;
+                height: 1em;
+              }
+            }
+
+            &:hover,
+            &:focus-visible {
+              .label {
+                @include link-line-hover;
+              }
+
+              .arrow {
+                transform: translate(4px, 0);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .cover-container {    
+      margin: auto;
+
+      // The white-slide "reveal" cover (:after + .on) is permanently retired
+      // — was JS-gated and the JS trigger for it was removed, so it used to
+      // just sit here as an always-on-top white square until a flat
+      // `display: none !important` override further down the file killed
+      // it. That override is gone too now; there's simply nothing to reveal.
+      .cover-visual {
+        align-self: center;
+        width: auto;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+
+        img {
+          width: 100%;
+          height: 100%;
+          margin: auto;
+          object-fit: cover;
+
+          @media #{$max-small-laptop} {
+            max-height: 360px;
+          }
+
+          @media #{$max-tablet} {
+            height: auto;
+          }
+        }
+      }
+
+      // .project-meta used to be duplicated here too — this copy was nested
+      // under .cover-container, but single.php has always put .project-meta
+      // inside .banner-txt instead, so it never matched anything. The real,
+      // live version now lives with the rest of .banner-txt above.
+    }
+
+    .scroll-indic {
+      position: absolute;
+      @include font-medium;
+      font-style: normal;
+      font-size: 1.2rem;
+      right: 3rem;
+      bottom: 1rem;
+      transform-origin: center;
+      transition: $t-all;
+      opacity: 1;
+      animation: slideChevronVertical 1.2s ease infinite;
+
+      &.scrolled {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+
+  /* 2. Project Body - Main blocks */
+
+  .project-content {
+    padding: 0;
+
+    @media #{$max-tablet} {
+      padding: 0px;
+    }
+
+    @media #{$max-phone} {
+      padding: 0px;
+    }
+
+    .container-l {
+
+      @media #{$max-tablet} {
+         display: block;
+      }     
+
+        .menu-wrapper {
+          position: relative;
+          height: 100%;
+
+          @media #{$max-tablet} {
+            display: none;
+          }
+
+            .project-scrolling-menu {
+              position: sticky;
+              top: 0px;
+              left: 100px;
+              transition: $t-all;
+
+              &.sticky {
+                position: sticky;
+                top: 120px;
+
+                @media #{$max-laptop} {
+                  top: 50px
+                }
+
+                @media #{$max-small-laptop} {
+                  top: 30px
+                }
+              }
+
+              .nav-item-container, .nav-item-chapter {
+                padding: 0.2rem 0;
+
+                @media #{$max-small-laptop} {
+                  padding: 0.175rem 0;
+                }
+
+                a {
+                  @include fluid-font-size(18px, 20px);
+                  opacity: 0.7;
+                  transition: opacity 0.2s, color 0.2s;
+                }
+
+                &.top-level {
+                  margin-top: 1.25rem;
+
+                  @media #{$max-small-laptop} {
+                    margin-top: 1rem;
+                  }
+
+                  a {
+                    cursor: auto;
+                    text-indent: -10px;
+                    display: block;
+                    font-weight: $WeightMedium;
+                    // A chapter heading, not a leaf link — always fully
+                    // visible rather than fading in only on hover/active.
+                    opacity: 1;
+                  }
+
+                  &:first-child {
+                    margin-top: 0;
+                  }
+                }
+
+                &.active a,
+                a:hover {
+                  opacity: 1;
+                  color: $accent;
+                }
+              }
+
+              // Right-pointing chevron on the active item, pinned to the very
+              // left of the <li>. The padding reserves its width + a ~4px gap
+              // on every item, so the text never shifts when .active toggles.
+              .nav-item-container {
+                position: relative;
+                padding-left: 10px;
+
+                &:before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  width: 10.5px;
+                  height: 14px;
+                  background-color: $accent;
+                  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6.5 11'%3E%3Cpath d='M1 1l4.5 4.5L1 10' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat left center / contain;
+                  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6.5 11'%3E%3Cpath d='M1 1l4.5 4.5L1 10' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat left center / contain;
+                  opacity: 0;
+                  transform: translate(-3px, -50%);
+                  transition: opacity 0.2s, transform 0.2s;
+                }
+
+                &.active:before {
+                  opacity: 1;
+                  transform: translate(0, -50%);
+                }
+
+                a {
+                  margin-left: 6px;
+                }
+              }
+            }      
+        }    
+
+        .page-body-content {
+
+          @media #{$max-tablet} {
+            width: 100%;
+          }
+        }      
+    }
+
+
+  }  
+
+  /* 3. Flexible composer components */
+
+  // Kept flat at 20px through desktop/laptop/tablet on purpose — this used
+  // to taper 50px → 26px (and before that, non-monotonically, 60 → 40 → 30
+  // → back up to 40 at tablet). Only phone gets a bit less.
+  .section-chapter {
+      max-width: 800px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      @include type-scale(5); // base size for prose inside; headings below set their own
+
+      @media #{$max-laptop} {
+        max-width: 700px;
+      }
+
+      @media #{$max-small-laptop} {
+        max-width: 600px;
+      }
+
+      @media #{$max-tablet} {
+        max-width: 100%;
+      }
+
+      @media #{$max-phone} {
+        padding-top: 16px;
+        padding-bottom: 16px;
+      }
+
+      // h2-equivalent — capped at 24px (≥1600px) and scaling down fluidly
+      // to 20px, so it stays under .banner-txt h1 and above
+      // .subsection-title at every width.
+      .section-title {
+        @include fluid-font-size(20px, 24px);
+        font-weight: $WeightMedium;
+        text-align: left;
+        margin-bottom: 24px;
+
+        @media #{$max-laptop} {
+          margin-bottom: 22px;
+        }
+
+        @media #{$max-small-laptop} {
+          margin-bottom: 20px;
+        }
+
+        @media #{$max-phone} {
+          margin-bottom: 16px;
+        }
+
+        &:after {
+          content: "";
+          display: inline-block;
+          vertical-align: top;
+          margin-left: -4px;
+          animation: fadeChevron 1s infinite;
+        }
+
+        &.active {
+
+          &:after {
+            content: "_";
+            opacity: 1;
+          }
+        }
+      }
+
+      // h3-equivalent — smaller than .section-title at every tier.
+      .subsection-title {
+        @include fluid-font-size(18px, 20px);
+        font-weight: $WeightMedium;
+        text-align: left;
+        margin-bottom: 18px;
+        display: inline-block;
+
+        @media #{$max-tablet} {
+          @include fluid-font-size(16px, 18px);
+        }
+
+        &:after {
+          content: "";
+          display: block;
+          background-color: $black;
+          width: 100%;
+          height: 0px;
+          margin-top: 0px;
+        }
+      }
+
+      p {
+        margin-bottom: 0.5rem;
+        font-weight: $WeightLight;
+        max-width: 720px;
+      }
+      
+      ol, ul {
+        margin-left: 1rem;
+        margin-bottom: 2rem;
+
+        li {
+          margin-bottom: 0.75rem;
+          list-style-position: outside;
+          // Font-size inherits from .section-chapter's own fluid size above
+          // — only the weight needs to differ from the container default.
+          font-weight: $WeightLight;
+        }
+      }
+
+      ul {
+        list-style: disc;
+      }
+
+      .info-content-block {
+        margin-bottom: 48px;
+        font-weight: $WeightLight; // inherits font-size from .section-chapter
+
+        @media #{$max-tablet} {
+          margin-bottom: 36px;
+        }
+      }
+ 
+
+      .visual-content {        
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+
+        @media #{$max-laptop} {          
+          margin-top: 0.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        @media #{$max-phone} {          
+          margin-top: 0.5rem;
+          margin-bottom: 1rem;
+        }
+
+        // The one deliberate !important left in this file: WordPress core's
+        // [caption] shortcode writes its own inline `style="width: …px"`
+        // straight onto this element's markup, which nothing but !important
+        // can override from a stylesheet.
+        .wp-caption {
+          width: 100% !important;
+        }
+
+        img {
+          max-width: 1140px;          
+          width: 100%;
+          height: auto;
+          margin: auto;
+          display: block;
+          padding: 1rem;
+          background-color: $bg-gray;
+          box-shadow: 1px 1px 3px 2px #f3f3f3;
+          opacity: 0;
+          transition: all 0.4s ease 0.2s;
+
+          &.mobile {
+            // .mobile already out-specifies the plain `img` rule above
+            // (extra class + later in source) — no !important needed.
+            width: 50%;
+          }
+
+          &:last-child {
+            margin-bottom: 0rem
+          }
+
+          @media #{$max-phone} {
+            box-shadow: 1px 1px 3px 2px #f3f3f3;
+          }
+
+          &.on {
+            opacity: 1;
+          }
+        }     
+
+        .wp-video {
+          opacity: 0;
+          transition: all 0.4s ease 0.2s;      
+
+          &.on {
+            opacity: 1;
+          }      
+        }
+
+        // Was `@extend .size-6` (a fluid 14-18px scale) plus a separate flat
+        // `#work .wp-caption-text { font-size: 14px; ... }` override further
+        // down the file that was never actually applying — this selector
+        // (three classes deep) out-specifies that single-class one, so the
+        // "flat override" was dead code and the fluid .size-6 value was
+        // what actually rendered. Set directly here instead.
+        .wp-caption-text {
+          font-size: 16px;
+          @include font-regular;
+          // font-style: italic;
+          margin-top: 0.5rem;
+          margin-bottom: 0;
+          display: block;
+          color: $gray;
+          text-align: left;
+          opacity: 1;
+        }
+      }
+
+      table {
+        margin: 2rem 0;
+
+        @media #{$max-laptop} {
+          margin: 1.8rem 0;
+        }
+
+        @media #{$max-small-laptop} {
+          margin: 1.6rem 0;
+        }
+        
+        tbody {
+          tr{
+            td {
+              border: 1px $black solid;
+              padding: 0.5rem;
+              @include font-regular;
+              vertical-align: middle;
+            }
+          
+          &:first-child {
+            td{
+              padding: 1rem;
+              @include font-medium;
+              background-color: $bg-gray;
+              text-align: center;
+              vertical-align: middle;
+            }
+          }
+
+
+          } 
+        }
+      }         
+
+      .post-link {
+        @extend .size-6;
+        color: $gray;
+        text-decoration: underline;        
+        margin-top: 0.5rem;
+        display: block;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: $black;
+          transform: translate3d(0.2rem, 0, 0) skewX(-10deg);
+        }
+      }
+
+      .statement-block {
+        display: block;
+        padding: 1.4rem 1.6rem 2rem 1.6rem;
+        border-left: 6px solid $accent;
+        background: $bg-gray;
+        margin-bottom: 40px;
+
+        @media #{$max-tablet} {
+          padding: 1.5rem;
+        }
+
+        p {
+          margin-bottom: 0;
+          @include font-regular;
+          @include fluid-font-size(18px, 21px);
+          line-height: 1.6;
+
+          @media #{$max-tablet} {
+            @include fluid-font-size(18px, 18px);
+          }
+        }
+
+        b {
+          @include font-medium;
+        }
+      }
+
+  }
+
+
+  .carousel-chapter {
+      max-width: 800px;
+      margin-top: 80px;
+      margin-bottom: 80px;
+
+      @media #{$max-laptop} {
+        max-width: 700px;
+        margin-bottom: 100px;
+      }
+
+      @media #{$max-small-laptop} {
+        max-width: 600px;
+        margin-bottom: 80px;
+      }
+
+      .carousel-desc{
+        margin-bottom: 18px;
+
+        @media #{$max-laptop} {
+          margin-bottom: 14px;
+        }       
+
+        @media #{$max-small-laptop} {
+          margin-bottom: 12px;
+        }              
+      }
+  }
+
+
+  /* 4. Next/Prev Links */
+
+  .next-post-nav,
+  div[role="link"] {
+    display: flex;
+    margin: auto;
+    padding: 180px 0;
+    justify-content: center;
+
+    @media #{$max-phone} {
+      padding: 100px 0;
+    }
+
+    .next-link {
+      @extend .size-5;
+      margin: 0rem;
+      align-self: center;
+      color: $black; // .next-link's own class specificity already beats base's `a { color: $black }`
+
+      &:after {
+        content: ">";
+        align-self: flex-end;
+        margin: 0 1rem;
+      }
+    }
+
+    .next-label {
+      @extend .size-4;
+      position: relative;
+      overflow: hidden;
+      display: block;
+      text-transform: capitalize;
+      padding: 0rem 0.4rem;
+      line-height: 1.3;
+      @include font-medium;
+      transition: all 0.4s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+      @media #{$max-phone} {
+        width: 60%;
+      }
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        transform: translate3d(-110%, 0, 0);
+        width: 100%;
+        z-index: -1;
+        height: 100%;
+        background-color: $accent;
+        transition: all 0.3s ease;
+
+        @media #{$max-tablet} {
+          height: 2px;
+          top: 92%;
+        }
+      }
+    }
+
+    &:hover {
+      .next-label {
+        color: $white;
+
+        @media #{$max-tablet} {
+          color: $white;
+        }
+
+        &:before {
+          transform: translate3d(0%, 0, 0);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Projects with no chapter nav (project_menu empty): drop the sidebar
+ * column and let the content take the full width, e.g. 3e International.
+ * The column itself being full-width wasn't enough — .section-chapter and
+ * its paragraphs still capped at 800px/720px, so the visible text stayed
+ * narrower than the hero row above it. Both overrides are needed together.
+ */
+#work .container-l.no-sidebar .col-8.page-body-content {
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+#work .container-l.no-sidebar .section-chapter,
+#work .container-l.no-sidebar .section-chapter p {
+  max-width: 100%;
+}

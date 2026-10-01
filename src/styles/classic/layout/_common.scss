@@ -1,0 +1,134 @@
+/*     
+    Name: _common.scss    
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+.page-content {
+  @extend .clearfix;
+  @include size(100%, 100%);
+  // position: relative;
+  // overflow: hidden;
+
+  @media #{$max-phone} {
+  }
+}
+
+.content-wrapper {
+  margin-left: 120px;
+
+  section {
+    padding-top: 140px;
+    padding-bottom: 140px;
+  }
+}
+
+.boxed-wide {
+  padding-left: 3rem;
+  padding-right: 3rem;
+
+  @media #{$max-small-laptop} {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+// Padding taper below is deliberately monotonic (48 → 40 → 32 → 28 → 24px) —
+// it used to jump 48px → 32px at small-laptop, then back UP to 48px at
+// tablet before dropping to 32px again at phone. That meant tablet-width
+// pages (~991-700px, no other override in the way) had wider margins than
+// small-laptop ones, and it held flat at the full 48px all the way from
+// desktop down to 1140px, which read too wide on ~1400px laptop screens.
+.boxed {
+  padding-left: 3rem;
+  padding-right: 3rem;
+  max-width: 1240px; // was 1480px — tightened for the redesign
+  margin: auto;
+  display: block;
+
+  @media #{$max-laptop} {
+    // max-width: 1024px;
+  }
+
+  @media (max-width: 1440px) {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  @media #{$max-small-laptop} {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 100%;
+  }
+
+  @media #{$max-tablet} {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+  }
+
+  @media #{$max-phone} {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+// Same box sizing as .boxed, for elements that need a flex row instead of
+// a block container (e.g. the slim page header — see .ze-header--slim).
+.boxed-flex {
+  padding-left: 3rem;
+  padding-right: 3rem;
+  max-width: 1240px;
+  margin: auto;
+  display: flex;
+
+  @media (max-width: 1440px) {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  @media #{$max-small-laptop} {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  @media #{$max-tablet} {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    max-width: 100%;
+  }
+
+  @media #{$max-phone} {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.full {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.intro {
+  margin-bottom: 1rem;
+}
+
+.headline {
+  @extend .size-2;
+  display: inline-block;
+  margin-bottom: 1.2rem;
+}
+
+.intro-text {
+  width: 50%;
+
+  @media #{$max-phone} {
+    width: 100%;
+  }
+}
+
+.left-m,
+.right-m {
+  img {
+    width: 100%;
+  }
+}

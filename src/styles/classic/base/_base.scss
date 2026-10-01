@@ -1,0 +1,114 @@
+/*     
+    Name: _base.scss    
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+/**
+ * Set up a decent box model on the root element
+ */
+html {
+  box-sizing: border-box;
+}
+
+/**
+ * Make all elements from the DOM inherit from the parent box-sizing
+ * Since `*` has a specificity of 0, it does not override the `html` value
+ * making all elements inheriting from the root box-sizing value
+ * See: https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  @include size(100%, 100%);
+  // Was `@extend .size-5` (18-21px fluid, but pinned flat at 18px below the
+  // max-laptop breakpoint — see base/_typo.scss). Bumped to a flat 21px site-
+  // wide base per request. Sections with their own explicit font-size (case
+  // study desc, home intro text, etc.) are unaffected either way.
+  font-size: 21px;
+  @include font-regular;
+  line-height: 1.5;
+  color: $black;
+  background-color: $white;
+  // overflow-x: hidden;
+}
+
+/**
+ * Basic styles for Main
+ */
+
+header,
+main,
+footer {
+  width: 100%;
+}
+
+/* Anchor */
+
+a {
+  text-decoration: none;
+  font-weight: 400;
+  transition: 0.25s ease;
+  color: $black;
+
+  &:hover {
+    color: $accent;
+    opacity: 1 !important;
+  }
+}
+
+::selection {
+  background-color: $accent;
+  color: $white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include font-medium;
+  line-height: 1.2;
+}
+
+h1 {
+  @media #{$max-phone} {
+    letter-spacing: -1px;
+  }
+}
+
+h2 {
+  @media #{$max-phone} {
+    letter-spacing: -1px;
+  }
+}
+
+h3 {
+  @media #{$max-phone} {
+    letter-spacing: -1px;
+  }
+}
+
+h3 {
+  line-height: 1.4;
+}
+
+// Capped at medium (500) — overrides the bold defaults from the browser,
+// vendors/_reset.scss (strong, th) and Bootstrap (b, strong, dt).
+b,
+strong,
+th,
+dt {
+  @include font-medium;
+}
+
+i {
+  font-style: italic;
+}

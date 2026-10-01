@@ -4,3 +4,9 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Old case-study URLs from the yellow version
+[[redirects]]
+  from = "/projects/*"
+  to = "/work/:splat"
+  status = 301

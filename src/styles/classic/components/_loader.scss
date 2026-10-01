@@ -1,0 +1,92 @@
+/*
+    Name: _loader.scss
+    Author: Zakaria El Khachia
+
+    The old #loader spinner (and its markup) is gone — header.php now
+    includes template-parts/loader.php only on the front page, which
+    renders .ze-loader. Kept in the "components" folder since, like the
+    old one, this is a self-contained, reusable piece of UI.
+*/
+
+// wins over html.no-scroll (base/_helpers.scss's .no-scroll utility is a
+// plain overflow:hidden with no !important) — same specificity, later in
+// source, only while the loader is actually up.
+html.ze-loading,
+body.ze-loading {
+  overflow: hidden !important;
+}
+
+.ze-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity .45s ease;
+
+  &.ze-loader--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.ze-loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.ze-loader-eye {
+  width: 150px;
+  height: auto;
+  display: block;
+}
+
+.ze-loader-type {
+  box-sizing: border-box;
+  width: 380px;
+  max-width: 86vw;
+  min-height: 50px;
+  display: block;
+  font-size: 17px;
+  font-weight: $WeightMedium;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  color: $black;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.ze-loader-caret {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  margin-left: 2px;
+  margin-right: -4px; // takes no width, so it can't change where lines wrap
+  background: $black;
+  animation: zeCaretBlink .9s steps(1) infinite;
+
+  &.ze-loader-caret--done {
+    opacity: .6;
+  }
+}
+
+.ze-loader-type-rest {
+  visibility: hidden; // untyped remainder: reserves the final line breaks
+}
+
+// Pupil eases between caret positions — per letter it's a small step, and
+// the jump back to the left on a new line reads as a quick eye movement.
+#zeLoaderPupilGroup {
+  transition: transform .14s ease-out;
+}
+
+@keyframes zeCaretBlink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}

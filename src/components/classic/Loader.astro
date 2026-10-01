@@ -1,0 +1,138 @@
+---
+// Home page loader from the WordPress theme (template-parts/loader.php), unchanged:
+// once per browser tab, types a random fact while the pupil follows the caret.
+---
+<div class="ze-loader" id="zeLoader">
+    <div class="ze-loader-inner">
+        <svg style="color:#040504" class="ze-loader-eye" id="zeLoaderEye" width="920" height="1200" viewBox="300 30 920 1200" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Loading">
+            <use href="/img/zakaria-face.svg#ze-face-lines" />
+            <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="#FDFDFD"/>
+            <g id="zeLoaderPupilGroup">
+                <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="#040504" />
+                <path d="M516.954 470.024C516.881 469.956 516.809 469.886 516.737 469.817C516.567 469.923 516.397 470.028 516.227 470.134C516.257 470.229 516.288 470.325 516.317 470.421C516.448 470.778 516.609 471.089 516.793 471.393C517.535 472.604 518.684 473.567 519.993 474.142C521.422 474.774 522.977 475.062 524.501 475.06C527.752 475.104 531.477 473.896 533.234 470.919C533.414 470.611 533.565 470.316 533.69 469.947C533.722 469.837 533.754 469.726 533.786 469.615C533.571 469.533 533.356 469.45 533.141 469.368C533.09 469.471 533.04 469.575 532.99 469.679C532.866 469.901 532.677 470.168 532.485 470.397C530.561 472.674 527.465 473.321 524.544 473.164C523.236 473.101 521.965 472.826 520.8 472.312C519.734 471.84 518.703 471.278 517.688 470.575C517.439 470.404 517.172 470.199 516.954 470.024Z" fill="white"/>
+            </g>
+        </svg>
+
+        <div class="ze-loader-type" id="zeLoaderType">
+            <span class="ze-loader-type-text" id="zeLoaderTypeText"></span><span class="ze-loader-caret" id="zeLoaderCaret"></span><span class="ze-loader-type-rest" id="zeLoaderTypeRest" aria-hidden="true"></span>
+        </div>
+    </div>
+</div>
+<script is:inline>
+(function () {
+    var loader = document.getElementById('zeLoader');
+    if (!loader) return;
+
+    // TESTING MODE: was left on for review — now off, so the "once per tab"
+    // gate below is live.
+    var TESTING_MODE = false;
+
+    // sessionStorage: scoped to this tab, cleared when the tab closes.
+    var SEEN_KEY = 'zeHomeLoaderSeen';
+
+    if (!TESTING_MODE && sessionStorage.getItem(SEEN_KEY)) {
+        loader.parentNode.removeChild(loader);
+        return;
+    }
+    sessionStorage.setItem(SEEN_KEY, '1');
+
+    document.documentElement.classList.add('ze-loading');
+
+    var typeEl = document.getElementById('zeLoaderType');
+    var textEl = document.getElementById('zeLoaderTypeText');
+    var restEl = document.getElementById('zeLoaderTypeRest');
+    var caret = document.getElementById('zeLoaderCaret');
+    var group = document.getElementById('zeLoaderPupilGroup');
+
+    // Fun, lesser-known general facts (nature, space, internet, culture) —
+    // one picked at random per load (never the same one twice in a row).
+    var FACTS = [
+        'The sky is blue because air scatters blue light the most.',
+        'Sunsets on Mars are blue.',
+        'Over half the oxygen we breathe comes from the ocean.',
+        'A fluffy white cloud can weigh as much as 100 elephants.',
+        'Octopuses have three hearts and blue blood.',
+        'Bananas are berries, but strawberries aren’t.',
+        'Sharks have been around longer than trees.',
+        'Wombats produce cube-shaped poop.',
+        'Sunlight takes about eight minutes to reach Earth.',
+        'The Eiffel Tower grows up to 15 cm taller in summer.',
+        'Most of the internet travels through cables on the ocean floor.',
+        'The first webcam was set up to watch a coffee pot.',
+        'The term “artificial intelligence” dates back to 1955.',
+        'The word “robot” comes from the Czech word for forced labour.',
+        'Oxford University is older than the Aztec Empire.'
+    ];
+    var lastIdx = parseInt(localStorage.getItem('zeLoaderLastFactIdx') || '-1', 10);
+    var idx;
+    do {
+        idx = Math.floor(Math.random() * FACTS.length);
+    } while (FACTS.length > 1 && idx === lastIdx);
+    localStorage.setItem('zeLoaderLastFactIdx', idx);
+
+    var phrase = FACTS[idx];
+    var negX = 14.0, posX = 20.0; // same forward/backward bounds as the hero eye
+    var LINE_DROP = 3.5, maxY = 9.0; // glance a little lower per wrapped line
+
+    // The not-yet-typed rest of the phrase sits in the layout invisibly, so
+    // line breaks are final from the first letter (no words jumping lines,
+    // no re-centering shift) and the caret's real position can be read.
+    var firstLineTop = null;
+
+    function render(n) {
+        textEl.textContent = phrase.slice(0, n);
+        restEl.textContent = phrase.slice(n);
+        lookAtCaret();
+    }
+
+    function lookAtCaret() {
+        var box = typeEl.getBoundingClientRect();
+        var c = caret.getBoundingClientRect();
+        if (!box.width) return;
+        if (firstLineTop === null) firstLineTop = c.top;
+
+        var fx = Math.min(Math.max((c.left - box.left) / box.width, 0), 1);
+        var line = Math.max(0, Math.round((c.top - firstLineTop) / (c.height || 1)));
+        var tx = -negX + fx * (negX + posX);
+        var ty = Math.min(line * LINE_DROP, maxY);
+        group.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
+    }
+
+    render(0); // pupil starts at the beginning of the first line
+
+    var i = 0;
+
+    function typeNext() {
+        i++;
+        render(i);
+
+        if (i < phrase.length) {
+            var justTyped = phrase[i - 1];
+            var delay = 55 + Math.random() * 85; // natural, uneven key-press rhythm
+            if (justTyped === ' ') delay += 90;   // small breath at word breaks
+            if (justTyped === '.') delay += 200;  // longer pause before the full stop lands
+            setTimeout(typeNext, delay);
+        } else {
+            setTimeout(finish, 550); // let the finished phrase sit a moment
+        }
+    }
+    setTimeout(typeNext, 300); // brief pause before typing starts
+
+    function finish() {
+        caret.classList.add('ze-loader-caret--done');
+        if (document.readyState === 'complete') {
+            hide();
+        } else {
+            window.addEventListener('load', hide);
+        }
+    }
+
+    function hide() {
+        loader.classList.add('ze-loader--hidden');
+        document.documentElement.classList.remove('ze-loading');
+        setTimeout(function () {
+            if (loader.parentNode) loader.parentNode.removeChild(loader);
+        }, 500);
+    }
+})();
+</script>

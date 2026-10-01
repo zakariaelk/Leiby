@@ -1,0 +1,149 @@
+---
+// The hand-drawn portrait with the pupil that follows the cursor (template-parts/hero-eye.php).
+// Now shown small, above the name; the height-matching to the intro block is switched off.
+---
+<svg style="color:#040504" class="ze-hero-eye" id="zeHeroEye" width="920" height="1200" viewBox="300 30 920 1200" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Hand-drawn illustration of Zakaria El Khachia">
+    <use href="/img/zakaria-face.svg#ze-face-lines" />
+
+    <!-- hand-drawn sclera cutout: erases the originally inked iris -->
+    <path d="M522.478 483.319C494.39 476.241 499.411 459.815 503.77 449.158C537.913 444.388 564.232 456.142 569.796 462.841C546.521 482.882 537.836 483.11 522.478 483.319Z" fill="#FDFDFD"/>
+
+    <!-- pupil group: ellipse + highlight, translated as one unit, always fully visible.
+         The transition (set from JS) is only on during random looks so they ease
+         smoothly; it's off while following the cursor so tracking is real-time. -->
+    <g id="zePupilGroup">
+        <ellipse cx="524.838" cy="465.684" rx="15.0319" ry="13.8758" fill="#040504" />
+        <path d="M516.954 470.024C516.881 469.956 516.809 469.886 516.737 469.817C516.567 469.923 516.397 470.028 516.227 470.134C516.257 470.229 516.288 470.325 516.317 470.421C516.448 470.778 516.609 471.089 516.793 471.393C517.535 472.604 518.684 473.567 519.993 474.142C521.422 474.774 522.977 475.062 524.501 475.06C527.752 475.104 531.477 473.896 533.234 470.919C533.414 470.611 533.565 470.316 533.69 469.947C533.722 469.837 533.754 469.726 533.786 469.615C533.571 469.533 533.356 469.45 533.141 469.368C533.09 469.471 533.04 469.575 532.99 469.679C532.866 469.901 532.677 470.168 532.485 470.397C530.561 472.674 527.465 473.321 524.544 473.164C523.236 473.101 521.965 472.826 520.8 472.312C519.734 471.84 518.703 471.278 517.688 470.575C517.439 470.404 517.172 470.199 516.954 470.024Z" fill="white"/>
+    </g>
+</svg>
+<script is:inline>
+(function () {
+    var svg = document.getElementById('zeHeroEye');
+    if (!svg) return;
+    var group = document.getElementById('zePupilGroup');
+
+    var restX = 524.838, restY = 465.684;
+    var negX = 14.0, posX = 20.0;
+    var negY = 8.0, posY = 9.0;
+
+    // Follows the cursor while it's moving; falls back to an autonomous
+    // "look around" once it's been still for a bit (also covers touch
+    // devices, which never fire mousemove at all, and the moment before
+    // the first move on page load).
+    var IDLE_DELAY = 1500; // ms of no cursor movement before it takes over
+    var RANDOM_EASE = 'transform 0.7s cubic-bezier(.45,.05,.55,.95)';
+    var idleTimer = null;
+    var randomLookTimer = null;
+
+    function moveTo(clientX, clientY) {
+        var pt = svg.createSVGPoint();
+        pt.x = clientX;
+        pt.y = clientY;
+        var ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        var loc = pt.matrixTransform(ctm.inverse());
+
+        var dx = loc.x - restX;
+        var dy = loc.y - restY;
+
+        var mag = Math.sqrt(dx * dx + dy * dy) || 1;
+        var reach = 700;
+        var t = Math.min(mag / reach, 1);
+
+        var nx = (dx / mag) * t;
+        var ny = (dy / mag) * t;
+
+        var tx = nx * (nx >= 0 ? posX : negX);
+        var ty = ny * (ny >= 0 ? posY : negY);
+
+        group.style.transition = 'none'; // real-time: no easing while following the cursor
+        group.setAttribute('transform', 'translate(' + tx.toFixed(2) + ',' + ty.toFixed(2) + ')');
+    }
+
+    // Picks a random point within the same bounds cursor-tracking uses, at
+    // a natural, unhurried pace (not a fast twitch, not a slow drift) —
+    // keeps re-scheduling itself until stopRandomLook() cancels it.
+    function randomLook() {
+        var angle = Math.random() * Math.PI * 2;
+        var t = Math.random(); // how far from center, 0-1
+        var nx = Math.cos(angle) * t;
+        var ny = Math.sin(angle) * t;
+
+        var tx = nx * (nx >= 0 ? posX : negX);
+        var ty = ny * (ny >= 0 ? posY : negY);
+
+        group.style.transition = RANDOM_EASE; // smooth, unhurried glide between looks
+        group.setAttribute('transform', 'translate(' + tx.toFixed(2) + ',' + ty.toFixed(2) + ')');
+
+        var delay = 1200 + Math.random() * 1800; // 1.2-3s between looks
+        randomLookTimer = setTimeout(randomLook, delay);
+    }
+
+    function stopRandomLook() {
+        if (randomLookTimer) {
+            clearTimeout(randomLookTimer);
+            randomLookTimer = null;
+        }
+    }
+
+    function scheduleIdle() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(randomLook, IDLE_DELAY);
+    }
+
+    // Cursor fully takes over from the random look: cancel it, then follow
+    // the cursor once per animation frame (mousemove can fire faster than
+    // the screen refreshes, so extra events in the same frame are skipped).
+    var lastX = 0, lastY = 0, frame = null;
+
+    window.addEventListener('mousemove', function (e) {
+        stopRandomLook();
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (!frame) {
+            frame = requestAnimationFrame(function () {
+                frame = null;
+                moveTo(lastX, lastY);
+            });
+        }
+        scheduleIdle(); // random look resumes once the cursor has been still for IDLE_DELAY
+    });
+
+    scheduleIdle(); // starts idle immediately: covers touch devices and page load
+
+    // Keep the illustration's height matched exactly to the name + intro
+    // block next to it (flex %-height doesn't resolve reliably against an
+    // auto-height row, so this is measured directly instead) — desktop only.
+    // Below 700px the illustration is a small fixed-size icon next to just
+    // the name (see .ze-hero-eye's own mobile rule in pages/_home.scss), so
+    // this bails out rather than fighting that CSS with an inline height.
+    var heroLeft = document.querySelector('.ze-hero-left');
+    var ratio = 920 / 1200; // matches the viewBox crop
+    // Computer screens (above the 991px $max-tablet breakpoint) show it at
+    // 70% of the intro block's height; tablets keep the full height.
+    var desktop = window.matchMedia('(min-width: 992px)');
+    var DESKTOP_SCALE = 0.7;
+
+    function syncHeight() { return; // small portrait above the name: fixed size (CSS)
+        if (!heroLeft) return;
+        if (window.innerWidth <= 700) {
+            svg.style.height = '';
+            svg.style.width = '';
+            return;
+        }
+        var h = heroLeft.getBoundingClientRect().height;
+        if (desktop.matches) h *= DESKTOP_SCALE;
+        if (h > 0) {
+            svg.style.height = h + 'px';
+            svg.style.width = (h * ratio) + 'px';
+        }
+    }
+
+    syncHeight();
+    window.addEventListener('resize', syncHeight);
+    window.addEventListener('load', syncHeight);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncHeight);
+    }
+})();
+</script>

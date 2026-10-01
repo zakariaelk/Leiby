@@ -1,0 +1,209 @@
+/*     
+    Name: _header.scss    
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+header {
+  position: relative;
+  width: 100%;
+  padding: 2rem 3rem;  
+  transition: $t-all;
+  z-index: 20;
+  // display: none !important;
+  // background-color: hsla(0%, 0%, 0%, 0.68);
+  // backdrop-filter: saturate(180%) blur(20px);
+
+  @media #{$max-laptop} {
+    padding: 2rem 3rem;
+  }
+
+  @media #{$max-small-laptop} {
+    padding: 1.5rem 2rem;
+  }
+
+  @media #{$max-tablet} {
+    padding: 1.5rem 3rem;
+  }
+
+
+  @media #{$max-phone} {
+    position: absolute;
+    padding: 2rem 2rem 1rem;
+  }
+
+  &.scrolled {
+    // background-color: hsla(0%, 1%, 98%, 0.68);
+    // backdrop-filter: saturate(180%) blur(20px);    
+    // transform: translate3d(0, -1rem, 0);
+
+    @media #{$max-phone} {
+    }
+
+    .top-header {
+      align-items: flex-start;      
+    }
+  }
+
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo-link {
+      align-self: center;
+      color: $white;
+      a {
+        font-weight: normal;
+
+        .top-part {
+          @extend .size-5;
+          @include font-medium;
+          display: block;
+          line-height: 1;
+
+          @media #{$max-phone} {
+            // @extend .size-5;
+          }
+        }
+
+        .bottom-part {
+          @extend .size-5;
+          @include font-regular;
+          white-space: nowrap;
+          position: absolute;
+          overflow: hidden;
+          transition: $t-all;
+          // transition: width 0.5s ease;
+
+          // &:after {
+          //   content: "";
+          //   display: inline-block;
+          //   @include size(0%, 110%);
+          //   position: absolute;
+          //   top: -3%;
+          //   right: 0;
+          //   background-color: $white;
+          //   transition: all 0.5s ease;
+          // }
+          
+          @media #{$max-phone} {
+            // opacity: 0;
+          }          
+
+          &.scrolled {
+            opacity: 0;
+
+            @media #{$max-phone} {
+              opacity: 0;
+            }
+
+            &:after {
+              // width: 100%;
+
+              @media #{$max-phone} {
+                width: 0%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Redesign header — home identity row (.ze-header--home, name now lives in
+ * the hero row in index.php) and the slim header used on every other page.
+ * Renders on the <header class="boxed-flex ze-header ..."> tag from header.php.
+ */
+.ze-header {
+  padding-top: 64px;
+  padding-bottom: 0;
+
+  // The legacy `header { @media #{$max-phone} { position: absolute; ... } }`
+  // rule above was written for the old animated hero header and still
+  // matches this element (it's still a <header> tag) — pin it back down.
+  position: relative !important;
+  top: auto !important;
+
+  // Sit below the home hover-preview overlays (.ze-preview).
+  z-index: 1 !important;
+
+  // Same taper as .ze-hero's margin-top (same value at every step) — this
+  // class only ever renders paired with .ze-header--slim today, which sets
+  // its own padding-top below, but keeping this responsive too means it
+  // won't regress if a bare .ze-header (e.g. a future --home variant) ever
+  // ships without --slim.
+  @media #{$max-tablet} {
+    padding-top: 56px;
+  }
+
+  @media (max-width: 700px) {
+    padding-top: 40px;
+  }
+}
+
+.ze-name {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  @include type-scale(3);
+  font-weight: $WeightMedium;
+  line-height: 1.2;
+}
+
+// Box sizing (padding / max-width / margin) comes from `.boxed-flex` on this
+// element in header.php — a flex-display counterpart to `.boxed` (see
+// layout/_common.scss), so there's no longer a competing `display` value on
+// the same element. This rule only adds the flex-row behavior specific to
+// the slim header.
+.ze-header--slim {
+  justify-content: space-between;
+  align-items: center;
+  // Was padding-top: 40px with no padding-bottom at all (inherited 0 from
+  // .ze-header) — left too little breathing room before the hero section
+  // below. Even top/bottom reads better and is small enough not to need
+  // its own taper across breakpoints.
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.ze-slim-name {
+  font-size: 18px;
+  font-weight: $WeightMedium;
+  line-height: 1.3;
+  text-decoration: none;
+  color: inherit;
+
+  @media (max-width: 700px) {
+    font-size: 17px;
+  }
+}
+
+.ze-slim-role {
+  display: block;
+  font-size: 18px;
+  font-weight: $WeightRegular;
+  color: #757575; // deliberately lighter than $gray (#666666)
+
+  @media (max-width: 700px) {
+    font-size: 17px;
+  }
+}
+
+.ze-slim-email {
+  font-size: 18px;
+  color: inherit;
+  text-decoration: underline;
+
+  @media (max-width: 700px) {
+    display: none;
+  }
+}

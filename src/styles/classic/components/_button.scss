@@ -1,0 +1,67 @@
+/*     
+    Name: _button.scss    
+    Author: Zakaria El Khachia
+    Client:
+*/
+
+/* Button */
+
+svg,
+.label,
+.arrow {
+  pointer-events: none;
+}
+
+// Standard CTA button — dark, modern, softly rounded corners. This is the
+// reusable base: compose it with a second, page/section-specific class for
+// placement and sizing rather than restyling a whole new button elsewhere
+// (e.g. .meta-cta in pages/_single-work.scss — <a class="btn meta-cta">).
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 22px;
+  background: #202020;
+  // Slightly dimmed white at rest, full white on hover/focus. Done with an
+  // rgba color rather than opacity so only the text/icon change, not the
+  // button background (the icon follows via currentColor).
+  color: rgba($white, 0.9);
+  font-weight: $WeightMedium;
+  border-radius: 8px; // discreet — just enough to soften the corners
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+  .arrow {
+    display: inline-flex;
+    transition: transform 0.25s ease;
+
+    // Inline SVG icons scale with the button's font-size and take its
+    // color via stroke="currentColor".
+    svg {
+      width: 1.1em;
+      height: 1.1em;
+    }
+  }
+
+  // Hover/focus: the button darkens to near-pitch black while the text
+  // brightens to full white. `color` is restated here because the global
+  // a:hover rule in base/_base.scss would otherwise turn the text black.
+  &:hover,
+  &:focus-visible {
+    background: #0a0a0a;
+    color: $white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+
+    .arrow {
+      transform: translateX(3px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+}

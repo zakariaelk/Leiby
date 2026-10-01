@@ -1,0 +1,54 @@
+.no-scroll {
+  overflow: hidden;
+}
+
+.img-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.img-modal.is-open {
+  display: block;
+}
+
+.img-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+}
+
+.img-modal__figure {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 4vh 4vw;
+}
+
+.img-modal__img {
+  max-width: 92vw;
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.img-modal__close {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    font-size: 32px;
+    line-height: 1;
+    color: $white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10000;
+  }
+  
+  .img-modal__close:hover {
+    opacity: 0.8;
+  }

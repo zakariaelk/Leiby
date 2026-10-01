@@ -1,0 +1,20 @@
+/*     
+    Name: _typo.scss    
+    Author: Zakaria El Khachia
+    Client: Zakaria Elk
+*/
+
+/* Font Name */
+
+// Plus Jakarta Sans + Fraunces are loaded via <link> in header.php (Google Fonts),
+// not self-hosted @font-face here — see header.php and abstracts/_variables.scss.
+
+/* Responsive font sizes */
+
+// Values live in $type-scale (abstracts/_variables.scss); in SCSS, use
+// @include type-scale(N) rather than a fixed font-size.
+@each $step, $sizes in $type-scale {
+  .size-#{$step} {
+    @include type-scale($step);
+  }
+}

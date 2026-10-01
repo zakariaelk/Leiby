@@ -1,0 +1,129 @@
+---
+// zakariaelk.com case study, ported from the WordPress theme (single.php). Same URL (/work/slug/),
+// same markup and classes. The body comes from the Markdoc file Keystatic edits; the "adapter"
+// styles give it the original look (section titles, framed visuals, captions, statement blocks).
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Classic from '../../layouts/Classic.astro';
+import { getProjects } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    // "Up next" follows the home page order and wraps around
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project, next } = Astro.props;
+const d = project.data;
+const { Content, headings } = await render(project);
+
+// Side menu: groups from the CMS, each item jumps to a heading in the body (matched on its text)
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const slugFor = (text: string) => headings.find((h) => norm(h.text) === norm(text))?.slug;
+const menu = d.menu
+  .map((g) => ({ ...g, items: g.items.map((it) => ({ ...it, slug: slugFor(it.heading) })).filter((it) => it.slug) }))
+  .filter((g) => g.items.length);
+const hasMenu = menu.length > 0;
+const meta = [
+  { label: 'Sector', value: d.sector },
+  { label: 'Role', value: d.role },
+  { label: 'Duration', value: d.duration },
+].filter((m) => m.value);
+const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+---
+<Classic bodyId="work" title={d.title} description={d.intro}>
+  <section class="project-hero">
+    <div class="hero-content boxed">
+      <div class="container-l">
+        <div class="col-5 banner-txt">
+          <h1>{d.headline}</h1>
+          <p class="desc">{d.intro}</p>
+          <div class="project-meta">
+            {meta.map((m) => (
+              <div class="meta-element">
+                <div class="meta-label">{m.label}</div>
+                <div class="meta-content"><p>{m.value}</p></div>
+              </div>
+            ))}
+            {d.link && (
+              <div class="meta-element meta-element--link">
+                <div class="meta-label">Take a look</div>
+                <a href={d.link} class="meta-content meta-link" target="_blank" rel="noopener noreferrer">
+                  <span class="label">{linkLabel}</span>
+                  <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+        <div class="col-7 cover-container">
+          <div class="cover-visual">
+            <Image src={d.cover} alt={`Zakaria Elk | ${d.title}`} widths={[640, 1024, 1440, 1920]} sizes="(min-width: 992px) 58vw, 100vw" loading="eager" fetchpriority="high" />
+          </div>
+        </div>
+      </div>
+      <i class="scroll-indic" aria-hidden="true">&gt;</i>
+    </div>
+  </section>
+
+  <section id="project-info" class="project-content">
+    <div class="boxed">
+      <div class:list={['container-l', !hasMenu && 'no-sidebar']}>
+        {hasMenu && (
+          <div class="col-4">
+            <nav class="menu-wrapper" aria-label="Sections">
+              <ul class="project-scrolling-menu">
+                {menu.map((g) => (
+                  <>
+                    {g.group && <li class="nav-item-chapter top-level"><a href={`#${g.items[0].slug}`}>{g.group}</a></li>}
+                    {g.items.map((it) => <li class="nav-item-container"><a href={`#${it.slug}`}>{it.label}</a></li>)}
+                  </>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        )}
+        <div class="col-8 page-body-content">
+          <div class="section-chapter md-body"><Content /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <a class="next-post-nav" href={`/work/${next.id}/`}>
+    <span class="next-link" data-label="next project">up next</span>
+    <span class="next-label" data-label={next.data.title}>{next.data.title}</span>
+  </a>
+</Classic>
+
+<script>
+  // Hero text slides in on load (was anime.js)
+  requestAnimationFrame(() => document.querySelector('.banner-txt')?.classList.add('on'));
+
+  // Highlight the section being read, in the side menu and on its title (blinking cursor)
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.project-scrolling-menu .nav-item-container a')];
+  const titles = [...document.querySelectorAll<HTMLElement>('.md-body h2, .md-body h3')].filter((h) => links.some((a) => a.hash === `#${h.id}`));
+  const setActive = (id: string) => {
+    links.forEach((a) => a.parentElement?.classList.toggle('active', a.hash === `#${id}`));
+    document.querySelectorAll('.md-body h2').forEach((h) => h.classList.toggle('active', h.id === id));
+  };
+  // The active section is the last menu heading that has scrolled past the top third of the screen
+  const update = () => {
+    const line = window.innerHeight * 0.33;
+    let current = titles[0];
+    titles.forEach((t) => { if (t.getBoundingClientRect().top < line) current = t; });
+    if (current) setActive(current.id);
+  };
+  if (titles.length) {
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+  // Sticky offset kicks in once the menu reaches the top (was .sticky in app.js)
+  const menu = document.querySelector('.project-scrolling-menu');
+  const onScroll = () => menu?.classList.toggle('sticky', (menu.getBoundingClientRect().top ?? 999) < 400);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
