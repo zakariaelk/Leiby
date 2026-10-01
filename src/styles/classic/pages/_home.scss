@@ -357,7 +357,7 @@
 // height-matched (via JS, see template-parts/hero-eye.php), right-aligned
 // within the boxed container.
 .ze-hero {
-  margin-top: 64px;
+  padding: 40px 0 50px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -368,8 +368,12 @@
     align-items: flex-end;
   }
 
+  @media #{$max-tablet} {
+    padding: 36px 0 40px;
+  }
+
   @media (max-width: 700px) {
-    margin-top: 40px;
+    padding: 32px 0 32px;
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -681,7 +685,11 @@ a.ze-row:hover .ze-preview-alt {
   align-items: center;
   gap: 48px;
   background: $bg-gray;
-  margin-top: 32px;
+  // Rounded outer corners in every layout: the card clips its own children, so the
+  // text side (left) and the visual (right, or top when stacked) follow the radius.
+  border-radius: 8px;
+  overflow: hidden;
+  isolation: isolate; // keeps the clip in Safari while the visual scales on hover
   text-decoration: none;
   color: inherit;
 
@@ -695,7 +703,6 @@ a.ze-row:hover .ze-preview-alt {
     flex-direction: column;
     align-items: stretch;
     gap: 24px;
-    margin-top: 24px;
   }
 
   &:hover {
@@ -712,13 +719,12 @@ a.ze-row:hover .ze-preview-alt {
 
 .ze-featured-text {
   flex: 0 0 38%;
-  max-width: 420px;
-  // Was flat 10px left/right at every width — bumped up on big screens,
-  // tighter again once the card gets narrower.
-  padding: 0 40px;
+  // Full width of its column: only a left padding, the card's 48px gap already
+  // separates the text from the visual on the right.
+  padding: 0 0 0 40px;
 
   @media #{$max-laptop} {
-    padding: 0 20px;
+    padding: 0 0 0 24px;
   }
 
   @media #{$max-tablet} {

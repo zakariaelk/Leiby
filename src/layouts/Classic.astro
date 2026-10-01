@@ -8,12 +8,13 @@ import '../styles/classic/classic.scss';
 import Loader from '../components/classic/Loader.astro';
 import settings from '../content/pages/settings.json';
 
-interface Props { title?: string; description?: string; bodyId: 'home' | 'work'; loader?: boolean }
+interface Props { title?: string; description?: string; bodyId: 'home' | 'work'; loader?: boolean; noindex?: boolean }
 const {
   title,
   description = 'Product designer with a frontend development background, working across agencies and humanitarian contexts',
   bodyId,
   loader = false,
+  noindex = false,
 } = Astro.props;
 const fullTitle = title ? `${title} | ${settings.name}` : `${settings.name} | Product designer`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -28,6 +29,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="keywords" content="Product Designer, UX Designer, UI Designer, Frontend Developer, Netherlands" />
     <meta name="author" content={settings.name} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/img/favicon/zakaria-logo-57.png" />
