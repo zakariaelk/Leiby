@@ -28,7 +28,7 @@ const intro = esc(home.heroText)
   .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   .replace(/\*(.+?)\*/g, '<span class="crayon-underline">$1</span>');
 ---
-<Classic bodyId="home" loader noindex={noindex}>
+<Classic bodyId="home" noindex={noindex}>
   <div class="boxed ze-home">
     <section class:list={['ze-hero', aside === 'cities' && 'ze-hero--aside']}>
       <div class="ze-hero-left">
