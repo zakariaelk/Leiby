@@ -7,7 +7,7 @@ import { render, type CollectionEntry } from 'astro:content';
 import Story from '../../layouts/Story.astro';
 import { splitConfirm } from '../../lib/media';
 
-interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'> }
+interface Props { project: CollectionEntry<'projects' | 'lab'>; next: CollectionEntry<'projects'> }
 const { project, next } = Astro.props;
 const d = project.data;
 const { Content, headings } = await render(project);

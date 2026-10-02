@@ -1,10 +1,8 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-const projects = defineCollection({
-  loader: glob({ pattern: '*.mdoc', base: './src/content/projects' }),
-  schema: ({ image }) =>
+const projectSchema = ({ image }: SchemaContext) =>
     z.object({
       title: z.string(),
       client: z.string(),
@@ -35,7 +33,17 @@ const projects = defineCollection({
         group: z.string().default(''),
         items: z.array(z.object({ label: z.string(), heading: z.string() })),
       })).default([]),
-    }),
+    });
+
+const projects = defineCollection({
+  loader: glob({ pattern: '*.mdoc', base: './src/content/projects' }),
+  schema: projectSchema,
+});
+
+// Drafts and alternative versions of case studies, not listed anywhere (e.g. /lab/inso-app/)
+const lab = defineCollection({
+  loader: glob({ pattern: '*.mdoc', base: './src/content/lab' }),
+  schema: projectSchema,
 });
 
 const timeline = z.array(z.object({ name: z.string(), role: z.string(), years: z.string() })).default([]);
@@ -51,4 +59,4 @@ const about = defineCollection({
   }),
 });
 
-export const collections = { projects, about };
+export const collections = { projects, lab, about };

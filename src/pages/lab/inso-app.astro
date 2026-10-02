@@ -1,0 +1,11 @@
+---
+// Rewritten INSO app case study on the story template, kept apart for comparison with the
+// live version at /work/mitigating-risk-with-location-based-alerts/. Not linked, not indexed.
+import { getEntry } from 'astro:content';
+import CaseStory from '../../components/story/CaseStory.astro';
+import { getProjects } from '../../lib/data';
+
+const project = (await getEntry('lab', 'inso-app'))!;
+const next = (await getProjects()).find((p) => p.id === 'ngosafety-website-redesign')!;
+---
+<CaseStory project={project} next={next} />
