@@ -11,6 +11,9 @@ const projectSchema = ({ image }: SchemaContext) =>
       intro: z.string(),
       // Show the intro under the title on the case study page (it still feeds the home card)
       showIntro: z.boolean().default(true),
+      // Short line after the project name, e.g. "a safety alert app for humanitarian workers"
+      tagline: z.string().optional(),
+      projectType: z.string().optional(),
       sector: z.string().optional(),
       role: z.string().optional(),
       duration: z.string().optional(),

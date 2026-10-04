@@ -1,0 +1,224 @@
+// Case study page (work/[slug].astro): hero in the order a reader skims it, then one centred
+// reading column with the sections menu on the left. Replaces the old project-hero and the
+// col-4 / col-8 side menu layout from single-work.
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+// ---------- Hero ----------
+.cs-top { background: $hero-bg-gray; }
+.cs-top__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  padding-top: clamp(40px, 5vw, 72px);
+  padding-bottom: clamp(40px, 5vw, 72px);
+
+  @media #{$max-tablet} {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+.cs-top__visual {
+  img { display: block; width: 100%; height: auto; border-radius: 8px; }
+  @media #{$max-tablet} { order: 2; }
+}
+.cs-top__text { max-width: 620px; }
+.cs-top__name {
+  @include type-scale(6);
+  color: $gray;
+  line-height: 1.4;
+  strong { color: $black; font-weight: $WeightMedium; }
+}
+.cs-top__title {
+  margin-top: 16px;
+  font-size: clamp(32px, 1.4rem + 2.6vw, 56px);
+  line-height: 1.12;
+  font-weight: $WeightMedium;
+  letter-spacing: -0.015em;
+}
+.cs-top__desc { @include type-scale(5); margin-top: 16px; }
+.cs-top__meta {
+  margin-top: 32px;
+  display: grid;
+  gap: 8px;
+  @include type-scale(6);
+  line-height: 1.45;
+
+  div { display: flex; gap: 8px; }
+  dt { flex: none; font-weight: $WeightMedium; }
+  dt::after { content: ':'; }
+  dd { margin: 0; font-weight: $WeightLight; }
+}
+.cs-top__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 12px 22px;
+  border: 1px solid $black;
+  border-radius: 999px;
+  @include type-scale(6);
+  font-weight: $WeightMedium;
+  color: $black;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover, &:focus-visible { background: $black; color: $white; }
+}
+
+// ---------- Reading layout ----------
+// Three columns: menu | reading area | a spacer as wide as the menu, so the text stays centred
+// on the page. Text is ~680px; images and videos break out wider, within the reading area.
+.cs-read {
+  --toc: 220px;
+  display: grid;
+  grid-template-columns: var(--toc) minmax(0, 1fr) var(--toc);
+  column-gap: 24px;
+  padding: clamp(56px, 6vw, 96px) var(--page-pad) 0;
+
+  &--no-menu { grid-template-columns: 0 minmax(0, 1fr) 0; }
+
+  @media (max-width: 1199px) { --toc: 28px; }
+  @media #{$max-tablet} { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+}
+.cs-read__body {
+  grid-column: 2;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  @media #{$max-tablet} { grid-column: 1; }
+}
+
+// Medium-like reading: regular weight (not light), comfortable line height
+#work .cs-read__body {
+  > article > p:not(:has(img)), li { font-weight: $WeightRegular; line-height: 1.65; }
+  > article > p:not(h2 ~ p) { line-height: 1.55; }
+
+  // Visuals wider than the text, centred on it
+  p:has(> img), .media-video, .carousel-chapter {
+    width: min(1000px, calc(100vw - 2 * var(--page-pad) - 2 * var(--toc, 0px) - 48px));
+    max-width: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    @media #{$max-tablet} { width: calc(100vw - 2 * var(--page-pad)); }
+  }
+  img, .media-video video { max-width: 100%; }
+  // Video captions line up with the text column, like the image captions
+  .media-video figcaption { max-width: 680px; margin-left: auto; margin-right: auto; }
+}
+
+// ---------- Sections menu ----------
+.cs-toc {
+  grid-column: 1;
+  grid-row: 1;
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  z-index: 20;
+  font-size: 14px;
+  line-height: 1.35;
+
+  ol { list-style: none; margin: 0; padding: 0; }
+  .cs-toc__group + .cs-toc__group { margin-top: 18px; }
+  .cs-toc__group-label { display: block; margin-bottom: 6px; color: $black; font-weight: $WeightMedium; }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    color: $gray;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  a:hover { color: $black; }
+  a[aria-current] { color: $black; font-weight: $WeightMedium; }
+
+  .cs-toc__tick { flex: none; width: 10px; height: 2px; border-radius: 1px; background: currentColor; opacity: 0.35; transition: width 0.2s ease, opacity 0.2s ease; }
+  a[aria-current] .cs-toc__tick { width: 16px; opacity: 1; }
+
+  @media #{$max-tablet} { display: none; }
+}
+
+// Smaller laptops: the menu shrinks to ticks and opens over the page on hover or keyboard focus
+@media (min-width: 992px) and (max-width: 1199px) {
+  .cs-toc {
+    width: 28px;
+    padding: 12px 0;
+    overflow: hidden;
+    border-radius: 0 10px 10px 0;
+    transition: width 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease;
+
+    .cs-toc__label, .cs-toc__group-label { opacity: 0; transition: opacity 0.15s ease; }
+    .cs-toc__group-label { height: 0; margin: 0; overflow: hidden; }
+
+    &:hover, &:focus-within {
+      width: 260px;
+      padding: 12px 18px;
+      margin-left: -18px;
+      background: $white;
+      box-shadow: 0 16px 48px -20px rgba(0, 0, 0, 0.35), 0 0 0 1px #ececec;
+      .cs-toc__label, .cs-toc__group-label { opacity: 1; }
+      .cs-toc__group-label { height: auto; margin-bottom: 6px; }
+    }
+  }
+}
+
+// ---------- Phones and tablets: top bar with progress, section list in a sheet ----------
+.cs-bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #ececec;
+  transform: translateY(-100%);
+  transition: transform 0.25s ease;
+
+  &.is-shown { transform: none; }
+  @media (min-width: 992px) { display: none; }
+}
+.cs-bar__btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px var(--page-pad);
+  border: 0;
+  background: none;
+  color: $black;
+  font: inherit;
+  font-size: 15px;
+  font-weight: $WeightMedium;
+  text-align: left;
+  cursor: pointer;
+
+  svg { width: 10px; height: 7px; fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+}
+.cs-bar__current { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-bar__hint { color: $gray; font-weight: $WeightRegular; }
+.cs-bar__progress { height: 2px; background: #ececec; }
+.cs-bar__progress span { display: block; height: 100%; background: $black; transform-origin: left; transform: scaleX(0); }
+
+.cs-sheet {
+  margin: auto 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 16px 16px 0 0;
+  padding: 20px var(--page-pad) 40px;
+  background: $white;
+  color: $black;
+
+  &::backdrop { background: rgba(0, 0, 0, 0.45); }
+  ol { list-style: none; margin: 0; padding: 0; }
+  ol a { display: block; padding: 10px 0; border-top: 1px solid #ececec; color: $black; text-decoration: none; font-size: 17px; }
+  ol a[aria-current] { font-weight: $WeightMedium; }
+}
+.cs-sheet__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.cs-sheet__title { font-size: 15px; color: $gray; }
+.cs-sheet__close { border: 0; background: none; color: $black; font: inherit; font-size: 15px; font-weight: $WeightMedium; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; padding: 8px; margin-right: -8px; }

@@ -51,12 +51,19 @@ const intro = esc(home.heroText)
       )}
     </section>
 
+    <div class="ze-section-label ze-featured-label">Featured work</div>
     <a href={`/work/${featured.id}/`} class="ze-featured">
       <div class="ze-featured-text">
-        <div class="ze-featured-eyebrow">Featured work</div>
-        <h2 class="ze-featured-title">{featured.data.headline}</h2>
-        <p class="ze-featured-desc">{featured.data.intro}</p>
-        <span class="ze-featured-cta">Read the case</span>
+        <p class="ze-featured-name"><strong>{featured.data.client}</strong>{featured.data.tagline && <span> · {featured.data.tagline}</span>}</p>
+        <h2 class="ze-featured-statement">{featured.data.intro}</h2>
+        <dl class="ze-featured-meta">
+          {[
+            { label: 'Project type', value: featured.data.projectType },
+            { label: 'Role', value: featured.data.role },
+            { label: 'Industry', value: featured.data.sector },
+          ].filter((m) => m.value).map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
+        </dl>
+        <span class="ze-featured-cta">Read the case study</span>
       </div>
       <div class="ze-featured-visual">
         {featured.data.featuredVideo ? (
@@ -141,6 +148,24 @@ const intro = esc(home.heroText)
   @media (max-width: 700px) { .ze-hero-lang { top: 32px; } }
   /* Tablets: the drawing sits on the intro's baseline, as on desktop, below the language link */
   @media (min-width: 701px) and (max-width: 991px) { .ze-hero--classic .ze-hero-visual { align-self: flex-end; } }
+
+  /* Featured work, in the order a reader skims it: project name (small), what I did (large),
+     the facts (small), then the link. Even spacing between the four. */
+  .ze-featured-label { margin-top: 0; }
+  .ze-featured { align-items: stretch; }
+  .ze-featured-text { flex: 0 0 44%; display: flex; flex-direction: column; justify-content: center; padding-block: 48px; }
+  .ze-featured-name { font-size: 16px; line-height: 1.4; color: #666; margin: 0; }
+  .ze-featured-name strong { color: #101010; font-weight: 500; }
+  .ze-featured-statement { font-size: clamp(26px, 1.2rem + 1.4vw, 38px); line-height: 1.22; font-weight: 500; letter-spacing: -0.01em; margin: 16px 0 0; }
+  .ze-featured-meta { margin: 32px 0 0; display: grid; gap: 6px; font-size: 16px; line-height: 1.45; }
+  .ze-featured-meta div { display: flex; gap: 8px; }
+  .ze-featured-meta dt { color: #666; flex: none; }
+  .ze-featured-meta dt::after { content: ':'; }
+  .ze-featured-meta dd { margin: 0; }
+  .ze-featured-text .ze-featured-cta { margin-top: 32px; align-self: flex-start; }
+  @media (max-width: 991px) {
+    .ze-featured-text { padding-block: 0 24px; }
+  }
 
   /* The featured card's clip is now a video (was a GIF): same box as the image */
   .ze-featured-visual video { display: block; width: 100%; height: 100%; object-fit: cover; }

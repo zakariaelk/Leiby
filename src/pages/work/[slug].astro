@@ -32,71 +32,79 @@ const menu = d.menu
   .filter((g) => g.items.length);
 const hasMenu = menu.length > 0;
 const meta = [
-  { label: 'Sector', value: d.sector },
+  { label: 'Project type', value: d.projectType },
   { label: 'Role', value: d.role },
-  { label: 'Duration', value: d.duration },
   { label: 'Team', value: d.team },
+  { label: 'Industry', value: d.sector },
+  { label: 'Duration', value: d.duration },
 ].filter((m) => m.value);
 const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+// Short labels for the progress bar on small screens
+const sections = menu.flatMap((g) => g.items.map((it) => ({ id: it.slug!, label: it.label })));
 ---
 <Classic bodyId="work" title={d.title} description={d.intro}>
-  <section class="project-hero">
-    <div class="hero-content boxed">
-      <div class="container-l">
-        <div class="col-5 banner-txt">
-          <h1>{d.headline}</h1>
-          {d.showIntro && <p class="desc">{d.intro}</p>}
-          <div class="project-meta">
-            {meta.map((m) => (
-              <div class="meta-element">
-                <div class="meta-label">{m.label}</div>
-                <div class="meta-content"><p>{m.value}</p></div>
-              </div>
-            ))}
-            {d.link && (
-              <div class="meta-element meta-element--link">
-                <div class="meta-label">Take a look</div>
-                <a href={d.link} class="meta-content meta-link" target="_blank" rel="noopener noreferrer">
-                  <span class="label">{linkLabel}</span>
-                  <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-        <div class="col-7 cover-container">
-          <div class="cover-visual">
-            <Image src={d.cover} alt={`Zakaria Elk | ${d.title}`} widths={[640, 1024, 1440, 1920]} sizes="(min-width: 992px) 58vw, 100vw" loading="eager" fetchpriority="high" />
-          </div>
-        </div>
+  <!-- Hero, in the order a reader skims it: project (small), what it is about (large), the facts, the link -->
+  <section class="cs-top" aria-label="Project summary">
+    <div class="cs-top__inner boxed">
+      <div class="cs-top__visual">
+        <Image src={d.cover} alt={`${d.client}: ${d.tagline ?? d.title}`} widths={[640, 960, 1280, 1680]} sizes="(min-width: 992px) 54vw, 100vw" loading="eager" fetchpriority="high" />
       </div>
-      <i class="scroll-indic" aria-hidden="true">&gt;</i>
+      <div class="cs-top__text">
+        <p class="cs-top__name"><strong>{d.client}</strong>{d.tagline && <span> · {d.tagline}</span>}</p>
+        <h1 class="cs-top__title">{d.headline}</h1>
+        {d.showIntro && <p class="cs-top__desc">{d.intro}</p>}
+        <dl class="cs-top__meta">
+          {meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
+        </dl>
+        {d.link && (
+          <a href={d.link} class="cs-top__link" target="_blank" rel="noopener noreferrer">
+            Visit {linkLabel}<span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span>
+          </a>
+        )}
+      </div>
     </div>
   </section>
 
-  <section id="project-info" class="project-content">
-    <div class="boxed">
-      <div class:list={['container-l', !hasMenu && 'no-sidebar']}>
-        {hasMenu && (
-          <div class="col-4">
-            <nav class="menu-wrapper" aria-label="Sections">
-              <ul class="project-scrolling-menu">
-                {menu.map((g) => (
-                  <>
-                    {g.group && <li class="nav-item-chapter top-level"><a href={`#${g.items[0].slug}`}>{g.group}</a></li>}
-                    {g.items.map((it) => <li class="nav-item-container"><a href={`#${it.slug}`}>{it.label}</a></li>)}
-                  </>
+  <!-- Reading layout: one centred column, sections menu on the left (ticks on smaller screens, a top bar on phones) -->
+  <section id="project-info" class:list={['cs-read', !hasMenu && 'cs-read--no-menu']}>
+    {hasMenu && (
+      <nav class="cs-toc" aria-label="Sections">
+        <ol>
+          {menu.map((g) => (
+            <li class="cs-toc__group">
+              {g.group && <span class="cs-toc__group-label">{g.group}</span>}
+              <ol>
+                {g.items.map((it) => (
+                  <li><a href={`#${it.slug}`} data-section={it.slug}><span class="cs-toc__tick" aria-hidden="true"></span><span class="cs-toc__label">{it.label}</span></a></li>
                 ))}
-              </ul>
-            </nav>
-          </div>
-        )}
-        <div class="col-8 page-body-content">
-          <div class="section-chapter md-body"><Content /></div>
-        </div>
-      </div>
-    </div>
+              </ol>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <div class="cs-read__body md-body"><Content /></div>
   </section>
+
+  {hasMenu && (
+    <>
+      <div class="cs-bar" data-bar>
+        <button type="button" class="cs-bar__btn" aria-haspopup="dialog" aria-controls="cs-sheet">
+          <span class="cs-bar__current" data-current>{sections[0]?.label}</span>
+          <span class="cs-bar__hint">Sections</span>
+          <svg viewBox="0 0 12 8" aria-hidden="true"><path d="M2 1.5h8L6 6.5z" /></svg>
+        </button>
+        <div class="cs-bar__progress" aria-hidden="true"><span data-progress></span></div>
+      </div>
+      <dialog id="cs-sheet" class="cs-sheet" aria-labelledby="cs-sheet-title">
+        <div class="cs-sheet__head">
+          <p id="cs-sheet-title" class="cs-sheet__title">Sections</p>
+          <button type="button" class="cs-sheet__close" data-close>Close</button>
+        </div>
+        <ol>{sections.map((s) => <li><a href={`#${s.id}`} data-section={s.id}>{s.label}</a></li>)}</ol>
+      </dialog>
+    </>
+  )}
 
   <a class="next-post-nav" href={`/work/${next.id}/`}>
     <span class="next-link" data-label="next project">up next</span>
@@ -105,30 +113,47 @@ const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, ''
 </Classic>
 
 <script>
-  // Hero text slides in on load (was anime.js)
-  requestAnimationFrame(() => document.querySelector('.banner-txt')?.classList.add('on'));
-
-  // Highlight the section being read, in the side menu and on its title (blinking cursor)
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('.project-scrolling-menu .nav-item-container a')];
-  const titles = [...document.querySelectorAll<HTMLElement>('.md-body h2, .md-body h3')].filter((h) => links.some((a) => a.hash === `#${h.id}`));
-  const setActive = (id: string) => {
-    links.forEach((a) => a.parentElement?.classList.toggle('active', a.hash === `#${id}`));
-    document.querySelectorAll('.md-body h2').forEach((h) => h.classList.toggle('active', h.id === id));
-  };
-  // The active section is the last menu heading that has scrolled past the top third of the screen
+  // Section being read: highlighted in the menu, the top bar and on its title (blinking cursor)
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-section]')];
+  const ids = [...new Set(links.map((a) => a.dataset.section!))];
+  const titles = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+  const bar = document.querySelector<HTMLElement>('[data-bar]');
+  const current = document.querySelector<HTMLElement>('[data-current]');
+  const progress = document.querySelector<HTMLElement>('[data-progress]');
+  const hero = document.querySelector<HTMLElement>('.cs-top');
+  const body = document.querySelector<HTMLElement>('.cs-read__body');
+  let active = '';
+  let ticking = false;
   const update = () => {
+    ticking = false;
     const line = window.innerHeight * 0.33;
-    let current = titles[0];
-    titles.forEach((t) => { if (t.getBoundingClientRect().top < line) current = t; });
-    if (current) setActive(current.id);
+    let id = titles[0]?.id ?? '';
+    titles.forEach((t) => { if (t.getBoundingClientRect().top < line) id = t.id; });
+    if (id !== active) {
+      active = id;
+      links.forEach((a) => (a.dataset.section === id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+      document.querySelectorAll('.md-body h2').forEach((h) => h.classList.toggle('active', h.id === id));
+      if (current) current.textContent = links.find((a) => a.dataset.section === id)?.textContent?.trim() || 'Sections';
+    }
+    if (body && progress) {
+      const r = body.getBoundingClientRect();
+      progress.style.transform = `scaleX(${Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - window.innerHeight)))})`;
+    }
+    if (bar && hero) bar.classList.toggle('is-shown', hero.getBoundingClientRect().bottom < 0);
   };
   if (titles.length) {
     update();
-    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
   }
-  // Sticky offset kicks in once the menu reaches the top (was .sticky in app.js)
-  const menu = document.querySelector('.project-scrolling-menu');
-  const onScroll = () => menu?.classList.toggle('sticky', (menu.getBoundingClientRect().top ?? 999) < 400);
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Section list on phones and tablets: a modal dialog (focus, Escape and backdrop for free)
+  const sheet = document.querySelector<HTMLDialogElement>('#cs-sheet');
+  if (sheet) {
+    document.querySelector('.cs-bar__btn')?.addEventListener('click', () => sheet.showModal());
+    sheet.querySelector('[data-close]')?.addEventListener('click', () => sheet.close());
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet || (e.target as HTMLElement).closest('a')) sheet.close();
+    });
+  }
 </script>
