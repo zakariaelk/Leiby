@@ -29,6 +29,17 @@
   }
 
   p { margin-bottom: 0.5rem; font-weight: $WeightLight; max-width: 720px; }
+
+  // Lead: paragraphs before the first section heading open the story. No heading of their own,
+  // one step larger and regular weight, with extra room before the first section.
+  > article > p:not(h2 ~ p) {
+    @include type-scale(4);
+    font-weight: $WeightRegular;
+    line-height: 1.55;
+    max-width: 760px;
+    margin-bottom: 1rem;
+  }
+  > article > p:not(h2 ~ p) + h2 { margin-top: 64px; }
   strong, b { font-weight: $WeightMedium; }
   a { text-decoration: underline; }
 
