@@ -101,6 +101,7 @@ export default config({
         headline: fields.text({ label: 'Headline (case study page)' }),
         summary: fields.text({ label: 'Card summary', multiline: true }),
         intro: fields.text({ label: 'Intro (case study page)', multiline: true }),
+        showIntro: fields.checkbox({ label: 'Show the intro under the title on the case study page', defaultValue: true }),
         sector: fields.text({ label: 'Sector' }),
         role: fields.text({ label: 'Role' }),
         duration: fields.text({ label: 'Duration' }),

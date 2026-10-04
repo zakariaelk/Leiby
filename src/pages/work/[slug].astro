@@ -44,7 +44,7 @@ const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, ''
       <div class="container-l">
         <div class="col-5 banner-txt">
           <h1>{d.headline}</h1>
-          <p class="desc">{d.intro}</p>
+          {d.showIntro && <p class="desc">{d.intro}</p>}
           <div class="project-meta">
             {meta.map((m) => (
               <div class="meta-element">

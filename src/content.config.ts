@@ -9,6 +9,8 @@ const projectSchema = ({ image }: SchemaContext) =>
       headline: z.string(),
       summary: z.string(),
       intro: z.string(),
+      // Show the intro under the title on the case study page (it still feeds the home card)
+      showIntro: z.boolean().default(true),
       sector: z.string().optional(),
       role: z.string().optional(),
       duration: z.string().optional(),
