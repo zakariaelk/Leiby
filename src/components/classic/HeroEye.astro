@@ -121,10 +121,11 @@
     var ratio = 920 / 1200; // matches the viewBox crop
     // Computer screens (above the 991px $max-tablet breakpoint) show it at
     // 70% of the intro block's height; tablets keep the full height.
-    var desktop = window.matchMedia('(min-width: 992px)');
+    var desktop = window.matchMedia('(min-width: 701px)'); // was 992px: on tablets the full-height drawing ran into the language link
     var DESKTOP_SCALE = 0.7;
 
-    function syncHeight() { return; // small portrait above the name: fixed size (CSS)
+    function syncHeight() {
+        if (svg.closest('.ze-face-mini')) return; // /v2/: small portrait above the name, fixed size (CSS)
         if (!heroLeft) return;
         if (window.innerWidth <= 700) {
             svg.style.height = '';

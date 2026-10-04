@@ -1,8 +1,8 @@
 ---
 // zakariaelk.com home page, ported from the WordPress theme (index.php).
-// Changes from the original: the portrait is small and sits above the name, and the top
-// right of the hero holds either the cities, written vertically (Casablanca → Beijing →
-// Rotterdam, the site root), or a language button (the /v2/ version).
+// Site root: same hero as WordPress (drawing on the right, height matched to the intro),
+// plus a language link at the top right. /v2/: small portrait above the name and a black
+// language button. (The cities were removed from the hero; they may come back in the footer.)
 import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import Classic from '../../layouts/Classic.astro';
@@ -12,8 +12,8 @@ import home from '../../content/pages/home.json';
 import settings from '../../content/pages/settings.json';
 import { getProjects } from '../../lib/data';
 
-interface Props { aside?: 'cities' | 'lang'; noindex?: boolean }
-const { aside = 'cities', noindex = false } = Astro.props;
+interface Props { hero?: 'classic' | 'v2'; noindex?: boolean }
+const { hero = 'classic', noindex = false } = Astro.props;
 
 const projects = await getProjects();
 const featured = projects.find((p) => p.data.featured) ?? projects[0];
@@ -30,9 +30,9 @@ const intro = esc(home.heroText)
 ---
 <Classic bodyId="home" noindex={noindex}>
   <div class="boxed ze-home">
-    <section class:list={['ze-hero', aside === 'cities' && 'ze-hero--aside']}>
+    <section class:list={['ze-hero', `ze-hero--${hero}`]}>
       <div class="ze-hero-left">
-        <div class="ze-face-mini"><HeroEye /></div>
+        {hero === 'v2' && <div class="ze-face-mini"><HeroEye /></div>}
         <h1 class="sr-only">{settings.name}, product designer</h1>
         <a href="/" class="ze-name" aria-hidden="true">{settings.name}</a>
         <div class="ze-intro-text"><p set:html={intro} /></div>
@@ -41,21 +41,11 @@ const intro = esc(home.heroText)
           <a href="#" class="ze-email-reveal" data-email={settings.email}>Email me</a>
         </div>
       </div>
-      {aside === 'cities' ? (
-        <div class="ze-hero-aside">
-          <LangSwitch look="link" />
-          <ol class="ze-cities" aria-label="Cities I have lived in">
-            {home.cities.map((city, i) => (
-              <>
-                {i > 0 && <li class="ze-cities__dots" aria-hidden="true"></li>}
-                <li class="ze-cities__city">
-                  <span class="ze-cities__name">{city}</span>
-                  {home.cityYears?.[i] && <span class="ze-cities__year">{home.cityYears[i]}</span>}
-                </li>
-              </>
-            ))}
-          </ol>
-        </div>
+      {hero === 'classic' ? (
+        <>
+          <div class="ze-hero-visual"><HeroEye /></div>
+          <div class="ze-hero-lang"><LangSwitch look="link" /></div>
+        </>
       ) : (
         <LangSwitch />
       )}
@@ -144,44 +134,13 @@ const intro = esc(home.heroText)
   .ze-face-mini .ze-hero-eye { height: 75px !important; width: auto !important; }
   @media (max-width: 700px) { .ze-face-mini .ze-hero-eye { height: 64px !important; } }
 
-  /* Golden-ratio grid (desktop and tablet):
-     - across: the text column takes 61.8% of the width, the right column the other 38.2%
-     - down: the portrait block (face + space under it) is 38.2% of the hero's content height,
-       so the name sits on the golden line and the intro + links fill the other 61.8%
-     The right column mirrors it: language switcher level with the top of the portrait,
-     cities running the full height to the links' baseline. */
-  .ze-hero { align-items: flex-end; }
-  .ze-hero--aside .ze-hero-left { flex: 0 0 61.8%; max-width: 61.8%; }
-  .ze-hero--aside .ze-face-mini { margin-bottom: 30px; }
-  .ze-hero-aside {
-    align-self: stretch; flex: none;
-    display: flex; gap: 28px;
-  }
-  .ze-hero-aside .ze-lang { align-self: flex-start; }
-  .ze-hero-aside .ze-cities { align-self: flex-end; }
-
-  /* Cities, written vertically, read bottom to top; the year sits under each name */
-  .ze-cities {
-    list-style: none; margin: 0; padding: 0;
-    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px;
-    writing-mode: vertical-rl; transform: rotate(180deg);
-    font-family: 'Outfit Variable', 'Outfit', sans-serif; font-size: 14px; line-height: 1.25; letter-spacing: 0.06em;
-    color: #101010; white-space: nowrap;
-  }
-  .ze-cities__city { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-  .ze-cities__name { font-weight: 500; }
-  .ze-cities__year { font-weight: 100; font-size: 13px; letter-spacing: 0.08em; }
-  /* dotted line, centred on the city names' line */
-  .ze-cities__dots { width: 0; height: 12px; border-left: 2px dotted #9a9a9a; margin-block-start: calc(0.625em - 1px); }
-  @media (max-width: 700px) {
-    .ze-hero--aside .ze-hero-left { flex: none; max-width: 100%; }
-    .ze-hero--aside .ze-face-mini { margin-bottom: 14px; }
-    .ze-hero-aside { display: contents; }
-    .ze-hero-aside .ze-lang { position: absolute; top: 32px; right: 0; }
-    .ze-hero-aside .ze-cities { align-self: flex-start; }
-    .ze-cities { writing-mode: horizontal-tb; transform: none; margin-top: 4px; gap: 10px; }
-    .ze-cities__dots { height: 0; width: 16px; border-left: 0; border-top: 2px dotted #9a9a9a; margin-block-start: calc(0.625em - 1px); }
-  }
+  /* Language link at the top right of the hero (site root) */
+  .ze-hero { position: relative; }
+  .ze-hero-lang { position: absolute; top: 40px; right: 0; z-index: 5; }
+  @media (max-width: 991px) { .ze-hero-lang { top: 36px; } }
+  @media (max-width: 700px) { .ze-hero-lang { top: 32px; } }
+  /* Tablets: the drawing sits on the intro's baseline, as on desktop, below the language link */
+  @media (min-width: 701px) and (max-width: 991px) { .ze-hero--classic .ze-hero-visual { align-self: flex-end; } }
 
   /* The featured card's clip is now a video (was a GIF): same box as the image */
   .ze-featured-visual video { display: block; width: 100%; height: 100%; object-fit: cover; }
