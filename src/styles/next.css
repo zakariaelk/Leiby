@@ -21,7 +21,7 @@
 }
 :root[data-theme='dark'] {
   --bg: #161514;
-  --surface: #1f1d1b;
+  --surface: #282522; /* lighter card band; text #ece7e1 on it is 12.6:1, grey text 5.6:1 */
   --ink: #ece7e1;
   --muted: #a39d96;
   --line: #36322e;
@@ -56,8 +56,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-brand { display: flex; align-items: center; gap: 10px; }
 
-/* Name: one line, same weight as the featured titles. On hover it turns into زكرياء الخاشع
-   (Amiri, drawn as an outline), with a soft blur-and-fade between the two scripts. */
+/* Name: one line, same weight as the featured titles. Every few seconds it slowly turns into
+   its Arabic form and back: a soft-edged sweep runs right to left, the way Arabic is written,
+   erasing the Latin name as the Arabic one is drawn in. */
+@property --sweep { syntax: '<percentage>'; inherits: true; initial-value: -20%; }
 .n-name {
   position: relative;
   display: inline-block;
@@ -67,24 +69,32 @@ img, video { display: block; max-width: 100%; height: auto; }
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
+  --sweep: -20%;
 }
-.n-name__latin, .n-name__ar { transition: opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease; }
 .n-name__ar {
   position: absolute;
   left: 0;
   top: 50%;
-  height: 1.45em;
-  width: auto;
+  width: 100%;
+  height: auto;
+  transform: translateY(-50%);
   fill: currentColor;
-  opacity: 0;
-  filter: blur(4px);
-  transform: translateY(-50%) scale(0.96);
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(to left, #000 var(--sweep), transparent calc(var(--sweep) + 20%));
+  mask-image: linear-gradient(to left, #000 var(--sweep), transparent calc(var(--sweep) + 20%));
 }
-.n-name:hover .n-name__latin, .n-name:focus-visible .n-name__latin { opacity: 0; filter: blur(4px); transform: scale(1.02); }
-.n-name:hover .n-name__ar, .n-name:focus-visible .n-name__ar { opacity: 1; filter: blur(0); transform: translateY(-50%) scale(1); }
-@media (prefers-reduced-motion: reduce) {
-  .n-name__latin, .n-name__ar { transition: none; filter: none !important; }
+.n-name__latin {
+  -webkit-mask-image: linear-gradient(to left, transparent var(--sweep), #000 calc(var(--sweep) + 20%));
+  mask-image: linear-gradient(to left, transparent var(--sweep), #000 calc(var(--sweep) + 20%));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .n-name { animation: name-morph 11s ease-in-out 2s infinite; }
+}
+/* Latin 3s · 1.6s to Arabic · Arabic 3s · 1.6s back */
+@keyframes name-morph {
+  0%, 27%   { --sweep: -20%; }
+  42%, 70%  { --sweep: 100%; }
+  85%, 100% { --sweep: -20%; }
 }
 
 /* Icon buttons: speaker (say my name) and theme switch share one style */
@@ -158,16 +168,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-tear { position: absolute; left: 0; width: 100%; height: clamp(32px, calc(32px + 16 * (100vw - 1024px) / 416), 48px); fill: var(--band); pointer-events: none; }
 .n-tear--top { bottom: calc(100% - 1px); }
 .n-tear--bottom { top: calc(100% - 1px); transform: scaleY(-1); }
-.n-curved-label {
-  position: absolute;
-  left: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad)) - 16px);
-  bottom: calc(100% + 2px);
-  width: 190px;
-  height: auto;
-  overflow: visible;
-  transform: rotate(-4deg);
-}
-.n-curved-label text { font-family: var(--sans); font-size: 17px; letter-spacing: 0.16em; text-transform: uppercase; fill: var(--muted); }
+.n-featured__label { margin-bottom: clamp(40px, calc(40px + 16 * (100vw - 1024px) / 416), 56px); }
 
 .n-card {
   display: grid;
@@ -216,7 +217,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
-.n-cta--torn { padding: 18px 28px; background: var(--ink); color: var(--bg); }
+.n-cta--torn { line-height: 1.25; padding: 12px 24px 13px; background: var(--ink); color: var(--bg); font-size: clamp(17px, calc(17px + 2 * (100vw - 1024px) / 416), 19px); }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
   content: '';

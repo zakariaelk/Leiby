@@ -33,13 +33,20 @@ const tornPath = (seed: number) => {
   }
   return d + ' L1000 40 Z';
 };
-// Button with torn edges: small jags along the top and bottom, as a clip-path polygon
+// Button torn on all four sides: small jags along every edge and chipped corners, as a clip-path
 const tornButton = (seed: number) => {
   const r = rng(seed);
-  const top: string[] = [], bottom: string[] = [];
-  for (let i = 0; i <= 16; i++) top.push(`${(i * 100 / 16).toFixed(2)}% ${(r() * 9).toFixed(2)}%`);
-  for (let i = 16; i >= 0; i--) bottom.push(`${(i * 100 / 16).toFixed(2)}% ${(100 - r() * 9).toFixed(2)}%`);
-  return `polygon(${[...top, ...bottom].join(', ')})`;
+  const j = (n: number) => (r() * n).toFixed(2);
+  const pts: string[] = [];
+  for (let i = 1; i < 14; i++) pts.push(`${(i * 100 / 14).toFixed(2)}% ${j(10)}%`);          // top
+  pts.push(`calc(100% - ${j(3)}px) ${3 + +j(6)}%`);                                          // corner
+  for (let i = 1; i < 4; i++) pts.push(`calc(100% - ${j(4)}px) ${(i * 25).toFixed(2)}%`);    // right
+  pts.push(`calc(100% - ${j(3)}px) ${(94 - +j(5)).toFixed(2)}%`);                            // corner
+  for (let i = 13; i > 0; i--) pts.push(`${(i * 100 / 14).toFixed(2)}% ${(100 - +j(10)).toFixed(2)}%`); // bottom
+  pts.push(`${j(3)}px ${(94 - +j(5)).toFixed(2)}%`);                                         // corner
+  for (let i = 3; i > 0; i--) pts.push(`${j(4)}px ${(i * 25).toFixed(2)}%`);                 // left
+  pts.push(`${j(3)}px ${3 + +j(6)}%`);                                                       // corner
+  return `polygon(${pts.join(', ')})`;
 };
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
@@ -50,16 +57,10 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
   </section>
 
   <section class="n-featured" id="work" aria-labelledby="featured-title">
-    <h2 class="sr-only" id="featured-title">Featured work</h2>
+    <h2 class="n-label n-featured__label n-wrap" id="featured-title">Featured work</h2>
     {featured.map(({ p, video, poster, posterSrc }, i) => (
       <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
         <svg class="n-tear n-tear--top" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true"><path d={tornPath(7 + i * 13)} /></svg>
-        {i === 0 && (
-          <svg class="n-curved-label" viewBox="0 0 200 48" aria-hidden="true">
-            <path id="featured-arc" d="M6 40 Q100 4 194 30" fill="none" />
-            <text><textPath href="#featured-arc">Featured work</textPath></text>
-          </svg>
-        )}
         <article class="n-card n-wrap">
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong>{p.data.projectName && <span> – {p.data.projectName}</span>}</p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
