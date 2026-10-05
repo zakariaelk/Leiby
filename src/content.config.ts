@@ -16,6 +16,9 @@ const projectSchema = ({ image }: SchemaContext) =>
       projectType: z.string().optional(),
       // One-line "what I did" for the featured card on the home page (next design)
       statement: z.string().optional(),
+      // Featured card label: organisation (bold) – project, e.g. "International NGO Safety Organisation – Alert mobile app"
+      org: z.string().optional(),
+      projectName: z.string().optional(),
       sector: z.string().optional(),
       role: z.string().optional(),
       duration: z.string().optional(),

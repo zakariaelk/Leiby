@@ -105,6 +105,8 @@ export default config({
         tagline: fields.text({ label: 'Tagline (after the project name, e.g. “a safety alert app for humanitarian workers”)' }),
         projectType: fields.text({ label: 'Project type' }),
         statement: fields.text({ label: 'Featured card statement (what I did, one line)', multiline: true }),
+        org: fields.text({ label: 'Organisation / client (featured card, bold)' }),
+        projectName: fields.text({ label: 'Project name (featured card, after the organisation)' }),
         sector: fields.text({ label: 'Sector' }),
         role: fields.text({ label: 'Role' }),
         duration: fields.text({ label: 'Duration' }),

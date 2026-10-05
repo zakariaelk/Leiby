@@ -1,0 +1,113 @@
+---
+// Next design direction: home. Shared by /next/ (dark torn-paper button) and /next/marker/
+// (marker-highlight link), so the two CTA styles can be compared side by side.
+import { Image, getImage } from 'astro:assets';
+import Next from '../../layouts/Next.astro';
+import { getProjects } from '../../lib/data';
+import { posterFor } from '../../lib/media';
+
+interface Props { cta?: 'torn' | 'marker' }
+const { cta = 'torn' } = Astro.props;
+
+const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
+const projects = await getProjects();
+const featured = await Promise.all(FEATURED.map(async (id) => {
+  const p = projects.find((x) => x.id === id)!;
+  const video = p.data.featuredVideo;
+  const poster = video ? posterFor(video) : undefined;
+  const posterSrc = poster ? (await getImage({ src: poster, format: 'webp', width: 1280 })).src : undefined;
+  return { p, video, poster, posterSrc };
+}));
+const rest = projects.filter((p) => !FEATURED.includes(p.id));
+
+// Torn paper: a jagged edge drawn from a seeded random walk, so it looks hand-torn but stays
+// the same on every build.
+const rng = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const tornPath = (seed: number) => {
+  const r = rng(seed);
+  let x = 0, d = 'M0 40 L0 ' + (24 + r() * 10).toFixed(1);
+  while (x < 1000) {
+    x = Math.min(1000, x + 14 + r() * 34);
+    const peak = r() < 0.18 ? 2 + r() * 8 : 18 + r() * 18; // the occasional tall peak
+    d += ` L${x.toFixed(1)} ${peak.toFixed(1)}`;
+  }
+  return d + ' L1000 40 Z';
+};
+// Button with torn edges: small jags along the top and bottom, as a clip-path polygon
+const tornButton = (seed: number) => {
+  const r = rng(seed);
+  const top: string[] = [], bottom: string[] = [];
+  for (let i = 0; i <= 16; i++) top.push(`${(i * 100 / 16).toFixed(2)}% ${(r() * 9).toFixed(2)}%`);
+  for (let i = 16; i >= 0; i--) bottom.push(`${(i * 100 / 16).toFixed(2)}% ${(100 - r() * 9).toFixed(2)}%`);
+  return `polygon(${[...top, ...bottom].join(', ')})`;
+};
+const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
+---
+<Next>
+  <section class="n-intro n-wrap">
+    <h1>Product designer, creative builder.</h1>
+    <p>12+ years designing and building web and mobile interfaces. <br />Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
+  </section>
+
+  <section class="n-featured" id="work" aria-labelledby="featured-title">
+    <h2 class="sr-only" id="featured-title">Featured work</h2>
+    {featured.map(({ p, video, poster, posterSrc }, i) => (
+      <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
+        <svg class="n-tear n-tear--top" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true"><path d={tornPath(7 + i * 13)} /></svg>
+        {i === 0 && (
+          <svg class="n-curved-label" viewBox="0 0 200 48" aria-hidden="true">
+            <path id="featured-arc" d="M6 40 Q100 4 194 30" fill="none" />
+            <text><textPath href="#featured-arc">Featured work</textPath></text>
+          </svg>
+        )}
+        <article class="n-card n-wrap">
+          <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong>{p.data.projectName && <span> – {p.data.projectName}</span>}</p>
+          <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
+          <div class="n-card__visual">
+            {video ? (
+              <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
+            ) : (
+              <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[640, 960, 1280, 1600]} sizes="(min-width: 900px) 52vw, 100vw" />
+            )}
+          </div>
+          {p.data.role && <dl class="n-card__role"><dt>Role</dt><dd>{p.data.role}</dd></dl>}
+          <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`} style={cta === 'torn' ? `clip-path:${tornButton(3 + i * 11)}` : undefined}>
+            <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
+          </a>
+        </article>
+        {i === featured.length - 1 && (
+          <svg class="n-tear n-tear--bottom" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true"><path d={tornPath(91)} /></svg>
+        )}
+      </div>
+    ))}
+  </section>
+
+  <section class="n-list n-wrap" aria-labelledby="more-label">
+    <p class="n-label" id="more-label">Selected work</p>
+    <ul>
+      {rest.map((p) => (
+        <li>
+          <a href={`/work/${p.id}/`}>
+            <span class="n-list__name">{p.data.client}</span>
+            <span class="n-list__desc">{p.data.intro}</span>
+            <span class="n-list__year">{p.data.year}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Next>
+
+<script>
+  // Videos play only while on screen, and never with reduced motion
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const videos = [...document.querySelectorAll<HTMLVideoElement>('.n-video')];
+  if (reduce) videos.forEach((v) => { v.controls = true; v.preload = 'metadata'; });
+  else {
+    const io = new IntersectionObserver((entries) => entries.forEach(({ target, isIntersecting }) => {
+      const v = target as HTMLVideoElement;
+      if (isIntersecting) v.play().catch(() => {}); else v.pause();
+    }), { threshold: 0.3 });
+    videos.forEach((v) => io.observe(v));
+  }
+</script>

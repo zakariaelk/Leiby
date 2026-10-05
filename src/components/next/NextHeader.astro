@@ -1,26 +1,12 @@
 ---
-// Header: wordmark (bends on hover), "say my name" speaker, nav, light/dark switch.
-// Each letter gets its offset on an arc: the first name bends up, the last name bends down.
-const ARC = 7;      // px at the middle of the word
-const TILT = 16;    // degrees at the ends
-const letters = (word: string, dir: 1 | -1) => {
-  const chars = [...word];
-  const mid = (chars.length - 1) / 2;
-  return chars.map((ch, i) => {
-    const t = mid ? (i - mid) / mid : 0; // -1 … 1 across the word
-    const y = (-dir * ARC * (1 - t * t)).toFixed(2);
-    const r = (dir * TILT * t).toFixed(2);
-    return { ch, style: `--y:${y}px;--r:${r}deg;--d:${i}` };
-  });
-};
-const first = letters('Zakaria', 1);
-const last = letters('El Khachia', -1);
+// Header: name (turns into its Arabic form on hover), "say my name" speaker, nav, light/dark switch.
+import ArabicNameAmiri from './ArabicNameAmiri.astro';
 ---
 <header class="n-head">
   <div class="n-brand">
-    <a href="/next/" class="n-name" aria-label="Zakaria El Khachia, home">
-      <span class="n-name__line" aria-hidden="true">{first.map((l) => <span class="n-name__l" style={l.style}>{l.ch}</span>)}</span>
-      <span class="n-name__line" aria-hidden="true">{last.map((l) => <span class="n-name__l" style={l.style}>{l.ch}</span>)}</span>
+    <a href="/next/" class="n-name">
+      <span class="n-name__latin">Zakaria El Khachia</span>
+      <ArabicNameAmiri />
     </a>
     <button type="button" class="n-icon n-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a">
       <svg viewBox="0 0 24 24" aria-hidden="true">
