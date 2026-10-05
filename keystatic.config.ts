@@ -104,6 +104,7 @@ export default config({
         showIntro: fields.checkbox({ label: 'Show the intro under the title on the case study page', defaultValue: true }),
         tagline: fields.text({ label: 'Tagline (after the project name, e.g. “a safety alert app for humanitarian workers”)' }),
         projectType: fields.text({ label: 'Project type' }),
+        statement: fields.text({ label: 'Featured card statement (what I did, one line)', multiline: true }),
         sector: fields.text({ label: 'Sector' }),
         role: fields.text({ label: 'Role' }),
         duration: fields.text({ label: 'Duration' }),

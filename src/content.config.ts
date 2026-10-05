@@ -14,6 +14,8 @@ const projectSchema = ({ image }: SchemaContext) =>
       // Short line after the project name, e.g. "a safety alert app for humanitarian workers"
       tagline: z.string().optional(),
       projectType: z.string().optional(),
+      // One-line "what I did" for the featured card on the home page (next design)
+      statement: z.string().optional(),
       sector: z.string().optional(),
       role: z.string().optional(),
       duration: z.string().optional(),
