@@ -1,0 +1,84 @@
+---
+// Font specimen for the next design direction: free serif + sans pairings in the spirit of
+// hansonwu.com (Martina Plantijn + Söhne, both paid). Loaded from Google Fonts for this page
+// only; the chosen pair will be self-hosted. Not linked, not indexed.
+const pairs = [
+  { id: 'a', name: 'Source Serif 4 + Inter', note: 'Closest to Hanson Wu: bookish serif, neutral grotesk', serif: "'Source Serif 4', Georgia, serif", sans: "'Inter', system-ui, sans-serif" },
+  { id: 'b', name: 'Newsreader + Hanken Grotesk', note: 'Softer, editorial; Newsreader is made for screen reading', serif: "'Newsreader', Georgia, serif", sans: "'Hanken Grotesk', system-ui, sans-serif" },
+  { id: 'c', name: 'Merriweather + Outfit', note: 'Your sketch: sturdy serif, with the sans you use today', serif: "'Merriweather', Georgia, serif", sans: "'Outfit', system-ui, sans-serif" },
+  { id: 'd', name: 'Instrument Serif + DM Sans', note: 'More character: tall, narrow display serif; Cathrine’s sans', serif: "'Instrument Serif', Georgia, serif", sans: "'DM Sans', system-ui, sans-serif" },
+];
+const gf = 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Hanken+Grotesk:wght@400;500&family=Merriweather:wght@400;700&family=Outfit:wght@300;400;500&family=Instrument+Serif&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Font pairings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={gf} />
+    <style>
+      :root { --bg: #f4efe9; --card: #f9f7f4; --ink: #1d1b19; --muted: #5d5853; --pad: clamp(16px, 4vw, 64px); }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; }
+      .jump { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 14px var(--pad); background: var(--ink); color: var(--bg); font: 500 14px/1.3 system-ui, sans-serif; }
+      .jump a { color: inherit; }
+      .pair { padding: 64px var(--pad) 96px; border-bottom: 1px solid #ddd5cc; }
+      .label { font: 500 14px/1.4 system-ui, sans-serif; color: var(--muted); margin: 0 0 40px; }
+      .label strong { color: var(--ink); font-size: 18px; display: block; }
+      .head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-family: var(--serif); font-size: 20px; }
+      .head nav { display: flex; gap: 28px; font-family: var(--sans); font-size: 17px; }
+      .intro { margin: 72px 0 0; font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 2rem + 3.6vw, 76px); line-height: 1.05; letter-spacing: -0.015em; }
+      .d .intro { font-weight: 400; letter-spacing: -0.01em; }
+      .sub { margin: 24px 0 0; font-family: var(--serif); font-size: clamp(19px, 1rem + 0.5vw, 24px); line-height: 1.5; max-width: 52ch; }
+      .card { margin-top: 72px; display: grid; grid-template-columns: minmax(0, 44fr) minmax(0, 56fr); gap: clamp(24px, 4vw, 64px); align-items: center; background: var(--card); padding: clamp(24px, 3vw, 48px); }
+      .client { font-family: var(--sans); font-size: 15px; color: var(--muted); margin: 0; }
+      .client b { color: var(--ink); font-weight: 500; }
+      .statement { margin: 14px 0 0; font-family: var(--serif); font-weight: 500; font-size: clamp(28px, 1.2rem + 1.6vw, 42px); line-height: 1.15; letter-spacing: -0.01em; }
+      .d .statement { font-weight: 400; }
+      .meta { margin: 36px 0 0; display: grid; gap: 18px; }
+      .meta dt { font-family: var(--serif); font-weight: 600; font-size: 18px; }
+      .d .meta dt, .b .meta dt { font-weight: 500; }
+      .meta dd { margin: 4px 0 0; font-family: var(--sans); font-size: 18px; color: #34312e; }
+      .visual { aspect-ratio: 16 / 11; border-radius: 6px; background: linear-gradient(135deg, #3d5aa8, #7b93c9); display: grid; place-items: center; }
+      .visual span { width: 32%; aspect-ratio: 9 / 18; background: #fff; border-radius: 14px; opacity: 0.95; }
+      .body { margin-top: 72px; max-width: 680px; }
+      .body h2 { font-family: var(--serif); font-weight: 500; font-size: 32px; line-height: 1.2; margin: 0 0 16px; }
+      .d .body h2 { font-weight: 400; font-size: 38px; }
+      .body p { font-family: var(--sans); font-size: 19px; line-height: 1.65; margin: 0 0 16px; }
+      @media (max-width: 760px) { .card { grid-template-columns: 1fr; } .head nav { gap: 16px; font-size: 15px; } }
+    </style>
+  </head>
+  <body>
+    <nav class="jump" aria-label="Pairings">
+      {pairs.map((p) => <a href={`#${p.id}`}>{p.id.toUpperCase()} · {p.name}</a>)}
+    </nav>
+    {pairs.map((p) => (
+      <section class:list={['pair', p.id]} id={p.id} style={`--serif:${p.serif};--sans:${p.sans}`}>
+        <p class="label"><strong>{p.id.toUpperCase()} · {p.name}</strong>{p.note}</p>
+        <div class="head"><span>Zakaria El Khachia</span><nav><span>About</span><span>Blog</span><span>Contact</span></nav></div>
+        <h1 class="intro">Product designer, creative builder.</h1>
+        <p class="sub">13 years designing &amp; building web and mobile interfaces. Most recently at INSO, I designed and shipped safety tools for NGO workers in conflict zones.</p>
+        <div class="card">
+          <div>
+            <p class="client"><b>INSO mobile app</b> · a safety alert app for humanitarian workers</p>
+            <h2 class="statement">Keeping humanitarian workers informed on the move</h2>
+            <dl class="meta">
+              <div><dt>Project type</dt><dd>Mobile app redesign + new features</dd></div>
+              <div><dt>Role</dt><dd>Sole product designer</dd></div>
+              <div><dt>Industry</dt><dd>Humanitarian safety, NGOs</dd></div>
+            </dl>
+          </div>
+          <div class="visual" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="body">
+          <h2>How I got into the project</h2>
+          <p>I got into this project out of curiosity after hearing the developers talk about a mobile app they were building. When I went to have a sneak peek, my admittedly biased designer brain thought: what is this, and who is it for? I wondered if it was even meant for INSO as I couldn't see any blue (our main brand colour) anywhere, only some brown and beige.</p>
+        </div>
+      </section>
+    ))}
+  </body>
+</html>
