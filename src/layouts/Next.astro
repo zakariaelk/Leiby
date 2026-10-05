@@ -1,0 +1,35 @@
+---
+// Layout for the next design direction (/next/). Not indexed while in progress.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/hanken-grotesk';
+import '../styles/next.css';
+import NextHeader from '../components/next/NextHeader.astro';
+
+interface Props { title?: string; description?: string }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/img/favicon/zakaria-logo.png" />
+    <!-- Theme before first paint: saved choice, else the system setting -->
+    <script is:inline>
+      (function () {
+        var saved = null;
+        try { saved = localStorage.getItem('ze-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <NextHeader />
+    <main id="main"><slot /></main>
+  </body>
+</html>

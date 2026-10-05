@@ -1,0 +1,129 @@
+/* Next design direction (/next/): Newsreader + Hanken Grotesk, warm off-white, light and dark.
+   References: hansonwu.com (space, type pairing), cathrine.co (short intro, playful logo),
+   thomasthorstensson.com (discreet header, theme switch). */
+
+:root {
+  --bg: #f4efe9;
+  --surface: #faf8f5;
+  --ink: #1d1b19;
+  --muted: #5d5853;
+  --line: #ddd5cc;
+  --accent: #ffdeb9; /* peach marker, highlights only */
+
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, serif;
+  --sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, sans-serif;
+
+  --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px;
+  --s-5: 48px; --s-6: 64px; --s-7: 96px; --s-8: 128px;
+  --pad: clamp(16px, 4vw, 64px);
+
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --bg: #161514;
+  --surface: #1f1d1b;
+  --ink: #ece7e1;
+  --muted: #a39d96;
+  --line: #36322e;
+  --accent: #6b4a2a;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+a { color: inherit; }
+img, video { display: block; max-width: 100%; height: auto; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Header ---------- */
+.n-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--pad);
+}
+.n-brand { display: flex; align-items: center; gap: 10px; }
+
+/* Wordmark: "Zakaria" over "El Khachia". On hover the first name bends up and the last name
+   bends down, letter by letter (like a stamp); straight again when the pointer leaves. */
+.n-name {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.02;
+  text-decoration: none;
+  letter-spacing: 0.005em;
+}
+.n-name__line { display: block; white-space: pre; }
+.n-name__l {
+  display: inline-block;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(var(--d, 0) * 18ms);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .n-name:hover .n-name__l, .n-name:focus-visible .n-name__l {
+    transform: translateY(var(--y)) rotate(var(--r));
+  }
+}
+
+/* Icon buttons: speaker (say my name) and theme switch share one style */
+.n-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.n-icon:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.n-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.n-icon .wave { opacity: 0.35; transition: opacity 0.2s ease; }
+.n-icon.is-playing .wave { opacity: 1; }
+.n-theme .moon { display: none; }
+:root[data-theme='dark'] .n-theme .sun { display: none; }
+:root[data-theme='dark'] .n-theme .moon { display: block; }
+
+.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-size: 17px; }
+.n-nav a { text-decoration: none; }
+.n-nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+@media (max-width: 600px) {
+  .n-nav { gap: 14px; font-size: 16px; }
+  .n-nav .n-nav__extra { display: none; }
+}
+
+/* ---------- Intro ---------- */
+.n-intro { padding: clamp(64px, 12vw, 176px) var(--pad) clamp(64px, 9vw, 128px); }
+.n-intro h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(42px, 1.6rem + 4.4vw, 96px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+.n-intro p {
+  margin: var(--s-3) 0 0;
+  font-family: var(--serif);
+  font-size: clamp(20px, 1rem + 0.6vw, 26px);
+  line-height: 1.45;
+  max-width: 46ch;
+}
