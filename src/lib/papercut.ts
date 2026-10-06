@@ -35,6 +35,13 @@ export function cutEdge(seed: number) {
   return d + ' L1000 24 Z';
 }
 
+/** The cut edge as a CSS custom property (--cut) holding an SVG mask, for .n-cut elements: the
+ *  band's own paper (colour + texture) masked by a gently uneven cut. */
+export function cutMask(seed: number) {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
+  return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
 /** A slightly uneven rectangle as a CSS clip-path polygon (for frames and images). */
 export function unevenRect(seed: number, wobble = 1.2) {
   const rand = rng(seed);
@@ -50,13 +57,14 @@ export function unevenRect(seed: number, wobble = 1.2) {
 /** A thick painted frame like La Palatine's (frame cd.webp), for a w × h visual drawn on top of
  *  it: an SVG ring (fill-rule evenodd) whose outer edge wanders 6–13 units outside the visual
  *  (each side its own thickness, a slow drift, a slight slant and fine brush jitter) and whose
- *  inner edge hides under the visual. Rounded only where the brush turns the corner. */
-export function brushFrame(seed: number, w = 1000, h = 600) {
+ *  inner edge hides under the visual. Rounded only where the brush turns the corner. thick scales the
+ *  thickness (wide visuals take a thinner stroke so it shows about as much as on the cards). */
+export function brushFrame(seed: number, w = 1000, h = 600, thick = 1) {
   const rand = rng(seed);
   const pts: [number, number][] = [];
   // one side: from corner a to corner b, pushed outwards along (nx, ny)
   const side = (ax: number, ay: number, bx: number, by: number, nx: number, ny: number, o0: number, o1: number) => {
-    const len = Math.hypot(bx - ax, by - ay), n = Math.round(len / 10);
+    const len = Math.hypot(bx - ax, by - ay), n = Math.round(len / 10), k = thick;
     const f1 = 0.5 + rand() * 0.8, p1 = rand() * 6.3, f2 = 2 + rand() * 2.5, p2 = rand() * 6.3;
     let j = 0;
     for (let i = 1; i < n; i++) {
@@ -64,7 +72,7 @@ export function brushFrame(seed: number, w = 1000, h = 600) {
       j = j * 0.55 + (rand() - 0.5) * 1.6; // smoothed jitter, like bristles
       const bump = rand() < 0.04 ? 1.5 + rand() * 1.5 : 0;
       const env = Math.min(1, 6 * t, 6 * (1 - t)); // calm near the corners so they join up
-      const o = o0 + (o1 - o0) * t + env * (2 * Math.sin(6.28 * f1 * t + p1) + 0.8 * Math.sin(6.28 * f2 * t + p2) + j + bump);
+      const o = o0 + (o1 - o0) * t + env * (2 * Math.sin(6.28 * f1 * t + p1) + 0.8 * Math.sin(6.28 * f2 * t + p2) + j + bump) * k;
       pts.push([ax + (bx - ax) * t + nx * o, ay + (by - ay) * t + ny * o]);
     }
   };
@@ -75,7 +83,7 @@ export function brushFrame(seed: number, w = 1000, h = 600) {
       pts.push([cx + Math.cos(a) * o, cy + Math.sin(a) * o]);
     }
   };
-  const o = Array.from({ length: 4 }, () => 7 + rand() * 4); // thickness at each corner
+  const o = Array.from({ length: 4 }, () => (7 + rand() * 4) * thick); // thickness at each corner
   const pi = Math.PI;
   corner(0, 0, pi, o[0], o[0]);         side(0, 0, w, 0, 0, -1, o[0], o[1]);  // top
   corner(w, 0, -pi / 2, o[1], o[1]);    side(w, 0, w, h, 1, 0, o[1], o[2]);   // right

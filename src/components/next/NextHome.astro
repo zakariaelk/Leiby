@@ -6,7 +6,7 @@ import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { brushFrame, cutEdge } from '../../lib/papercut';
+import { brushFrame, cutMask as cut } from '../../lib/papercut';
 import NextButton from './NextButton.astro';
 
 interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
@@ -23,11 +23,6 @@ const featured = await Promise.all(FEATURED.map(async (id) => {
 }));
 const rest = projects.filter((p) => !FEATURED.includes(p.id));
 
-// Paper-cut band edge: the band's own paper (colour + texture), masked by a gently uneven cut
-const cut = (seed: number) => {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
-  return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-};
 const TILT = ['-0.6deg', '0.5deg', '-0.45deg']; // the frame sits a little off the visual
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
@@ -44,7 +39,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
         <div class="n-cut n-cut--top" style={cut(7 + i * 13)} aria-hidden="true"></div>
         <article class="n-card n-wrap">
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong></p>
-          <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
+          <h3 class="n-card__title"><a href={`/next/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
           <div class="n-card__visual">
             <!-- painted frame behind the visual, slightly tilted; only its outer edge shows (La Palatine) -->
             <svg class="n-brush" style={`--tilt:${TILT[i]}`} viewBox="-20 -20 1040 640" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(7 + i * 5)} /></svg>
@@ -60,9 +55,9 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
               {p.data.role && <div class="n-card__meta-item n-card__meta-item--mid"><dt>Role</dt><dd>{p.data.role}</dd></div>}
             </dl>
             {cta === 'paper' ? (
-              <NextButton href={`/work/${p.id}/`} name={p.data.projectName ?? p.data.title} seed={41 + i * 6} />
+              <NextButton href={`/next/work/${p.id}/`} name={p.data.projectName ?? p.data.title} seed={41 + i * 6} />
             ) : (
-              <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
+              <a class:list={['n-cta', `n-cta--${cta}`]} href={`/next/work/${p.id}/`}>
                 <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
               </a>
             )}
@@ -80,7 +75,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
     <ul>
       {rest.map((p) => (
         <li>
-          <a href={`/work/${p.id}/`}>
+          <a href={`/next/work/${p.id}/`}>
             <span class="n-list__name">{p.data.client}</span>
             <span class="n-list__desc">{p.data.intro}</span>
             <span class="n-list__year">{p.data.year}</span>

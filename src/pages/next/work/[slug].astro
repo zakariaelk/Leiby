@@ -1,0 +1,55 @@
+---
+// Next design direction: case study (/next/work/<slug>/), in the style of the /next/ home page.
+// Top: the client line, the title and the facts, with the link, then the cover in the painted
+// frame. The story itself sits on a white sheet of paper below.
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Next from '../../../layouts/Next.astro';
+import NextButton from '../../../components/next/NextButton.astro';
+import { getProjects } from '../../../lib/data';
+import { brushFrame, cutMask } from '../../../lib/papercut';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, index: i, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project, index } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const meta = [
+  { label: 'Project type', value: d.projectType },
+  { label: 'Role', value: d.role },
+  { label: 'Industry', value: d.sector },
+  { label: 'Duration', value: d.duration },
+  { label: 'Team', value: d.team },
+].filter((m) => m.value);
+const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+---
+<Next title={`${d.title} · Zakaria El Khachia`} description={d.intro}>
+  <section class="n-case n-wrap" aria-label="Project summary">
+    <div class="n-case__head">
+      <div class="n-case__lead">
+        <p class="n-case__client"><strong>{d.org ?? d.client}</strong>{d.projectName && <span> · {d.projectName}</span>}</p>
+        <h1 class="n-case__title">{d.headline}</h1>
+        {d.showIntro && <p class="n-case__intro">{d.intro}</p>}
+      </div>
+      <div class="n-case__facts">
+        <dl>{meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}</dl>
+        {d.link && <NextButton href={d.link} label={`Visit ${linkLabel}`} seed={53 + index} external />}
+      </div>
+    </div>
+    <div class="n-case__cover">
+      <svg class="n-brush" style="--tilt:-0.4deg" viewBox="-20 -20 1040 640" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(11 + index * 7, 1000, 600, 0.6)} /></svg>
+      <Image src={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} widths={[640, 960, 1280, 1600, 2000]} sizes="(min-width: 1440px) 1312px, 92vw" loading="eager" fetchpriority="high" />
+    </div>
+  </section>
+
+  <div class="n-band n-band--light n-case__sheet">
+    <div class="n-cut n-cut--top" style={cutMask(29 + index * 3)} aria-hidden="true"></div>
+    <article class="n-prose n-wrap"><Content /></article>
+  </div>
+</Next>
