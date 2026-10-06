@@ -4,12 +4,12 @@
 // moons on ensemblelapalatine.com. Variants: small circle in black or pastel blue.
 import { blob } from '../../lib/papercut';
 
-interface Props { variant?: 'black' | 'blue'; seed?: number; size?: number }
-const { variant = 'black', seed = 11, size = 180 } = Astro.props;
+interface Props { variant?: 'black' | 'blue'; seed?: number; size?: number; decorative?: boolean }
+const { variant = 'black', seed = 11, size = 180, decorative = false } = Astro.props;
 // ز outline from Amiri Bold (SIL OFL), bbox x -92…377, y -602…249 (font units)
 const zain = 'M237 -295Q239 -304 244 -306Q255 -309 276 -283Q292 -264 306 -236Q320 -208 330 -170Q377 -2 270 136Q208 216 118 240Q85 249 62 238Q18 219 -16 204Q-51 188 -76 176Q-92 167 -87 156Q-81 144 -65 148Q3 168 43 158Q86 147 153 107Q271 36 296 -31Q297 -33 297 -37Q288 -84 212 -163Q205 -170 208 -182L237 -295ZM138 -594Q144 -602 155 -599Q175 -592 194 -581Q212 -570 228 -556Q236 -548 231 -538L183 -462Q176 -452 165 -460Q155 -468 93 -505Q82 -512 89 -522L138 -594Z';
 ---
-<svg class:list={['n-logo', `n-logo--${variant}`]} width={size} height={size} viewBox="0 0 200 200" role="img" aria-label="Z and ز, the first letter of Zakaria in Latin and Arabic">
+<svg class:list={['n-logo', `n-logo--${variant}`]} width={size} height={size} viewBox="0 0 200 200" role={decorative ? undefined : 'img'} aria-hidden={decorative ? 'true' : undefined} aria-label={decorative ? undefined : 'Z and ز, the first letter of Zakaria in Latin and Arabic'}>
   <g class="n-logo__big">
     <path class="n-logo__big-shape" d={blob(seed, 88, 88, 78)} />
     <text class="n-logo__z" x="86" y="124" text-anchor="middle">Z</text>

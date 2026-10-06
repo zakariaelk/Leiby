@@ -1,9 +1,11 @@
 ---
-// Header: name (turns into its Arabic form on hover), "say my name" speaker, nav, light/dark switch.
+// Header: logo (Z + ز), name (morphs into its Arabic form every few seconds), "say my name" speaker, nav, light/dark switch.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
+import NextLogo from './NextLogo.astro';
 ---
 <header class="n-head">
   <div class="n-brand">
+    <NextLogo variant="blue" seed={23} size={42} decorative />
     <a href="/next/" class="n-name">
       <span class="n-name__latin">Zakaria El Khachia</span>
       <ArabicNameAmiri />

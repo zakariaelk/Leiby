@@ -1,15 +1,15 @@
 ---
-// Next design direction: home. Shared by /next/ (slanted paper-cut button) and /next/marker/
+// Next design direction: home. Shared by /next/ (crumpled paper button) and /next/marker/
 // (marker-highlight link), so the two CTA styles can be compared side by side.
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { cutEdge, unevenRect } from '../../lib/papercut';
+import { cutEdge, unevenRect, rng } from '../../lib/papercut';
 import NextLogo from './NextLogo.astro';
 
-interface Props { cta?: 'slant' | 'marker' }
-const { cta = 'slant' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker' }
+const { cta = 'paper' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -27,6 +27,26 @@ const cut = (seed: number) => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
+// Trial colours, so they can be compared: frames brown / blue, buttons black / blue / brown
+const FRAME = ['brown', 'blue', 'brown'];
+const BUTTON = ['black', 'blue', 'brown'];
+// Crumpled paper button: each letter gets its own tilt (within about ±24°) and the background a
+// crumpled outline; both straighten on hover. Same 10-point outline shape so it can animate.
+const LABEL = 'Read the case';
+const crookedLetters = (seed: number) => {
+  const r = rng(seed);
+  return [...LABEL].map((ch) => ({ ch, style: `--r:${((r() * 2 - 1) * 24).toFixed(1)}deg;--y:${((r() * 2 - 1) * 2.5).toFixed(1)}px` }));
+};
+const crumple = (seed: number) => {
+  const r = rng(seed);
+  const v = (base: number, n: number) => (base + (r() * 2 - 1) * n).toFixed(1);
+  const pts = [
+    `${v(1, 1)}% ${v(10, 6)}%`, `${v(30, 4)}% ${v(4, 4)}%`, `${v(62, 4)}% ${v(12, 6)}%`, `${v(99, 1)}% ${v(3, 3)}%`,
+    `${v(96, 3)}% ${v(50, 8)}%`, `${v(99, 1)}% ${v(96, 4)}%`, `${v(68, 4)}% ${v(88, 6)}%`, `${v(35, 4)}% ${v(97, 3)}%`,
+    `${v(2, 2)}% ${v(90, 6)}%`, `${v(5, 3)}% ${v(50, 8)}%`,
+  ];
+  return `--crumple:polygon(${pts.join(', ')})`;
+};
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
 <Next>
@@ -43,7 +63,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
         <article class="n-card n-wrap">
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong>{p.data.projectName && <span> – {p.data.projectName}</span>}</p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
-          <div class="n-card__visual">
+          <div class:list={['n-card__visual', `n-card__visual--${FRAME[i]}`]} style={`--tilt:${[-1.2, 1.4, -0.8][i]}deg;clip-path:${unevenRect(41 + i * 9, 0.8)}`}>
             {video ? (
               <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
             ) : (
@@ -51,13 +71,19 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
             )}
           </div>
           <div class="n-card__foot">
-          <dl class="n-card__meta">
-            {p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
-            {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
-          </dl>
-          <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
-            <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
-          </a>
+            <dl class="n-card__meta">
+              {p.data.sector && <div class="n-card__meta-item"><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
+              {p.data.role && <div class="n-card__meta-item n-card__meta-item--mid"><dt>Role</dt><dd>{p.data.role}</dd></div>}
+            </dl>
+            {cta === 'paper' ? (
+              <a class:list={['n-cta', 'n-cta--paper', `n-cta--${BUTTON[i]}`]} href={`/work/${p.id}/`} style={crumple(5 + i * 17)} aria-label={`Read the case: ${p.data.projectName ?? p.data.title}`}>
+                <span class="n-cta__letters" aria-hidden="true">{crookedLetters(9 + i * 23).map((l) => <span class="n-cta__l" style={l.style}>{l.ch === ' ' ? '\u00a0' : l.ch}</span>)}</span><Fragment set:html={arrow} />
+              </a>
+            ) : (
+              <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
+                <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
+              </a>
+            )}
           </div>
         </article>
         {i === featured.length - 1 && (
