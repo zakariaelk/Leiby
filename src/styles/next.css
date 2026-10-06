@@ -22,11 +22,13 @@
   --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px;
   --s-5: 48px; --s-6: 64px; --s-7: 96px; --s-8: 128px;
   --pad: clamp(16px, 4vw, 64px);
+  --lead: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px); /* intro text, name, nav */
   /* Paper: fine grain plus soft fibres, a few percent on top of every background */
   --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.6'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.5'/%3E%3CfeFuncA type='table' tableValues='0 .16'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.7'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.6'/%3E%3CfeFuncA type='table' tableValues='0 .07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
   color-scheme: light;
 }
+@media (max-width: 899px) { :root { --lead: 20px; } }
 :root[data-theme='dark'] {
   --bg: #161514;
   --surface: #282522; /* lighter card band; text #ece7e1 on it is 12.6:1, grey text 5.6:1 */
@@ -88,10 +90,6 @@ img, video { display: block; max-width: 100%; height: auto; }
   padding: var(--s-3) var(--pad);
 }
 .n-brand { display: flex; align-items: center; gap: 2px; }
-.n-brand .n-logo { flex: none; margin-right: 4px; }
-/* paper-logo version: the cut-outs at header size; the speaker clears the Arabic piece */
-.n-brand--paper .n-lw { font-size: 22px; }
-.n-brand--paper .n-say { margin-left: 14px; }
 
 /* Name: one line, same weight as the featured titles. Every few seconds it slowly turns into
    its Arabic form and back: a soft-edged sweep runs right to left, the way Arabic is written,
@@ -102,7 +100,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   display: inline-block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--lead);
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
@@ -156,13 +154,12 @@ img, video { display: block; max-width: 100%; height: auto; }
 :root[data-theme='dark'] .n-theme .sun { display: none; }
 :root[data-theme='dark'] .n-theme .moon { display: block; }
 
-.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-size: clamp(17px, calc(17px + 4 * (100vw - 1024px) / 256), 21px); } /* 21px from 1280px up */
+.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--serif); font-size: var(--lead); }
 .n-burger { display: none; }
 .n-nav a { text-decoration: none; }
 .n-nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
 /* Phones: brown paper square with two white bars; the menu opens full screen in the same brown */
 @media (max-width: 700px) {
-  .n-name { font-size: 19px; }
   .n-burger {
     display: grid;
     place-content: center;
@@ -231,7 +228,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   margin: var(--s-3) 0 0;
   font-family: var(--serif);
   font-weight: 470;
-  font-size: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px);
+  font-size: var(--lead);
   line-height: 1.5;
 }
 /* Phones and tablets in portrait: two lines, "Product designer," / "Creative builder." */
@@ -389,7 +386,6 @@ img, video { display: block; max-width: 100%; height: auto; }
   .n-card__foot { order: 4; margin-top: var(--s-3); grid-template-columns: 1fr; row-gap: 16px; }
   .n-card__meta-item--mid { justify-self: start; }
   .n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 1; justify-self: start; margin-top: 8px; }
-  .n-intro p { font-size: 20px; }
   .n-intro p br { display: none; }
   .n-intro { padding-top: 72px; padding-bottom: 96px; }
 }
@@ -415,12 +411,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   .n-list__desc { grid-column: 1 / -1; grid-row: 2; }
 }
 
-/* ---------- Trials: logo ---------- */
-.n-trials { padding-top: var(--s-7); padding-bottom: var(--s-8); }
-.n-trials .n-label { margin-top: var(--s-6); }
-.n-trials__logos { display: flex; flex-wrap: wrap; gap: var(--s-6); }
-.n-trials figure { margin: 0; }
-.n-trials figcaption { margin-top: 8px; font-size: 15px; color: var(--muted); }
+/* ---------- Logos: the round Z / ز (favicon source) and the Zakaria / زكرياء cut-outs, not on the page for now ---------- */
 
 .n-logo { display: block; overflow: visible; }
 .n-logo__big-shape { fill: var(--brown); }
@@ -436,14 +427,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 @media (prefers-reduced-motion: reduce) { .n-logo__big, .n-logo__small { transform: none; } }
 
 
-/* Logo + button timing trial: each column sets its own --cut-time / --cut-stagger */
-.n-trials__timing { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-6) var(--s-5); align-items: start; padding-bottom: var(--s-3); }
-.n-timing { display: flex; flex-direction: column; align-items: flex-start; }
-.n-trials .n-timing figcaption { margin: 52px 0 20px; }
-.n-timing--a { --cut-time: 0.3s; }
-.n-timing--b { --cut-time: 0.45s; }
-.n-timing--c { --cut-time: 0.65s; }
-.n-timing--d { --cut-time: 0.4s; --cut-stagger: 0.1s; }
 
 /* Logo with the full first name: two paper cut-outs (drawn by scripts/paper.ts) cut down to Z / ز
    and opened again at a steady speed. With --cut-stagger the Arabic follows the Latin on the way

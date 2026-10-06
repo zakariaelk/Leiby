@@ -1,27 +1,14 @@
 ---
-// Header: logo, "say my name" speaker, nav, light/dark switch. Logo versions: 'mark' = Z + ز
-// circles and the name (morphs into its Arabic form every few seconds); 'text' = the name alone;
-// 'paper' = the Zakaria / زكرياء paper cut-outs, always open.
+// Header: the name (morphs into its Arabic form every few seconds; the round Z / ز logo is the
+// favicon), "say my name" speaker, nav, light/dark switch.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
-import NextLogo from './NextLogo.astro';
-import NextLogoWord from './NextLogoWord.astro';
-
-interface Props { logo?: 'mark' | 'text' | 'paper' }
-const { logo = 'mark' } = Astro.props;
 ---
 <header class="n-head">
-  <div class:list={['n-brand', `n-brand--${logo}`]}>
-    {logo === 'paper' ? (
-      <NextLogoWord variant="blue" collapse={false} label="Zakaria El Khachia" />
-    ) : (
-      <>
-        {logo === 'mark' && <NextLogo variant="blue" seed={23} size={52} decorative />}
-        <a href="/next/" class="n-name">
-          <span class="n-name__latin">Zakaria El Khachia</span>
-          <ArabicNameAmiri />
-        </a>
-      </>
-    )}
+  <div class="n-brand">
+    <a href="/next/" class="n-name">
+      <span class="n-name__latin">Zakaria El Khachia</span>
+      <ArabicNameAmiri />
+    </a>
     <button type="button" class="n-icon n-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 9.5h3l4.5-4v13L7 14.5H4z" />

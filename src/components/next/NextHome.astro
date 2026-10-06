@@ -1,18 +1,16 @@
 ---
 // Next design direction: home. Shared by /next/ and /next/white/ (white and gray paper, dark-gray
-// cut-outs, paper-circle button), /next/logo-text/ and /next/logo-paper/ (other header logos),
-// /next/marker/ (marker-highlight link) and /next/beige/ (the beige paper version, parked).
+// cut-outs, paper-circle button), /next/marker/ (marker-highlight link) and /next/beige/ (the
+// beige paper version, parked).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
 import { brushFrame, cutEdge } from '../../lib/papercut';
 import NextButton from './NextButton.astro';
-import NextLogo from './NextLogo.astro';
-import NextLogoWord from './NextLogoWord.astro';
 
-interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono'; logo?: 'mark' | 'text' | 'paper' }
-const { cta = 'paper', palette = 'mono', logo = 'mark' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
+const { cta = 'paper', palette = 'mono' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -31,15 +29,9 @@ const cut = (seed: number) => {
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 const TILT = ['-0.6deg', '0.5deg', '-0.45deg']; // the frame sits a little off the visual
-const TIMINGS = [
-  { id: 'a', label: 'A · 0.3s' },
-  { id: 'b', label: 'B · 0.45s' },
-  { id: 'c', label: 'C · 0.65s' },
-  { id: 'd', label: 'D · 0.4s, the Arabic 0.1s after the Latin' },
-];
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
-<Next palette={palette} logo={logo}>
+<Next palette={palette}>
   <section class="n-intro n-wrap">
     <h1>Product designer, <br class="n-intro__br" /><span class="n-intro__second">creative builder.</span></h1>
     <p>12+ years designing and building web and mobile interfaces. <br />Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
@@ -97,24 +89,6 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       ))}
     </ul>
   </section>
-
-  <!-- Trials, to judge in context before they move into the header and the case studies -->
-  <section class="n-trials n-wrap" aria-label="Design trials">
-    <p class="n-label">Trial · logo</p>
-    <div class="n-trials__logos">
-      <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
-      <figure><NextLogo variant="blue" seed={23} /><figcaption>Brown + pastel blue</figcaption></figure>
-    </div>
-    <p class="n-label">Trial · logo timing, linear (collapses after 5s, opens on hover)</p>
-    <div class="n-trials__timing">
-      {TIMINGS.map(({ id, label }) => (
-        <figure class:list={['n-timing', `n-timing--${id}`]}>
-          <NextLogoWord variant="blue" />
-          <figcaption>{label}</figcaption>
-        </figure>
-      ))}
-    </div>
-  </section>
 </Next>
 
 <script>
@@ -128,22 +102,5 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       if (isIntersecting) v.play().catch(() => {}); else v.pause();
     }), { threshold: 0.3 });
     videos.forEach((v) => io.observe(v));
-  }
-
-  // Logo trial: full first name for 5 seconds, then collapse to Z / ز (hover opens it again)
-  const words = document.querySelectorAll<HTMLElement>('[data-lw]');
-  if (reduce) words.forEach((w) => w.classList.add('is-collapsed'));
-  else window.setTimeout(() => words.forEach((w) => w.classList.add('is-collapsed')), 5000);
-
-  // Logo trial: the two paper circles drift apart with the pointer (-1…1 across the window)
-  if (!reduce) {
-    let frame = 0;
-    window.addEventListener('pointermove', (e) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        document.documentElement.style.setProperty('--mx', ((e.clientX / innerWidth) * 2 - 1).toFixed(3));
-        document.documentElement.style.setProperty('--my', ((e.clientY / innerHeight) * 2 - 1).toFixed(3));
-      });
-    }, { passive: true });
   }
 </script>
