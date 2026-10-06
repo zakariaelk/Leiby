@@ -1,16 +1,18 @@
 ---
-// Next design direction: home. Shared by /next/ (brown paper-card button), /next/marker/
-// (marker-highlight link) and /next/white/ (white and gray paper, dark-gray cut-outs).
+// Next design direction: home. Shared by /next/ and /next/white/ (white and gray paper, dark-gray
+// cut-outs, paper-circle button), /next/marker/ (marker-highlight link) and /next/beige/ (the
+// beige paper version, parked).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { blob, brushFrame, cutEdge, unevenRect } from '../../lib/papercut';
+import { brushFrame, cutEdge, unevenRect } from '../../lib/papercut';
+import NextButton from './NextButton.astro';
 import NextLogo from './NextLogo.astro';
 import NextLogoWord from './NextLogoWord.astro';
 
 interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
-const { cta = 'paper', palette = 'paper' } = Astro.props;
+const { cta = 'paper', palette = 'mono' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -29,6 +31,13 @@ const cut = (seed: number) => {
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 const inso = '/work/mitigating-risk-with-location-based-alerts/';
+const TILT = ['-0.6deg', '0.5deg', '-0.45deg']; // the frame sits a little off the visual
+const TIMINGS = [
+  { id: 'a', label: 'A · 0.3s' },
+  { id: 'b', label: 'B · 0.45s (used in the cards)' },
+  { id: 'c', label: 'C · 0.65s' },
+  { id: 'd', label: 'D · 0.4s, the Arabic 0.1s after the Latin' },
+];
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
 <Next palette={palette}>
@@ -46,8 +55,8 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong></p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
           <div class="n-card__visual">
-            <!-- painted brown frame behind the visual; only its outer edge shows (La Palatine) -->
-            <svg class="n-brush" viewBox="-20 -20 1040 640" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(7 + i * 5)} /></svg>
+            <!-- painted frame behind the visual, slightly tilted; only its outer edge shows (La Palatine) -->
+            <svg class="n-brush" style={`--tilt:${TILT[i]}`} viewBox="-20 -20 1040 640" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(7 + i * 5)} /></svg>
             {video ? (
               <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
             ) : (
@@ -60,9 +69,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
               {p.data.role && <div class="n-card__meta-item n-card__meta-item--mid"><dt>Role</dt><dd>{p.data.role}</dd></div>}
             </dl>
             {cta === 'paper' ? (
-              <a class:list={['n-cta', 'n-cta--paper']} href={`/work/${p.id}/`} aria-label={`Read the case: ${p.data.projectName ?? p.data.title}`}>
-                <span aria-hidden="true">Read the case</span><Fragment set:html={arrow} />
-              </a>
+              <NextButton href={`/work/${p.id}/`} name={p.data.projectName ?? p.data.title} seed={41 + i * 6} />
             ) : (
               <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
                 <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
@@ -94,41 +101,20 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
 
   <!-- Trials, to judge in context before they move into the header and the case studies -->
   <section class="n-trials n-wrap" aria-label="Design trials">
-    <p class="n-label">Trial · button styles</p>
-    <div class="n-trials__buttons">
-      <figure>
-        <a class="n-btn n-btn--tape" href={inso}><span>Read the case</span><span class="sr-only">: Alert mobile app</span><Fragment set:html={arrow} /></a>
-        <figcaption>A · Masking tape: tilted, straightens and lifts on hover</figcaption>
-      </figure>
-      <figure>
-        <a class="n-btn n-btn--loop" href={inso}>
-          <span>Read the case</span><span class="sr-only">: Alert mobile app</span><Fragment set:html={arrow} />
-          <svg class="n-btn__under" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6C40 3 85 8 130 5S185 4 197 6" /></svg>
-          <svg class="n-btn__loop" viewBox="0 0 240 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30 18C80 2 190 4 226 26C246 40 228 66 170 72C110 78 30 74 14 52C2 34 30 14 74 9" /></svg>
-        </a>
-        <figcaption>B · Marker loop: drawn around the words on hover</figcaption>
-      </figure>
-      <figure>
-        <a class="n-btn n-btn--circle" href={inso}>
-          <span>Read the case</span><span class="sr-only">: Alert mobile app</span>
-          <svg class="n-btn__dot" viewBox="0 0 100 100" aria-hidden="true"><path class="n-btn__dot-shape" d={blob(41, 50, 50, 46)} /><path class="n-btn__dot-arrow" d="M29 50h40M55 36l14 14-14 14" /></svg>
-        </a>
-        <figcaption>C · Paper circle: turns and nudges on hover, like the logo</figcaption>
-      </figure>
-    </div>
     <p class="n-label">Trial · logo</p>
     <div class="n-trials__logos">
       <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
       <figure><NextLogo variant="blue" seed={23} /><figcaption>Brown + pastel blue</figcaption></figure>
     </div>
-    <p class="n-label">Trial · logo with the full first name (collapses after 5s, opens on hover)</p>
-    <div class="n-trials__logos n-trials__logos--word">
-      <figure><NextLogoWord variant="black" /><figcaption>Brown + black</figcaption></figure>
-      <figure><NextLogoWord variant="blue" /><figcaption>Brown + pastel blue</figcaption></figure>
-      <figure><NextLogoWord variant="vermilion" /><figcaption>Brown + vermilion</figcaption></figure>
-      <figure><NextLogoWord variant="sage" /><figcaption>Brown + sage</figcaption></figure>
-      <figure><NextLogoWord variant="ochre" /><figcaption>Brown + ochre</figcaption></figure>
-      <figure><NextLogoWord variant="pink" /><figcaption>Brown + dusty pink</figcaption></figure>
+    <p class="n-label">Trial · logo and button timing, linear (logos collapse after 5s, open on hover)</p>
+    <div class="n-trials__timing">
+      {TIMINGS.map(({ id, label }) => (
+        <figure class:list={['n-timing', `n-timing--${id}`]}>
+          <NextLogoWord variant="blue" />
+          <figcaption>{label}</figcaption>
+          <NextButton href={inso} name="Alert mobile app" />
+        </figure>
+      ))}
     </div>
     <p class="n-label">Trial · paper-cut frames</p>
     <div class="n-trials__frames">

@@ -13,7 +13,8 @@
   --on-brown: #f4efe9;
   --blue: #b7cbe3;
   --shade: 60 40 20; /* shadow colour (rgb) */
-  --tape: rgb(236 224 198 / 0.88);
+  --cut-time: 0.45s; /* paper growing / shrinking: logo and button */
+  --cut-stagger: 0s;
 
   --serif: 'Newsreader Variable', 'Newsreader', Georgia, serif;
   --sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, sans-serif;
@@ -47,7 +48,6 @@
   --on-brown: #fff;
   --blue: #accff6;
   --shade: 0 0 0;
-  --tape: rgb(228 228 226 / 0.9);
   --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .08'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 :root[data-palette='mono'][data-theme='dark'] {
@@ -309,7 +309,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   align-self: center;
   position: relative;
 }
-.n-brush { position: absolute; top: -3.333%; left: -2%; width: 104%; height: 106.667%; pointer-events: none; fill: var(--brown); fill-rule: evenodd; }
+.n-brush { position: absolute; top: -3.333%; left: -2%; width: 104%; height: 106.667%; pointer-events: none; fill: var(--brown); fill-rule: evenodd; transform: rotate(var(--tilt, 0deg)); }
 .n-card__visual img, .n-card__visual video { position: relative; z-index: 1; border-radius: 3px; }
 .n-card__visual img, .n-card__visual video { width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
 .n-card__foot {
@@ -323,11 +323,11 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-card__meta { display: contents; margin: 0; }
 .n-card__meta-item--mid { justify-self: center; }
-.n-card__foot .n-cta { grid-column: 3; justify-self: end; }
+.n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 3; justify-self: end; }
 .n-card__meta dt { font-family: var(--serif); font-weight: 600; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.3; }
 .n-card__meta dd { margin: 6px 0 0; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.45; color: var(--muted); }
 
-/* "Read the case": slanted paper-cut tab (/next/) or a marker highlight (/next/marker/) */
+/* "Read the case" on /next/marker/: a marker highlight */
 .n-cta {
   flex: none;
   display: inline-flex;
@@ -340,38 +340,39 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
-/* Brown paper card, cut like La Palatine's concert cards: left edge shorter, top rising and
-   bottom dropping to the right. Beige text, straight. A soft paper shadow underneath; on hover
-   the card flattens a little and lifts. */
-.n-cta--paper {
+/* "Read the case" (NextButton): the words, then a round paper cut-out holding the arrow. On hover
+   the paper grows leftwards under the words at the logo's steady speed; the light copy of the words
+   inside the paper shows wherever it has reached. */
+.n-btn {
   position: relative;
-  padding: 15px 28px 17px 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
   line-height: 1.2;
-  color: var(--on-brown);
+  color: var(--ink);
+  text-decoration: none;
   isolation: isolate;
-  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.22)) drop-shadow(0 8px 12px rgb(var(--shade) / 0.16));
-  transition: filter 0.25s ease, transform 0.25s ease;
 }
-.n-cta--paper::before {
-  content: '';
+.n-btn__label { white-space: nowrap; }
+.n-btn__shadow {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--brown);
-  background-image: var(--paper);
-  clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%);
-  transition: clip-path 0.25s ease;
+  top: 0;
+  right: 0;
+  width: 54px;
+  height: 54px;
+  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.2)) drop-shadow(0 6px 10px rgb(var(--shade) / 0.14));
+  transition: width var(--cut-time) linear;
 }
-.n-cta--paper:hover, .n-cta--paper:focus-visible {
-  transform: translateY(-2px);
-  filter: drop-shadow(0 2px 2px rgb(var(--shade) / 0.2)) drop-shadow(0 14px 18px rgb(var(--shade) / 0.18));
-}
-.n-cta--paper:hover::before, .n-cta--paper:focus-visible::before { clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%); }
-:root[data-theme='dark'] .n-cta--paper { filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.4)); }
-@media (prefers-reduced-motion: reduce) {
-  .n-cta--paper, .n-cta--paper::before { transition: none; }
-  .n-cta--paper:hover, .n-cta--paper:focus-visible { transform: none; }
-}
+.n-btn:hover .n-btn__shadow, .n-btn:focus-visible .n-btn__shadow { width: calc(100% + 22px); }
+.n-btn__paper { position: absolute; inset: 0; background-color: var(--brown); background-image: var(--paper); }
+/* lines up with the words outside: 54px circle + 14px gap from the right */
+.n-btn__label--light { position: absolute; top: 50%; right: 68px; transform: translateY(-50%); color: var(--on-brown); }
+.n-btn__arrow { position: relative; flex: none; width: 54px; height: 54px; fill: none; stroke: var(--on-brown); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+:root[data-theme='dark'] .n-btn__shadow { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)); }
+@media (prefers-reduced-motion: reduce) { .n-btn__shadow { transition: none; } }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
   content: '';
@@ -392,7 +393,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   .n-card__title { order: 3; margin: var(--s-3) 0 0; font-size: clamp(26px, 5.5vw, 32px); }
   .n-card__foot { order: 4; margin-top: var(--s-3); grid-template-columns: 1fr; row-gap: 16px; }
   .n-card__meta-item--mid { justify-self: start; }
-  .n-card__foot .n-cta { grid-column: 1; justify-self: start; margin-top: 8px; }
+  .n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 1; justify-self: start; margin-top: 8px; }
   .n-intro p { font-size: 20px; }
   .n-intro p br { display: none; }
   .n-intro { padding-top: 72px; padding-bottom: 96px; }
@@ -426,60 +427,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-trials figure { margin: 0; }
 .n-trials figcaption { margin-top: 8px; font-size: 15px; color: var(--muted); }
 
-/* Button trials: three more "Read the case" styles in the paper / marker language */
-.n-trials__buttons { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--s-6) var(--s-7); padding: var(--s-2) 0 var(--s-3); }
-.n-trials__buttons figcaption { margin-top: 22px; max-width: 18em; }
-.n-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
-  line-height: 1.2;
-  color: var(--ink);
-  text-decoration: none;
-  isolation: isolate;
-}
-.n-btn > svg:not(.n-btn__under):not(.n-btn__loop):not(.n-btn__dot) { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
-.n-btn:hover > svg:not(.n-btn__under):not(.n-btn__loop):not(.n-btn__dot) { transform: translateX(4px); }
-/* A · masking tape: see-through cream strip with torn ends, tilted; straightens and lifts on hover */
-.n-btn--tape {
-  padding: 13px 30px 14px;
-  color: #1d1b19;
-  transform: rotate(-2deg);
-  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.14)) drop-shadow(0 4px 6px rgb(var(--shade) / 0.08));
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-.n-btn--tape::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--tape);
-  background-image: var(--paper);
-  clip-path: polygon(0% 0%, 100% 0%, 98.5% 14%, 100% 28%, 98.2% 43%, 100% 58%, 98.6% 72%, 100% 86%, 98.4% 100%, 0% 100%, 1.6% 86%, 0% 71%, 1.8% 57%, 0% 42%, 1.5% 28%, 0% 14%);
-}
-.n-btn--tape:hover, .n-btn--tape:focus-visible { transform: rotate(0deg) translateY(-2px); filter: drop-shadow(0 2px 2px rgb(var(--shade) / 0.16)) drop-shadow(0 10px 14px rgb(var(--shade) / 0.14)); }
-/* B · marker loop: a short hand-drawn underline; on hover a loose loop is drawn around the words */
-.n-btn--loop { padding: 10px 18px; }
-.n-btn__under, .n-btn__loop { position: absolute; pointer-events: none; overflow: visible; fill: none; stroke: var(--brown); stroke-linecap: round; }
-.n-btn__under path, .n-btn__loop path { vector-effect: non-scaling-stroke; }
-.n-btn__under { left: 18px; right: 46px; bottom: 2px; width: calc(100% - 64px); height: 8px; stroke-width: 2.5; transition: opacity 0.2s ease; }
-.n-btn__loop { inset: -12px -14px; width: calc(100% + 28px); height: calc(100% + 24px); stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.6s cubic-bezier(0.5, 0, 0.3, 1); }
-.n-btn--loop:hover .n-btn__loop, .n-btn--loop:focus-visible .n-btn__loop { stroke-dashoffset: 0; }
-.n-btn--loop:hover .n-btn__under, .n-btn--loop:focus-visible .n-btn__under { opacity: 0; }
-/* C · paper circle: a round cut-out holding the arrow; turns and nudges on hover */
-.n-btn--circle { gap: 14px; }
-.n-btn__dot { width: 54px; height: 54px; overflow: visible; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); filter: drop-shadow(0 3px 4px rgb(var(--shade) / 0.16)); }
-.n-btn__dot-shape { fill: var(--brown); }
-.n-btn__dot-arrow { fill: none; stroke: var(--on-brown); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-.n-btn--circle:hover .n-btn__dot, .n-btn--circle:focus-visible .n-btn__dot { transform: translateX(5px) rotate(-14deg); }
-@media (prefers-reduced-motion: reduce) {
-  .n-btn--tape, .n-btn__loop, .n-btn__dot { transition: none; }
-}
-
 .n-logo { display: block; overflow: visible; }
 .n-logo__big-shape { fill: var(--brown); }
 .n-logo__z { font-family: var(--serif); font-weight: 600; font-size: 104px; fill: var(--on-brown); }
@@ -498,18 +445,19 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-frame img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 @media (max-width: 899px) { .n-trials__frames { grid-template-columns: 1fr; } }
 
-/* Logo trial with the full first name: two paper cut-outs (shape drawn by NextLogoWord's script)
-   cut down to Z / ز and opened again in snips: quick cut, pause, quick cut… like scissors */
-.n-trials__logos--word { gap: var(--s-6) var(--s-7); align-items: flex-start; padding-bottom: var(--s-3); }
-.n-lw {
-  --snip: linear(0, 0.2 10%, 0.2 22%, 0.42 30%, 0.42 44%, 0.63 52%, 0.63 66%, 0.84 74%, 0.84 86%, 1 94%, 1);
-  --cut-time: 1.2s;
-  position: relative;
-  display: inline-block;
-  text-decoration: none;
-  font-size: 44px;
-}
-@supports not (transition-timing-function: linear(0, 1)) { .n-lw { --snip: steps(5, end); } }
+/* Logo + button timing trial: each column sets its own --cut-time / --cut-stagger */
+.n-trials__timing { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-6) var(--s-5); align-items: start; padding-bottom: var(--s-3); }
+.n-timing { display: flex; flex-direction: column; align-items: flex-start; }
+.n-trials .n-timing figcaption { margin: 52px 0 20px; }
+.n-timing--a { --cut-time: 0.3s; }
+.n-timing--b { --cut-time: 0.45s; }
+.n-timing--c { --cut-time: 0.65s; }
+.n-timing--d { --cut-time: 0.4s; --cut-stagger: 0.1s; }
+
+/* Logo with the full first name: two paper cut-outs (drawn by scripts/paper.ts) cut down to Z / ز
+   and opened again at a steady speed. With --cut-stagger the Arabic follows the Latin on the way
+   out and goes first on the way back. */
+.n-lw { position: relative; display: inline-block; text-decoration: none; font-size: 44px; }
 .n-lw__pill { display: inline-flex; align-items: center; justify-content: center; background-image: var(--paper); }
 .n-lw__pill--big {
   height: 1.8em;
@@ -524,7 +472,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* flex, not inline-block: an inline-block with overflow hidden sits on its bottom edge, which
    lifted "akaria" above the Z */
 .n-lw__latin { display: inline-flex; }
-.n-lw__rest { overflow: hidden; max-width: 2.9em; white-space: nowrap; transition: max-width var(--cut-time) var(--snip); }
+.n-lw__rest { overflow: hidden; max-width: 2.9em; white-space: nowrap; transition: max-width var(--cut-time) linear; }
 /* the Arabic hangs under the end of the Latin name and grows leftwards (the way Arabic is written) */
 .n-lw__pill--small {
   position: absolute;
@@ -540,21 +488,17 @@ img, video { display: block; max-width: 100%; height: auto; }
   align-items: center;
   width: 2.61em; /* the word at 0.82em high */
   overflow: hidden;
-  transition: width var(--cut-time) var(--snip);
+  transition: width var(--cut-time) linear var(--cut-stagger);
 }
 .n-lw__ar svg { grid-area: 1 / 1; height: 0.82em; width: auto; }
+.n-lw__ar-rest { transition: opacity 0s linear var(--cut-stagger); }
 .n-lw--black .n-lw__pill--small { background-color: #1d1b19; fill: var(--on-brown); }
 .n-lw--blue .n-lw__pill--small { background-color: var(--blue); fill: #1d1b19; }
-.n-lw--vermilion .n-lw__pill--small { background-color: #e4572e; fill: #1d1b19; }
-.n-lw--sage .n-lw__pill--small { background-color: #9fb89a; fill: #1d1b19; }
-.n-lw--ochre .n-lw__pill--small { background-color: #e2a83a; fill: #1d1b19; }
-.n-lw--pink .n-lw__pill--small { background-color: #e9a6a1; fill: #1d1b19; }
 /* collapsed (after 5s), unless hovered or focused; both directions animate. The kaf's top stroke
-   leans over the ز, so the rest of the word goes with the last snip and comes back with the first. */
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__rest { max-width: 0; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar { width: 0.36em; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-rest { opacity: 0; transition: opacity 0s linear calc(var(--cut-time) * 0.9); }
+   leans over the ز, so the rest of the word goes just before the end and comes back at the start. */
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__rest { max-width: 0; transition-delay: var(--cut-stagger); }
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar { width: 0.36em; transition-delay: 0s; }
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-rest { opacity: 0; transition-delay: calc(var(--cut-time) * 0.9); }
 @media (prefers-reduced-motion: reduce) {
-  .n-lw__rest, .n-lw__ar, .n-lw.is-collapsed .n-lw__ar-rest { transition: none !important; }
+  .n-lw__rest, .n-lw__ar, .n-lw__ar-rest, .n-lw.is-collapsed .n-lw__ar-rest { transition: none !important; }
 }
-.n-trials__logos--word figcaption { margin-top: 52px; }

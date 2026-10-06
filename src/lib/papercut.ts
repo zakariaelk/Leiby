@@ -97,3 +97,42 @@ export function raggedRect(seed: number, wobble = 0.6, steps = 24) {
   for (let i = steps / 2 - 1; i > 0; i--) pts.push(`${j()}% ${(i * 200 / steps).toFixed(2)}%`);
   return `polygon(${pts.join(', ')})`;
 }
+
+// Seeded random number for a given point, so every cut stays where it is while the paper grows
+const hash = (seed: number, i: number) => {
+  let t = (seed * 9973 + i * 7919) >>> 0;
+  t = Math.imul(t ^ (t >>> 15), 2246822507) >>> 0;
+  t = Math.imul(t ^ (t >>> 13), 3266489909) >>> 0;
+  return ((t ^ (t >>> 16)) >>> 0) / 4294967295;
+};
+
+/** A paper cut-out of width w and height h (CSS path, px): two round ends cut in short straight
+ *  strokes, with the long edges cut at a fixed spacing counted from the side the paper grows from,
+ *  so the paper grows and shrinks instead of stretching. Round when w = h. */
+export function paperPill(w: number, h: number, seed: number, anchor: string) {
+  const r = h / 2;
+  w = Math.max(w, h);
+  const pts: [number, number][] = [];
+  const cap = (cx: number, from: number, id: number) => {
+    for (let k = 0; k <= 5; k++) {
+      const a = from + (k / 5) * Math.PI;
+      const rr = r * (0.94 + hash(seed, id + k) * 0.1);
+      pts.push([cx + Math.cos(a) * rr, r + Math.sin(a) * rr]);
+    }
+  };
+  const step = h * 0.6;
+  const n = Math.floor((w - 2 * r) / step);
+  const edge = (y: number, dir: 1 | -1, id: number) => {
+    const xs = Array.from({ length: n }, (_, k) => (anchor === 'left' ? r + (k + 1) * step : w - r - (k + 1) * step));
+    xs.sort((a, b) => (a - b) * dir);
+    xs.forEach((x) => {
+      const k = Math.round(Math.abs(x - (anchor === 'left' ? r : w - r)) / step);
+      pts.push([x, y + (hash(seed, id + k) - 0.5) * h * 0.07]);
+    });
+  };
+  cap(r, Math.PI / 2, 0);              // left end: bottom → left → top
+  edge(h * 0.02, 1, 100);              // top edge, left to right
+  cap(w - r, -Math.PI / 2, 50);        // right end: top → right → bottom
+  edge(h * 0.98, -1, 200);             // bottom edge, right to left
+  return 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') + 'Z';
+}

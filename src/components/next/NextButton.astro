@@ -1,0 +1,18 @@
+---
+// "Read the case": the words, then a round paper cut-out holding the arrow. On hover (or focus)
+// the paper grows leftwards under the words; a light copy of the words lives inside the paper,
+// so they turn light exactly where the paper has reached. Same paper and timing as the logo.
+interface Props { href: string; name?: string; seed?: number }
+const { href, name, seed = 41 } = Astro.props;
+---
+<a class="n-btn" href={href}>
+  <span class="n-btn__label">Read the case</span>{name && <span class="sr-only">: {name}</span>}
+  <span class="n-btn__shadow" aria-hidden="true">
+    <span class="n-btn__paper" data-paper data-seed={seed} data-anchor="right"><span class="n-btn__label n-btn__label--light">Read the case</span></span>
+  </span>
+  <svg class="n-btn__arrow" viewBox="0 0 54 54" aria-hidden="true"><path d="M17 27h20M30 20l7 7-7 7" /></svg>
+</a>
+
+<script>
+  import '../../scripts/paper';
+</script>

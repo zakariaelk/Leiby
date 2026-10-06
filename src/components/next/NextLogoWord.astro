@@ -1,19 +1,18 @@
 ---
 // Logo trial: "Zakaria" on a brown paper cut-out, overlapped by a smaller cut-out with زكـــريــــاء.
 // Shown in full for 5 seconds, then both are cut down to their first letters (Z and ز) and become
-// round cut-outs; hovering (or focusing) opens them again. The width moves in snips (quick cut,
-// pause), and the paper is redrawn from its width every frame: round ends of a fixed size and cut
-// points at a fixed spacing, so it grows and shrinks instead of stretching. Arabic: the first word
-// of the header name (Amiri Regular with kashida, SIL OFL), split into ز and the rest so the word
-// can be cut back to ز.
-interface Props { variant?: 'black' | 'blue' | 'vermilion' | 'sage' | 'ochre' | 'pink' }
+// round cut-outs; hovering (or focusing) opens them again, at a steady (linear) speed set by
+// --cut-time. The paper is redrawn from its width every frame (scripts/paper.ts), so it grows and
+// shrinks instead of stretching. Arabic: the first word of the header name (Amiri Regular with
+// kashida, SIL OFL), split into ز and the rest so the word can be cut back to ز.
+interface Props { variant?: 'black' | 'blue' }
 const { variant = 'black' } = Astro.props;
 ---
 <a href="/next/" class:list={['n-lw', `n-lw--${variant}`]} aria-label="Zakaria, زكرياء" data-lw>
-  <span class="n-lw__pill n-lw__pill--big" data-seed="5" data-anchor="left" aria-hidden="true">
+  <span class="n-lw__pill n-lw__pill--big" data-paper data-seed="5" data-anchor="left" aria-hidden="true">
     <span class="n-lw__latin"><span>Z</span><span class="n-lw__rest">akaria</span></span>
   </span>
-  <span class="n-lw__pill n-lw__pill--small" data-seed="17" data-anchor="right" aria-hidden="true">
+  <span class="n-lw__pill n-lw__pill--small" data-paper data-seed="17" data-anchor="right" aria-hidden="true">
     <span class="n-lw__ar">
       <svg class="n-lw__ar-rest" viewBox="3765 -770 3402 1070"><path d="M4037 -125Q4032 -110 4024 -105Q3987 -92 3941 -67Q3894 -42 3838 -4Q3828 2 3822 -4Q3820 -6 3820 -7Q3811 -25 3867 -73Q3785 -103 3792 -152Q3796 -192 3854 -259Q3889 -298 3913 -298Q3964 -298 3959 -242Q3958 -224 3946 -204Q3935 -185 3921 -199Q3876 -242 3856 -214Q3835 -183 3892 -156Q3927 -139 3972 -148Q3986 -151 4003 -161Q4012 -166 4020 -169Q4028 -173 4034 -174Q4053 -177 4045 -151L4037 -125ZM4187 -720Q4191 -727 4194 -726Q4199 -726 4202 -705Q4220 -550 4226 -440Q4231 -336 4235 -273Q4238 -210 4239 -188Q4246 -96 4339 -90Q4366 -88 4360 -54Q4351 0 4339 0Q4208 0 4199 -122Q4195 -173 4193 -224Q4190 -276 4188 -328Q4185 -432 4176 -496Q4167 -561 4152 -643Q4149 -658 4155 -668L4187 -720ZM5081 0Q5003 6 4911 10Q4818 13 4710 13Q4602 13 4510 10Q4417 6 4339 0Q4331 0 4326 -15L4314 -59Q4305 -93 4339 -90Q4495 -78 4710 -78Q4925 -78 5081 -90Q5116 -92 5107 -59L5094 -15Q5090 0 5081 0ZM5141 -211L5169 -273Q5177 -291 5187 -274Q5207 -237 5211 -193Q5215 -150 5202 -98Q5178 0 5081 0Q5071 0 5060 -51Q5055 -77 5065 -86Q5071 -91 5081 -90Q5140 -87 5170 -122Q5172 -124 5170 -129Q5164 -157 5143 -187Q5135 -198 5141 -211ZM5230 113Q5232 110 5238 111Q5258 118 5276 128Q5293 138 5309 152Q5313 156 5310 161L5262 237Q5260 240 5253 235Q5250 232 5236 224Q5222 215 5196 200L5158 259Q5155 264 5148 258Q5144 255 5127 244Q5110 233 5078 214Q5074 211 5077 208L5126 135Q5128 132 5134 133Q5151 138 5166 147Q5181 155 5194 166L5230 113ZM5623 -62L5654 -142Q5661 -158 5667 -148Q5684 -118 5699 -104Q5715 -90 5737 -90Q5761 -90 5761 -46Q5761 -2 5737 0Q5721 1 5704 0Q5701 0 5699 6Q5696 102 5631 187Q5566 272 5510 278Q5454 284 5416 275Q5397 270 5373 261Q5348 252 5319 237Q5311 234 5310 229Q5308 222 5312 220Q5316 217 5322 219Q5387 235 5436 225Q5487 214 5534 185Q5580 155 5623 108Q5659 67 5668 27Q5670 1 5627 -41Q5619 -49 5623 -62ZM6293 0Q6215 6 6146 10Q6076 13 6014 13Q5953 13 5884 10Q5814 6 5736 0Q5728 0 5723 -15L5711 -59Q5702 -93 5736 -90Q5892 -78 6014 -78Q6137 -78 6293 -90Q6327 -92 6318 -59L6305 -15Q6301 0 6293 0ZM6292 -90Q6455 -66 6549 -160Q6552 -163 6551 -167Q6489 -266 6342 -340Q6325 -349 6324 -402Q6321 -477 6354 -507Q6497 -635 6873 -752Q6877 -754 6880 -754Q6883 -754 6885 -754Q6891 -754 6891 -748Q6891 -747 6891 -745Q6890 -744 6889 -741L6870 -670Q6866 -656 6856 -653Q6426 -499 6357 -430Q6353 -426 6359 -423Q6570 -297 6571 -172Q6571 -101 6542 -62Q6511 -20 6468 -10Q6363 16 6284 1Q6271 -2 6268 -24Q6265 -48 6265 -60Q6265 -81 6275 -87Q6281 -92 6292 -90Z" /></svg>
       <svg class="n-lw__ar-zain" viewBox="6702 -770 465 1070"><path d="M7051 -279Q7052 -283 7054 -284Q7059 -286 7069 -276Q7108 -236 7127 -169Q7147 -100 7141 -35Q7129 53 7071 127Q7013 202 6919 226Q6895 233 6871 225Q6813 205 6777 191Q6740 176 6726 167Q6722 164 6722 161Q6722 157 6725 154Q6728 151 6734 153Q6769 163 6798 167Q6827 170 6852 167Q6877 164 6906 153Q6934 141 6966 120Q7061 59 7105 -24Q7109 -30 7107 -40Q7092 -93 7029 -171Q7026 -176 7027 -179L7051 -279ZM6949 -590Q6951 -593 6957 -592Q6997 -578 7028 -550Q7032 -546 7029 -542L6982 -466Q6979 -461 6972 -467Q6968 -470 6951 -481Q6934 -492 6902 -511Q6897 -514 6900 -517L6949 -590Z" /></svg>
@@ -22,49 +21,5 @@ const { variant = 'black' } = Astro.props;
 </a>
 
 <script>
-  // Seeded random number for a given point, so every cut stays where it is while the paper grows
-  const rand = (seed: number, i: number) => {
-    let t = (seed * 9973 + i * 7919) >>> 0;
-    t = Math.imul(t ^ (t >>> 15), 2246822507) >>> 0;
-    t = Math.imul(t ^ (t >>> 13), 3266489909) >>> 0;
-    return ((t ^ (t >>> 16)) >>> 0) / 4294967295;
-  };
-
-  // A paper cut-out of width w and height h: two round ends cut in short straight strokes, with
-  // the long edges cut at a fixed spacing, counted from the side the paper grows from.
-  const paper = (w: number, h: number, seed: number, anchor: string) => {
-    const r = h / 2;
-    w = Math.max(w, h);
-    const pts: [number, number][] = [];
-    const cap = (cx: number, from: number, id: number) => {
-      for (let k = 0; k <= 5; k++) {
-        const a = from + (k / 5) * Math.PI;
-        const rr = r * (0.94 + rand(seed, id + k) * 0.1);
-        pts.push([cx + Math.cos(a) * rr, r + Math.sin(a) * rr]);
-      }
-    };
-    const step = h * 0.6;
-    const n = Math.floor((w - 2 * r) / step);
-    const edge = (y: number, dir: 1 | -1, id: number) => {
-      const xs = Array.from({ length: n }, (_, k) => (anchor === 'left' ? r + (k + 1) * step : w - r - (k + 1) * step));
-      xs.sort((a, b) => (a - b) * dir);
-      xs.forEach((x) => {
-        const k = Math.round(Math.abs(x - (anchor === 'left' ? r : w - r)) / step);
-        pts.push([x, y + (rand(seed, id + k) - 0.5) * h * 0.07]);
-      });
-    };
-    cap(r, Math.PI / 2, 0);              // left end: bottom → left → top
-    edge(h * 0.02, 1, 100);              // top edge, left to right
-    cap(w - r, -Math.PI / 2, 50);        // right end: top → right → bottom
-    edge(h * 0.98, -1, 200);             // bottom edge, right to left
-    return 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') + 'Z';
-  };
-
-  // the pill's own background (colour + paper grain) is cut to this outline
-  const draw = (pill: HTMLElement) => {
-    pill.style.clipPath = `path('${paper(pill.offsetWidth, pill.offsetHeight, +pill.dataset.seed!, pill.dataset.anchor!)}')`;
-  };
-  const pills = [...document.querySelectorAll<HTMLElement>('.n-lw__pill')];
-  const ro = new ResizeObserver((entries) => entries.forEach((e) => draw(e.target as HTMLElement)));
-  pills.forEach((p) => { draw(p); ro.observe(p); });
+  import '../../scripts/paper';
 </script>
