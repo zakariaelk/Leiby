@@ -156,6 +156,14 @@ img, video { display: block; max-width: 100%; height: auto; }
   font-size: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px);
   line-height: 1.5;
 }
+/* Phones and tablets in portrait: two lines, "Product designer," / "Creative builder." */
+.n-intro__br { display: none; }
+@media (max-width: 1023px) {
+  .n-intro h1 { white-space: normal; font-size: min(64px, calc((100vw - 2 * var(--pad)) / 8.6)); }
+  .n-intro__br { display: inline; }
+  .n-intro__second { display: inline-block; }
+  .n-intro__second::first-letter { text-transform: uppercase; }
+}
 .n-intro a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; font-weight: 500; }
 
 /* ---------- Section labels ---------- */
