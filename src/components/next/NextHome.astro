@@ -5,7 +5,7 @@ import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { cutEdge, unevenRect, raggedRect } from '../../lib/papercut';
+import { cutEdge, unevenRect } from '../../lib/papercut';
 import NextLogo from './NextLogo.astro';
 import NextLogoWord from './NextLogoWord.astro';
 
@@ -44,12 +44,17 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
         <article class="n-card n-wrap">
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong></p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
-          <div class="n-card__visual" style={`--frame-edge:${raggedRect(41 + i * 9, 0.7)};--frame-inner:${raggedRect(63 + i * 5, 0.35, 16)}`}>
+          <div class="n-card__visual">
             {video ? (
               <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
             ) : (
               <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[640, 960, 1280, 1600]} sizes="(min-width: 900px) 52vw, 100vw" />
             )}
+            <!-- thin marker line over the visual's edge: soft corners, fine fuzzy unevenness -->
+            <svg class="n-marker" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+              <filter id={`marker-${i}`} x="-3%" y="-3%" width="106%" height="106%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={7 + i * 5} /><feDisplacementMap in="SourceGraphic" scale="4" /></filter>
+              <rect x="3" y="3" width="994" height="594" rx="9" filter={`url(#marker-${i})`} />
+            </svg>
           </div>
           <div class="n-card__foot">
             <dl class="n-card__meta">

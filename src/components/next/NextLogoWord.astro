@@ -1,19 +1,68 @@
 ---
-// Logo trial: "Zakaria" in a brown paper-cut pill, overlapped by a smaller pill with زكرياء.
+// Logo trial: "Zakaria" on a brown paper cut-out, overlapped by a smaller cut-out with زكرياء.
 // Shown in full for 5 seconds, then both collapse to their first letters (Z and ز) and become
-// circles again; hovering (or focusing) the logo opens them back up. Arabic drawn as outlines
-// from Amiri Bold (SIL OFL), so no Arabic font is downloaded.
+// round cut-outs; hovering (or focusing) opens them again. The paper is redrawn from its width
+// every frame: round ends of a fixed size and cut points at a fixed spacing, so the paper grows
+// and shrinks instead of stretching. Arabic drawn as Amiri Bold outlines (SIL OFL).
 interface Props { variant?: 'black' | 'blue' }
 const { variant = 'black' } = Astro.props;
 ---
 <a href="/next/" class:list={['n-lw', `n-lw--${variant}`]} aria-label="Zakaria, زكرياء" data-lw>
-  <span class="n-lw__big" aria-hidden="true">
-    <span>Z</span><span class="n-lw__rest">akaria</span>
-    <span class="n-lw__small">
+  <span class="n-lw__pill n-lw__pill--big" data-seed="5" data-anchor="left" aria-hidden="true">
+    <span class="n-lw__latin"><span>Z</span><span class="n-lw__rest">akaria</span></span>
+  </span>
+  <span class="n-lw__pill n-lw__pill--small" data-seed="17" data-anchor="right" aria-hidden="true">
       <span class="n-lw__ar-wrap">
         <svg class="n-lw__word" viewBox="40 -865 1819 1149"><path d="M184 -306Q243 -304 237 -242Q234 -211 219 -195Q204 -179 187 -193Q144 -233 131 -206Q121 -186 160 -166Q220 -137 271 -167Q302 -184 315 -180Q330 -175 323 -149L315 -123Q309 -103 298 -98Q261 -85 215 -60Q168 -35 113 2Q98 11 88 1Q68 -19 124 -70Q50 -102 56 -149Q62 -195 120 -264Q156 -306 184 -306ZM460 -725Q480 -760 485 -718Q506 -532 509 -378Q512 -222 515 -189Q519 -111 610 -105Q641 -103 645 -75Q646 -70 646 -60Q645 -51 643 -38Q639 -14 632 1Q626 15 610 15Q469 15 460 -121Q458 -152 456 -205Q454 -258 452 -332Q450 -400 442 -472Q433 -544 418 -621Q413 -647 423 -662L460 -725ZM661 -213L690 -275Q705 -308 716 -288Q765 -205 739 -94Q714 15 610 15Q590 15 581 -19Q577 -36 575 -49Q573 -63 573 -73Q573 -93 594 -102Q602 -105 610 -105Q666 -104 694 -128Q688 -155 671 -173Q652 -194 661 -213ZM752 109Q758 101 769 104Q789 111 808 122Q827 133 843 147Q851 155 846 165L798 241Q790 252 780 243Q776 239 763 231Q749 222 727 209L694 263Q687 273 676 265Q671 261 653 250Q634 239 603 220Q592 214 600 203L648 131Q654 123 665 126Q695 136 721 155L752 109ZM1178 -165Q1189 -149 1198 -135Q1207 -122 1214 -108Q1254 -29 1207 92Q1149 243 1048 269Q1024 274 985 265Q969 261 935 248Q900 235 845 212Q829 206 834 190Q838 175 855 177Q899 181 933 180Q967 179 989 173Q1034 161 1096 114Q1157 68 1174 29Q1180 6 1164 -18Q1150 -40 1135 -51Q1122 -61 1126 -84L1141 -154Q1150 -194 1178 -165ZM1716 -823L1703 -752Q1699 -736 1679 -730Q1546 -694 1416 -649Q1285 -605 1156 -552Q1371 -337 1344 -139Q1329 -28 1222 -11Q1198 -8 1179 -46Q1140 -124 1162 -145Q1172 -153 1188 -150Q1230 -141 1286 -168Q1296 -211 1218 -307Q1202 -327 1184 -346Q1166 -366 1144 -388Q1115 -365 1096 -387Q1073 -413 1059 -428Q1045 -444 1040 -451Q1030 -464 1035 -486Q1067 -626 1156 -669Q1270 -725 1404 -770Q1538 -816 1690 -850Q1717 -855 1717 -828Q1717 -827 1717 -825Q1716 -824 1716 -823ZM1709 -295Q1711 -304 1716 -306Q1727 -309 1748 -283Q1764 -264 1778 -236Q1792 -208 1802 -170Q1849 -2 1742 136Q1680 216 1590 240Q1557 249 1534 238Q1490 219 1456 204Q1421 188 1396 176Q1380 167 1385 156Q1391 144 1407 148Q1475 168 1515 158Q1558 147 1625 107Q1743 36 1768 -31Q1769 -33 1769 -37Q1760 -84 1684 -163Q1677 -170 1680 -182L1709 -295ZM1610 -594Q1616 -602 1627 -599Q1647 -592 1666 -581Q1684 -570 1700 -556Q1708 -548 1703 -538L1655 -462Q1648 -452 1637 -460Q1627 -468 1565 -505Q1554 -512 1561 -522L1610 -594Z" /></svg>
         <svg class="n-lw__zain" viewBox="-102 -612 489 871"><path d="M237 -295Q239 -304 244 -306Q255 -309 276 -283Q292 -264 306 -236Q320 -208 330 -170Q377 -2 270 136Q208 216 118 240Q85 249 62 238Q18 219 -16 204Q-51 188 -76 176Q-92 167 -87 156Q-81 144 -65 148Q3 168 43 158Q86 147 153 107Q271 36 296 -31Q297 -33 297 -37Q288 -84 212 -163Q205 -170 208 -182L237 -295ZM138 -594Q144 -602 155 -599Q175 -592 194 -581Q212 -570 228 -556Q236 -548 231 -538L183 -462Q176 -452 165 -460Q155 -468 93 -505Q82 -512 89 -522L138 -594Z" /></svg>
       </span>
-    </span>
   </span>
 </a>
+
+<script>
+  // Seeded random number for a given point, so every cut stays where it is while the paper grows
+  const rand = (seed: number, i: number) => {
+    let t = (seed * 9973 + i * 7919) >>> 0;
+    t = Math.imul(t ^ (t >>> 15), 2246822507) >>> 0;
+    t = Math.imul(t ^ (t >>> 13), 3266489909) >>> 0;
+    return ((t ^ (t >>> 16)) >>> 0) / 4294967295;
+  };
+
+  // A paper cut-out of width w and height h: two round ends cut in short straight strokes, with
+  // the long edges cut at a fixed spacing, counted from the side the paper grows from.
+  const paper = (w: number, h: number, seed: number, anchor: string) => {
+    const r = h / 2;
+    w = Math.max(w, h);
+    const pts: [number, number][] = [];
+    const cap = (cx: number, from: number, id: number) => {
+      for (let k = 0; k <= 5; k++) {
+        const a = from + (k / 5) * Math.PI;
+        const rr = r * (0.94 + rand(seed, id + k) * 0.1);
+        pts.push([cx + Math.cos(a) * rr, r + Math.sin(a) * rr]);
+      }
+    };
+    const step = h * 0.6;
+    const n = Math.floor((w - 2 * r) / step);
+    const edge = (y: number, dir: 1 | -1, id: number) => {
+      const xs = Array.from({ length: n }, (_, k) => (anchor === 'left' ? r + (k + 1) * step : w - r - (k + 1) * step));
+      xs.sort((a, b) => (a - b) * dir);
+      xs.forEach((x) => {
+        const k = Math.round(Math.abs(x - (anchor === 'left' ? r : w - r)) / step);
+        pts.push([x, y + (rand(seed, id + k) - 0.5) * h * 0.07]);
+      });
+    };
+    cap(r, Math.PI / 2, 0);              // left end: bottom → left → top
+    edge(h * 0.02, 1, 100);              // top edge, left to right
+    cap(w - r, -Math.PI / 2, 50);        // right end: top → right → bottom
+    edge(h * 0.98, -1, 200);             // bottom edge, right to left
+    return 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') + 'Z';
+  };
+
+  // the pill's own background (colour + paper grain) is cut to this outline
+  const draw = (pill: HTMLElement) => {
+    pill.style.clipPath = `path('${paper(pill.offsetWidth, pill.offsetHeight, +pill.dataset.seed!, pill.dataset.anchor!)}')`;
+  };
+  const pills = [...document.querySelectorAll<HTMLElement>('.n-lw__pill')];
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => draw(e.target as HTMLElement)));
+  pills.forEach((p) => { draw(p); ro.observe(p); });
+</script>

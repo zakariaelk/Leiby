@@ -217,7 +217,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-label {
   margin-top: 0;
   margin-bottom: var(--s-4); /* not the shorthand: keeps .n-wrap's auto side margins */
-  font-size: 13px;
+  font-size: clamp(14px, calc(14px + 2 * (100vw - 1024px) / 256), 16px);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -255,7 +255,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px);
   padding-bottom: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px);
 }
-.n-card__client { grid-column: 1; grid-row: 1; margin: 0; font-family: var(--serif); font-size: clamp(16px, calc(16px + 2 * (100vw - 1024px) / 416), 18px); line-height: 1.4; }
+.n-card__client { grid-column: 1; grid-row: 1; margin: 0; font-family: var(--serif); font-size: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); line-height: 1.4; }
 .n-card__client strong { font-weight: 500; }
 .n-card__title {
   grid-column: 1;
@@ -270,18 +270,17 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-card__title a { text-decoration: none; }
 .n-card__title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
-/* Thick brown marker border hugging the visual (like La Palatine's video frame): the frame's
-   outer edge and the image's edge are both slightly ragged; the visual itself stays straight */
+/* Thin brown marker line over the visual's edge (like La Palatine's video frame): soft corners,
+   finely fuzzy edge; the visual itself stays straight */
 .n-card__visual {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
-  padding: 10px;
-  background-color: #4b3427;
-  background-image: var(--paper);
-  clip-path: var(--frame-edge);
+  position: relative;
 }
-.n-card__visual img, .n-card__visual video { clip-path: var(--frame-inner); }
+.n-marker { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; fill: none; stroke: #4b3427; stroke-width: 3.5; }
+.n-marker rect { vector-effect: non-scaling-stroke; }
+.n-card__visual img, .n-card__visual video { border-radius: 6px; }
 .n-card__visual img, .n-card__visual video { width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
 .n-card__foot {
   grid-column: 1 / -1;
@@ -329,9 +328,20 @@ img, video { display: block; max-width: 100%; height: auto; }
   background-color: #4b3427;
   background-image: var(--paper);
   clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%);
-  transition: clip-path 0.25s ease;
+  transition: clip-path 0.25s ease, inset 0.25s ease;
 }
-.n-cta--paper:hover::before, .n-cta--paper:focus-visible::before { clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%); }
+/* a pastel-blue card of the same cut, peeking out bottom-left; the brown one covers it on hover */
+.n-cta--paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-color: #b7cbe3;
+  background-image: var(--paper);
+  clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%);
+  transform: translate(-7px, 7px);
+}
+.n-cta--paper:hover::before, .n-cta--paper:focus-visible::before { inset: 0 0 -7px -7px; clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%); }
 @media (prefers-reduced-motion: reduce) { .n-cta--paper::before { transition: none; } }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
@@ -405,23 +415,31 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-frame img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 @media (max-width: 899px) { .n-trials__frames { grid-template-columns: 1fr; } }
 
-/* Logo trial with the full first name: pills that collapse into circles (Z / ز) */
+/* Logo trial with the full first name: two paper cut-outs (shape drawn by NextLogoWord's script)
+   whose paper grows and shrinks with the text; collapsed they are round (Z / ز) */
 .n-trials__logos--word { gap: var(--s-7); align-items: flex-start; padding-bottom: var(--s-3); }
-.n-lw { display: inline-block; text-decoration: none; font-size: 44px; }
-.n-lw__big {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+.n-lw { position: relative; display: inline-block; text-decoration: none; font-size: 44px; }
+.n-lw__pill { display: inline-flex; align-items: center; justify-content: center; background-image: var(--paper); }
+.n-lw__pill--big {
   height: 1.8em;
-  padding: 0 0.5em 0.06em;
+  min-width: 1.8em;
+  padding: 0 0.58em 0.06em;
   font-family: var(--serif);
   font-weight: 600;
   line-height: 1;
   color: #f4efe9;
   background-color: #4b3427;
-  background-image: var(--paper);
-  border-radius: 46% 54% 43% 57% / 58% 45% 55% 42%; /* uneven, like a cut-out */
 }
+.n-lw__pill--small {
+  position: absolute;
+  right: -0.5em;
+  bottom: -0.45em;
+  height: 1.12em;
+  min-width: 1.12em;
+  padding: 0 0.26em;
+}
+.n-lw--black .n-lw__pill--small { background-color: #1d1b19; fill: #f4efe9; }
+.n-lw--blue .n-lw__pill--small { background-color: #b7cbe3; fill: #1d1b19; }
 .n-lw__rest {
   display: inline-block;
   overflow: hidden;
@@ -429,20 +447,6 @@ img, video { display: block; max-width: 100%; height: auto; }
   white-space: nowrap;
   transition: max-width 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
 }
-.n-lw__small {
-  position: absolute;
-  right: -0.5em;
-  bottom: -0.45em;
-  display: grid;
-  place-items: center;
-  height: 1.1em;
-  padding: 0 0.28em;
-  background-image: var(--paper);
-  border-radius: 54% 46% 57% 43% / 45% 58% 42% 55%;
-  transition: padding 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-}
-.n-lw--black .n-lw__small { background-color: #1d1b19; fill: #f4efe9; }
-.n-lw--blue .n-lw__small { background-color: #b7cbe3; fill: #1d1b19; }
 .n-lw__ar-wrap {
   display: grid;
   place-items: center;
@@ -454,13 +458,12 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-lw__ar-wrap svg { grid-area: 1 / 1; height: 0.8em; width: auto; transition: opacity 0.5s ease; }
 .n-lw__word { width: 1.27em; }
 .n-lw__zain { opacity: 0; height: 0.62em !important; }
-/* collapsed (after 5s), unless hovered or focused */
+/* collapsed (after 5s), unless hovered or focused; both directions animate */
 .n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__rest { max-width: 0; opacity: 0; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__small { padding: 0 0.24em; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-wrap { width: 0.62em; }
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-wrap { width: 0.6em; }
 .n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__word { opacity: 0; }
 .n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__zain { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-  .n-lw__rest, .n-lw__small, .n-lw__ar-wrap, .n-lw__ar-wrap svg { transition: none; }
+  .n-lw__rest, .n-lw__ar-wrap, .n-lw__ar-wrap svg { transition: none; }
 }
 .n-trials__logos--word figcaption { margin-top: 30px; }
