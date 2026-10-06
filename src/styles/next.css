@@ -22,7 +22,7 @@
   --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px;
   --s-5: 48px; --s-6: 64px; --s-7: 96px; --s-8: 128px;
   --pad: clamp(16px, 4vw, 64px);
-  --lead: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px); /* intro text, name, nav */
+  --lead: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px); /* intro text, name */
   /* Paper: fine grain plus soft fibres, a few percent on top of every background */
   --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.6'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.5'/%3E%3CfeFuncA type='table' tableValues='0 .16'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.7'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.6'/%3E%3CfeFuncA type='table' tableValues='0 .07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
@@ -154,7 +154,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 :root[data-theme='dark'] .n-theme .sun { display: none; }
 :root[data-theme='dark'] .n-theme .moon { display: block; }
 
-.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--serif); font-size: var(--lead); }
+.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--serif); font-weight: 500; font-size: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); } /* name weight, one size down (as the client names) */
 .n-burger { display: none; }
 .n-nav a { text-decoration: none; }
 .n-nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
