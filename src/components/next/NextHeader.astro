@@ -5,7 +5,7 @@ import NextLogo from './NextLogo.astro';
 ---
 <header class="n-head">
   <div class="n-brand">
-    <NextLogo variant="blue" seed={23} size={42} decorative />
+    <NextLogo variant="blue" seed={23} size={52} decorative />
     <a href="/next/" class="n-name">
       <span class="n-name__latin">Zakaria El Khachia</span>
       <ArabicNameAmiri />
@@ -18,8 +18,12 @@ import NextLogo from './NextLogo.astro';
       </svg>
     </button>
   </div>
-  <nav class="n-nav" aria-label="Main">
-    <a href="/next/#work" class="n-nav__extra">Work</a>
+  <!-- Phones: a brown paper square with two white bars opens the menu full screen (like ensemblelapalatine.com) -->
+  <button type="button" class="n-burger" aria-label="Menu" aria-expanded="false" aria-controls="n-menu">
+    <span class="n-burger__bar"></span><span class="n-burger__bar"></span>
+  </button>
+  <nav class="n-nav" id="n-menu" aria-label="Main">
+    <a href="/next/#work">Work</a>
     <a href="/next/about/">About</a>
     <a href="/next/#contact">Contact</a>
     <button type="button" class="n-icon n-theme" aria-label="Switch to dark mode">
@@ -45,6 +49,18 @@ import NextLogo from './NextLogo.astro';
     audio.onended = () => say.classList.remove('is-playing');
     audio.play().catch(() => say.classList.remove('is-playing'));
   });
+
+  // Phone menu: full-screen panel; closes on Escape, on a link, or on the button again
+  const burger = document.querySelector<HTMLButtonElement>('.n-burger');
+  const setMenu = (open: boolean) => {
+    document.documentElement.classList.toggle('is-menu-open', open);
+    burger?.setAttribute('aria-expanded', String(open));
+    burger?.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+  };
+  burger?.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  document.querySelectorAll('#n-menu a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && burger?.getAttribute('aria-expanded') === 'true') { setMenu(false); burger.focus(); } });
+  window.matchMedia('(min-width: 701px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
 
   // Light / dark: remembered for next time
   const root = document.documentElement;
