@@ -1,12 +1,13 @@
 ---
-// Next design direction: home. Shared by /next/ (crumpled paper button) and /next/marker/
+// Next design direction: home. Shared by /next/ (brown paper-card button) and /next/marker/
 // (marker-highlight link), so the two CTA styles can be compared side by side.
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { cutEdge, unevenRect, rng } from '../../lib/papercut';
+import { cutEdge, unevenRect, raggedRect } from '../../lib/papercut';
 import NextLogo from './NextLogo.astro';
+import NextLogoWord from './NextLogoWord.astro';
 
 interface Props { cta?: 'paper' | 'marker' }
 const { cta = 'paper' } = Astro.props;
@@ -27,26 +28,6 @@ const cut = (seed: number) => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
-// Trial colours, so they can be compared: frames brown / blue
-const FRAME = ['brown', 'blue', 'brown'];
-// Frame drawn with a marker: four strokes that overshoot the corners a little, each slightly
-// bowed, roughened by an SVG filter so the line has a marker's uneven edge
-const markerFrame = (seed: number) => {
-  const r = rng(seed);
-  const j = (n: number) => (r() * 2 - 1) * n;
-  const side = (x0: number, y0: number, x1: number, y1: number) => {
-    const mx = (x0 + x1) / 2 + j(4), my = (y0 + y1) / 2 + j(4);
-    return `M${(x0 + j(6)).toFixed(1)} ${(y0 + j(5)).toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${(x1 + j(6)).toFixed(1)} ${(y1 + j(5)).toFixed(1)}`;
-  };
-  return [side(-6, 4, 1006, -2), side(998, -8, 1003, 606), side(1006, 596, -5, 602), side(3, 608, -2, -6)].join(' ');
-};
-// Paper button: a sheet of white paper, crumpled in its texture (not its shape); letters just
-// slightly off. On hover the paper is smoothed out and the letters line up, in jerky steps.
-const LABEL = 'Read the case';
-const crookedLetters = (seed: number) => {
-  const r = rng(seed);
-  return [...LABEL].map((ch) => ({ ch, style: `--r:${((r() * 2 - 1) * 5).toFixed(1)}deg;--y:${((r() * 2 - 1) * 1).toFixed(1)}px` }));
-};
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
 <Next>
@@ -61,13 +42,9 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
         <div class="n-cut n-cut--top" style={cut(7 + i * 13)} aria-hidden="true"></div>
         <article class="n-card n-wrap">
-          <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong>{p.data.projectName && <span> – {p.data.projectName}</span>}</p>
+          <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong></p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
-          <div class:list={['n-card__visual', `n-card__visual--${FRAME[i]}`]}>
-            <svg class="n-marker" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-              <filter id={`marker-${i}`} x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.08 0.12" numOctaves="2" seed={i + 3} /><feDisplacementMap in="SourceGraphic" scale="5" /></filter>
-              <path d={markerFrame(41 + i * 9)} filter={`url(#marker-${i})`} />
-            </svg>
+          <div class="n-card__visual" style={`--frame-edge:${raggedRect(41 + i * 9, 0.7)};--frame-inner:${raggedRect(63 + i * 5, 0.35, 16)}`}>
             {video ? (
               <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
             ) : (
@@ -80,8 +57,8 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
               {p.data.role && <div class="n-card__meta-item n-card__meta-item--mid"><dt>Role</dt><dd>{p.data.role}</dd></div>}
             </dl>
             {cta === 'paper' ? (
-              <a class:list={['n-cta', 'n-cta--paper']} href={`/work/${p.id}/`} style={`--shape:${unevenRect(5 + i * 17, 2)}`} aria-label={`Read the case: ${p.data.projectName ?? p.data.title}`}>
-                <span class="n-cta__letters" aria-hidden="true">{crookedLetters(9 + i * 23).map((l) => <span class="n-cta__l" style={l.style}>{l.ch === ' ' ? '\u00a0' : l.ch}</span>)}</span><Fragment set:html={arrow} />
+              <a class:list={['n-cta', 'n-cta--paper']} href={`/work/${p.id}/`} aria-label={`Read the case: ${p.data.projectName ?? p.data.title}`}>
+                <span aria-hidden="true">Read the case</span><Fragment set:html={arrow} />
               </a>
             ) : (
               <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
@@ -119,6 +96,11 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
       <figure><NextLogo variant="blue" seed={23} /><figcaption>Brown + pastel blue</figcaption></figure>
     </div>
+    <p class="n-label">Trial · logo with the full first name (collapses after 5s, opens on hover)</p>
+    <div class="n-trials__logos n-trials__logos--word">
+      <figure><NextLogoWord variant="black" /><figcaption>Brown + black</figcaption></figure>
+      <figure><NextLogoWord variant="blue" /><figcaption>Brown + pastel blue</figcaption></figure>
+    </div>
     <p class="n-label">Trial · paper-cut frames</p>
     <div class="n-trials__frames">
       {featured.map(({ p }, i) => (
@@ -142,6 +124,11 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
     }), { threshold: 0.3 });
     videos.forEach((v) => io.observe(v));
   }
+
+  // Logo trial: full first name for 5 seconds, then collapse to Z / ز (hover opens it again)
+  const words = document.querySelectorAll<HTMLElement>('[data-lw]');
+  if (reduce) words.forEach((w) => w.classList.add('is-collapsed'));
+  else window.setTimeout(() => words.forEach((w) => w.classList.add('is-collapsed')), 5000);
 
   // Logo trial: the two paper circles drift apart with the pointer (-1…1 across the window)
   if (!reduce) {

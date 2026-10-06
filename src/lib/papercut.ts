@@ -46,3 +46,15 @@ export function unevenRect(seed: number, wobble = 1.2) {
   for (let i = 5; i > 0; i--) pts.push(`${j()}% ${i * 100 / 6}%`);
   return `polygon(${pts.join(', ')})`;
 }
+
+/** A rectangle with a ragged, marker-like edge: many small wobbles per side (CSS clip-path). */
+export function raggedRect(seed: number, wobble = 0.6, steps = 24) {
+  const rand = rng(seed);
+  const j = () => (rand() * wobble).toFixed(2);
+  const pts: string[] = [];
+  for (let i = 0; i <= steps; i++) pts.push(`${(i * 100 / steps).toFixed(2)}% ${j()}%`);
+  for (let i = 1; i < steps / 2; i++) pts.push(`${(100 - +j()).toFixed(2)}% ${(i * 200 / steps).toFixed(2)}%`);
+  for (let i = steps; i >= 0; i--) pts.push(`${(i * 100 / steps).toFixed(2)}% ${(100 - +j()).toFixed(2)}%`);
+  for (let i = steps / 2 - 1; i > 0; i--) pts.push(`${j()}% ${(i * 200 / steps).toFixed(2)}%`);
+  return `polygon(${pts.join(', ')})`;
+}
