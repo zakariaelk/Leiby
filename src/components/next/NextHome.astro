@@ -1,13 +1,15 @@
 ---
-// Next design direction: home. Shared by /next/ (dark torn-paper button) and /next/marker/
+// Next design direction: home. Shared by /next/ (slanted paper-cut button) and /next/marker/
 // (marker-highlight link), so the two CTA styles can be compared side by side.
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
+import { cutEdge, unevenRect } from '../../lib/papercut';
+import NextLogo from './NextLogo.astro';
 
-interface Props { cta?: 'drawn' | 'marker' }
-const { cta = 'drawn' } = Astro.props;
+interface Props { cta?: 'slant' | 'marker' }
+const { cta = 'slant' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -20,41 +22,10 @@ const featured = await Promise.all(FEATURED.map(async (id) => {
 }));
 const rest = projects.filter((p) => !FEATURED.includes(p.id));
 
-// Torn paper. Each edge is two masked layers: the paper itself, and just above it a lighter,
-// half-transparent rim of fibres (what a real tear shows). Both outlines come from a seeded
-// random walk (same on every build), roughened with an SVG displacement filter.
-const rng = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-const walk = (seed: number, lift = 0) => {
-  const r = rng(seed);
-  let x = 0, d = `M0 48 L0 ${(30 + r() * 8 - lift).toFixed(1)}`;
-  while (x < 1000) {
-    x = Math.min(1000, x + 10 + r() * 30);
-    const peak = r() < 0.16 ? 6 + r() * 10 : 24 + r() * 16;
-    d += ` L${x.toFixed(1)} ${(peak - lift - r() * lift).toFixed(1)}`;
-  }
-  return d + ' L1000 48 Z';
-};
-const tearMask = (d: string, seed: number, rough: number, freq: string) => {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 48' preserveAspectRatio='none'><filter id='t' x='-2%' y='-60%' width='104%' height='220%'><feTurbulence type='fractalNoise' baseFrequency='${freq}' numOctaves='2' seed='${seed}'/><feDisplacementMap in='SourceGraphic' scale='${rough}' xChannelSelector='R' yChannelSelector='G'/></filter><path filter='url(#t)' d='${d}'/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-};
-const tear = (seed: number) =>
-  `--tear-main:${tearMask(walk(seed), seed, 3, '.5 .9')};--tear-rim:${tearMask(walk(seed, 3), seed + 1, 7, '.9 1.6')}`;
-
-// Hand-drawn outline for the "Read the case" button: two quick, uneven passes around the box
-const sketch = (seed: number) => {
-  const r = rng(seed);
-  const j = (n: number) => (r() - 0.5) * n;
-  const pass = () => {
-    const c = [[2 + j(3), 3 + j(4)], [198 + j(3), 2 + j(4)], [197 + j(3), 54 + j(4)], [3 + j(3), 53 + j(4)]];
-    let d = `M${c[0][0].toFixed(1)} ${c[0][1].toFixed(1)}`;
-    for (let i = 1; i <= 4; i++) {
-      const [x0, y0] = c[i - 1], [x1, y1] = c[i % 4];
-      d += ` Q${((x0 + x1) / 2 + j(4)).toFixed(1)} ${((y0 + y1) / 2 + j(5)).toFixed(1)} ${(x1 + j(2)).toFixed(1)} ${(y1 + j(2)).toFixed(1)}`;
-    }
-    return d;
-  };
-  return `${pass()} ${pass()}`;
+// Paper-cut band edge: the band's own paper (colour + texture), masked by a gently uneven cut
+const cut = (seed: number) => {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
+  return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
@@ -68,7 +39,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
     <h2 class="n-label n-featured__label n-wrap" id="featured-title">Featured work</h2>
     {featured.map(({ p, video, poster, posterSrc }, i) => (
       <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
-        <div class="n-tear n-tear--top" style={tear(7 + i * 13)} aria-hidden="true"><span class="n-tear__rim"></span><span class="n-tear__paper"></span></div>
+        <div class="n-cut n-cut--top" style={cut(7 + i * 13)} aria-hidden="true"></div>
         <article class="n-card n-wrap">
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong>{p.data.projectName && <span> – {p.data.projectName}</span>}</p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
@@ -79,17 +50,18 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
               <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[640, 960, 1280, 1600]} sizes="(min-width: 900px) 52vw, 100vw" />
             )}
           </div>
+          <div class="n-card__foot">
           <dl class="n-card__meta">
             {p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
             {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
           </dl>
           <a class:list={['n-cta', `n-cta--${cta}`]} href={`/work/${p.id}/`}>
-            {cta === 'drawn' && <svg class="n-cta__outline" viewBox="0 0 200 56" preserveAspectRatio="none" aria-hidden="true"><path d={sketch(3 + i * 11)} /></svg>}
             <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
           </a>
+          </div>
         </article>
         {i === featured.length - 1 && (
-          <div class="n-tear n-tear--bottom" style={tear(91)} aria-hidden="true"><span class="n-tear__rim"></span><span class="n-tear__paper"></span></div>
+          <div class="n-cut n-cut--bottom" style={cut(91)} aria-hidden="true"></div>
         )}
       </div>
     ))}
@@ -109,6 +81,23 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       ))}
     </ul>
   </section>
+
+  <!-- Trials, to judge in context before they move into the header and the case studies -->
+  <section class="n-trials n-wrap" aria-label="Design trials">
+    <p class="n-label">Trial · logo</p>
+    <div class="n-trials__logos">
+      <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
+      <figure><NextLogo variant="blue" seed={23} /><figcaption>Brown + pastel blue</figcaption></figure>
+    </div>
+    <p class="n-label">Trial · paper-cut frames</p>
+    <div class="n-trials__frames">
+      {featured.map(({ p }, i) => (
+        <figure class="n-frame" style={`clip-path:${unevenRect(31 + i * 7, 1.4)}`}>
+          <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[480, 800]} sizes="(min-width: 900px) 30vw, 100vw" style={`clip-path:${unevenRect(57 + i * 5, 0.9)}`} />
+        </figure>
+      ))}
+    </div>
+  </section>
 </Next>
 
 <script>
@@ -122,5 +111,17 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       if (isIntersecting) v.play().catch(() => {}); else v.pause();
     }), { threshold: 0.3 });
     videos.forEach((v) => io.observe(v));
+  }
+
+  // Logo trial: the two paper circles drift apart with the pointer (-1…1 across the window)
+  if (!reduce) {
+    let frame = 0;
+    window.addEventListener('pointermove', (e) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--mx', ((e.clientX / innerWidth) * 2 - 1).toFixed(3));
+        document.documentElement.style.setProperty('--my', ((e.clientY / innerHeight) * 2 - 1).toFixed(3));
+      });
+    }, { passive: true });
   }
 </script>
