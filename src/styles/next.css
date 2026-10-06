@@ -39,7 +39,7 @@
 /* White / gray variant (/next/white/): white and light-gray paper, dark-gray cut-outs, brighter
    blue, grain at half strength. In dark mode the cut-outs turn light gray so they stay visible. */
 :root[data-palette='mono'] {
-  --bg: #efefef;
+  --bg: #f5f5f5;
   --surface: #fff;
   --ink: #161616;
   --muted: #5c5c5c;
@@ -89,8 +89,9 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-brand { display: flex; align-items: center; gap: 2px; }
 .n-brand .n-logo { flex: none; margin-right: 4px; }
-/* the icon box is centred on the line; nudge it up to the centre of the capitals */
-.n-say svg { transform: translateY(-2.5px); }
+/* paper-logo version: the cut-outs at header size; the speaker clears the Arabic piece */
+.n-brand--paper .n-lw { font-size: 22px; }
+.n-brand--paper .n-say { margin-left: 14px; }
 
 /* Name: one line, same weight as the featured titles. Every few seconds it slowly turns into
    its Arabic form and back: a soft-edged sweep runs right to left, the way Arabic is written,
@@ -341,10 +342,9 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
 /* "Read the case" (NextButton): the words, then a round paper cut-out holding the arrow. On hover
-   the paper grows leftwards under the words at the logo's steady speed; the light copy of the words
-   inside the paper shows wherever it has reached. */
+   the paper turns 15° every 0.25s (stop-motion steps) for as long as the pointer stays; it keeps
+   its angle when the pointer leaves. The first 15° is immediate (the group), the rest is the loop. */
 .n-btn {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 14px;
@@ -354,25 +354,20 @@ img, video { display: block; max-width: 100%; height: auto; }
   line-height: 1.2;
   color: var(--ink);
   text-decoration: none;
-  isolation: isolate;
 }
 .n-btn__label { white-space: nowrap; }
-.n-btn__shadow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 54px;
-  height: 54px;
-  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.2)) drop-shadow(0 6px 10px rgb(var(--shade) / 0.14));
-  transition: width var(--cut-time) linear;
+.n-btn__dot { flex: none; width: 54px; height: 54px; overflow: visible; filter: drop-shadow(0 3px 4px rgb(var(--shade) / 0.16)); }
+:root[data-theme='dark'] .n-btn__dot { filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.4)); }
+.n-btn__dot-turn, .n-btn__dot-shape { transform-box: view-box; transform-origin: 50% 50%; }
+.n-btn__dot-shape { fill: var(--brown); animation: n-turn 6s steps(24, end) infinite paused; }
+.n-btn:hover .n-btn__dot-turn, .n-btn:focus-visible .n-btn__dot-turn { transform: rotate(15deg); }
+.n-btn:hover .n-btn__dot-shape, .n-btn:focus-visible .n-btn__dot-shape { animation-play-state: running; }
+@keyframes n-turn { to { transform: rotate(360deg); } }
+.n-btn__dot-arrow { fill: none; stroke: var(--on-brown); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: reduce) {
+  .n-btn__dot-shape { animation: none; }
+  .n-btn:hover .n-btn__dot-turn, .n-btn:focus-visible .n-btn__dot-turn { transform: none; }
 }
-.n-btn:hover .n-btn__shadow, .n-btn:focus-visible .n-btn__shadow { width: calc(100% + 22px); }
-.n-btn__paper { position: absolute; inset: 0; background-color: var(--brown); background-image: var(--paper); }
-/* lines up with the words outside: 54px circle + 14px gap from the right */
-.n-btn__label--light { position: absolute; top: 50%; right: 68px; transform: translateY(-50%); color: var(--on-brown); }
-.n-btn__arrow { position: relative; flex: none; width: 54px; height: 54px; fill: none; stroke: var(--on-brown); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-:root[data-theme='dark'] .n-btn__shadow { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)); }
-@media (prefers-reduced-motion: reduce) { .n-btn__shadow { transition: none; } }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
   content: '';
@@ -420,7 +415,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   .n-list__desc { grid-column: 1 / -1; grid-row: 2; }
 }
 
-/* ---------- Trials: logo and paper-cut frames ---------- */
+/* ---------- Trials: logo ---------- */
 .n-trials { padding-top: var(--s-7); padding-bottom: var(--s-8); }
 .n-trials .n-label { margin-top: var(--s-6); }
 .n-trials__logos { display: flex; flex-wrap: wrap; gap: var(--s-6); }
@@ -440,10 +435,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-logo__small { transform: translate(calc(var(--mx, 0) * 9px), calc(var(--my, 0) * 9px)); }
 @media (prefers-reduced-motion: reduce) { .n-logo__big, .n-logo__small { transform: none; } }
 
-.n-trials__frames { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
-.n-frame { padding: 12px; background-color: var(--brown); background-image: var(--paper); }
-.n-frame img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
-@media (max-width: 899px) { .n-trials__frames { grid-template-columns: 1fr; } }
 
 /* Logo + button timing trial: each column sets its own --cut-time / --cut-stagger */
 .n-trials__timing { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-6) var(--s-5); align-items: start; padding-bottom: var(--s-3); }

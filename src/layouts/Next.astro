@@ -6,8 +6,8 @@ import '@fontsource-variable/hanken-grotesk';
 import '../styles/next.css';
 import NextHeader from '../components/next/NextHeader.astro';
 
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono' }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono' } = Astro.props;
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; logo?: 'mark' | 'text' | 'paper' }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', logo = 'mark' } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-palette={palette}>
@@ -29,7 +29,7 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
     </script>
   </head>
   <body>
-    <NextHeader />
+    <NextHeader logo={logo} />
     <main id="main"><slot /></main>
   </body>
 </html>

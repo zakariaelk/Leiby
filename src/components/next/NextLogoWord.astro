@@ -1,14 +1,14 @@
 ---
 // Logo trial: "Zakaria" on a brown paper cut-out, overlapped by a smaller cut-out with زكـــريــــاء.
 // Shown in full for 5 seconds, then both are cut down to their first letters (Z and ز) and become
-// round cut-outs; hovering (or focusing) opens them again, at a steady (linear) speed set by
+// round cut-outs (unless collapse is false, as in the header); hovering (or focusing) opens them again, at a steady (linear) speed set by
 // --cut-time. The paper is redrawn from its width every frame (scripts/paper.ts), so it grows and
 // shrinks instead of stretching. Arabic: the first word of the header name (Amiri Regular with
 // kashida, SIL OFL), split into ز and the rest so the word can be cut back to ز.
-interface Props { variant?: 'black' | 'blue' }
-const { variant = 'black' } = Astro.props;
+interface Props { variant?: 'black' | 'blue'; collapse?: boolean; label?: string }
+const { variant = 'black', collapse = true, label = 'Zakaria, زكرياء' } = Astro.props;
 ---
-<a href="/next/" class:list={['n-lw', `n-lw--${variant}`]} aria-label="Zakaria, زكرياء" data-lw>
+<a href="/next/" class:list={['n-lw', `n-lw--${variant}`]} aria-label={label} data-lw={collapse ? '' : undefined}>
   <span class="n-lw__pill n-lw__pill--big" data-paper data-seed="5" data-anchor="left" aria-hidden="true">
     <span class="n-lw__latin"><span>Z</span><span class="n-lw__rest">akaria</span></span>
   </span>

@@ -1,18 +1,18 @@
 ---
 // Next design direction: home. Shared by /next/ and /next/white/ (white and gray paper, dark-gray
-// cut-outs, paper-circle button), /next/marker/ (marker-highlight link) and /next/beige/ (the
-// beige paper version, parked).
+// cut-outs, paper-circle button), /next/logo-text/ and /next/logo-paper/ (other header logos),
+// /next/marker/ (marker-highlight link) and /next/beige/ (the beige paper version, parked).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { brushFrame, cutEdge, unevenRect } from '../../lib/papercut';
+import { brushFrame, cutEdge } from '../../lib/papercut';
 import NextButton from './NextButton.astro';
 import NextLogo from './NextLogo.astro';
 import NextLogoWord from './NextLogoWord.astro';
 
-interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
-const { cta = 'paper', palette = 'mono' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono'; logo?: 'mark' | 'text' | 'paper' }
+const { cta = 'paper', palette = 'mono', logo = 'mark' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -30,17 +30,16 @@ const cut = (seed: number) => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
-const inso = '/work/mitigating-risk-with-location-based-alerts/';
 const TILT = ['-0.6deg', '0.5deg', '-0.45deg']; // the frame sits a little off the visual
 const TIMINGS = [
   { id: 'a', label: 'A · 0.3s' },
-  { id: 'b', label: 'B · 0.45s (used in the cards)' },
+  { id: 'b', label: 'B · 0.45s' },
   { id: 'c', label: 'C · 0.65s' },
   { id: 'd', label: 'D · 0.4s, the Arabic 0.1s after the Latin' },
 ];
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
-<Next palette={palette}>
+<Next palette={palette} logo={logo}>
   <section class="n-intro n-wrap">
     <h1>Product designer, <br class="n-intro__br" /><span class="n-intro__second">creative builder.</span></h1>
     <p>12+ years designing and building web and mobile interfaces. <br />Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
@@ -106,21 +105,12 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
       <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
       <figure><NextLogo variant="blue" seed={23} /><figcaption>Brown + pastel blue</figcaption></figure>
     </div>
-    <p class="n-label">Trial · logo and button timing, linear (logos collapse after 5s, open on hover)</p>
+    <p class="n-label">Trial · logo timing, linear (collapses after 5s, opens on hover)</p>
     <div class="n-trials__timing">
       {TIMINGS.map(({ id, label }) => (
         <figure class:list={['n-timing', `n-timing--${id}`]}>
           <NextLogoWord variant="blue" />
           <figcaption>{label}</figcaption>
-          <NextButton href={inso} name="Alert mobile app" />
-        </figure>
-      ))}
-    </div>
-    <p class="n-label">Trial · paper-cut frames</p>
-    <div class="n-trials__frames">
-      {featured.map(({ p }, i) => (
-        <figure class="n-frame" style={`clip-path:${unevenRect(31 + i * 7, 1.4)}`}>
-          <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[480, 800]} sizes="(min-width: 900px) 30vw, 100vw" style={`clip-path:${unevenRect(57 + i * 5, 0.9)}`} />
         </figure>
       ))}
     </div>
