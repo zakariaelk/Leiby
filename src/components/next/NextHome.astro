@@ -1,16 +1,16 @@
 ---
-// Next design direction: home. Shared by /next/ (brown paper-card button) and /next/marker/
-// (marker-highlight link), so the two CTA styles can be compared side by side.
+// Next design direction: home. Shared by /next/ (brown paper-card button), /next/marker/
+// (marker-highlight link) and /next/white/ (white and gray paper, dark-gray cut-outs).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
 import { posterFor } from '../../lib/media';
-import { cutEdge, unevenRect } from '../../lib/papercut';
+import { blob, brushFrame, cutEdge, unevenRect } from '../../lib/papercut';
 import NextLogo from './NextLogo.astro';
 import NextLogoWord from './NextLogoWord.astro';
 
-interface Props { cta?: 'paper' | 'marker' }
-const { cta = 'paper' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
+const { cta = 'paper', palette = 'paper' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -28,9 +28,10 @@ const cut = (seed: number) => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 24' preserveAspectRatio='none'><path d='${cutEdge(seed)}'/></svg>`;
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
+const inso = '/work/mitigating-risk-with-location-based-alerts/';
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
-<Next>
+<Next palette={palette}>
   <section class="n-intro n-wrap">
     <h1>Product designer, <br class="n-intro__br" /><span class="n-intro__second">creative builder.</span></h1>
     <p>12+ years designing and building web and mobile interfaces. <br />Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
@@ -45,16 +46,13 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
           <p class="n-card__client"><strong>{p.data.org ?? p.data.client}</strong></p>
           <h3 class="n-card__title"><a href={`/work/${p.id}/`}>{p.data.statement ?? p.data.headline}</a></h3>
           <div class="n-card__visual">
+            <!-- painted brown frame behind the visual; only its outer edge shows (La Palatine) -->
+            <svg class="n-brush" viewBox="-20 -20 1040 640" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(7 + i * 5)} /></svg>
             {video ? (
               <video class="n-video" src={video} poster={posterSrc} width={poster?.width} height={poster?.height} muted loop playsinline preload="none" aria-label={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? ''}`}></video>
             ) : (
               <Image src={p.data.cover} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} widths={[640, 960, 1280, 1600]} sizes="(min-width: 900px) 52vw, 100vw" />
             )}
-            <!-- thin marker line over the visual's edge: soft corners, fine fuzzy unevenness -->
-            <svg class="n-marker" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-              <filter id={`marker-${i}`} x="-3%" y="-3%" width="106%" height="106%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={7 + i * 5} /><feDisplacementMap in="SourceGraphic" scale="4" /></filter>
-              <rect x="3" y="3" width="994" height="594" rx="9" filter={`url(#marker-${i})`} />
-            </svg>
           </div>
           <div class="n-card__foot">
             <dl class="n-card__meta">
@@ -96,6 +94,28 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
 
   <!-- Trials, to judge in context before they move into the header and the case studies -->
   <section class="n-trials n-wrap" aria-label="Design trials">
+    <p class="n-label">Trial · button styles</p>
+    <div class="n-trials__buttons">
+      <figure>
+        <a class="n-btn n-btn--tape" href={inso}><span>Read the case</span><span class="sr-only">: Alert mobile app</span><Fragment set:html={arrow} /></a>
+        <figcaption>A · Masking tape: tilted, straightens and lifts on hover</figcaption>
+      </figure>
+      <figure>
+        <a class="n-btn n-btn--loop" href={inso}>
+          <span>Read the case</span><span class="sr-only">: Alert mobile app</span><Fragment set:html={arrow} />
+          <svg class="n-btn__under" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6C40 3 85 8 130 5S185 4 197 6" /></svg>
+          <svg class="n-btn__loop" viewBox="0 0 240 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30 18C80 2 190 4 226 26C246 40 228 66 170 72C110 78 30 74 14 52C2 34 30 14 74 9" /></svg>
+        </a>
+        <figcaption>B · Marker loop: drawn around the words on hover</figcaption>
+      </figure>
+      <figure>
+        <a class="n-btn n-btn--circle" href={inso}>
+          <span>Read the case</span><span class="sr-only">: Alert mobile app</span>
+          <svg class="n-btn__dot" viewBox="0 0 100 100" aria-hidden="true"><path class="n-btn__dot-shape" d={blob(41, 50, 50, 46)} /><path class="n-btn__dot-arrow" d="M29 50h40M55 36l14 14-14 14" /></svg>
+        </a>
+        <figcaption>C · Paper circle: turns and nudges on hover, like the logo</figcaption>
+      </figure>
+    </div>
     <p class="n-label">Trial · logo</p>
     <div class="n-trials__logos">
       <figure><NextLogo variant="black" seed={11} /><figcaption>Brown + black</figcaption></figure>
@@ -105,6 +125,10 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
     <div class="n-trials__logos n-trials__logos--word">
       <figure><NextLogoWord variant="black" /><figcaption>Brown + black</figcaption></figure>
       <figure><NextLogoWord variant="blue" /><figcaption>Brown + pastel blue</figcaption></figure>
+      <figure><NextLogoWord variant="vermilion" /><figcaption>Brown + vermilion</figcaption></figure>
+      <figure><NextLogoWord variant="sage" /><figcaption>Brown + sage</figcaption></figure>
+      <figure><NextLogoWord variant="ochre" /><figcaption>Brown + ochre</figcaption></figure>
+      <figure><NextLogoWord variant="pink" /><figcaption>Brown + dusty pink</figcaption></figure>
     </div>
     <p class="n-label">Trial · paper-cut frames</p>
     <div class="n-trials__frames">

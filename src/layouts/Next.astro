@@ -6,11 +6,11 @@ import '@fontsource-variable/hanken-grotesk';
 import '../styles/next.css';
 import NextHeader from '../components/next/NextHeader.astro';
 
-interface Props { title?: string; description?: string }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.' } = Astro.props;
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono' }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'paper' } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-palette={palette}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

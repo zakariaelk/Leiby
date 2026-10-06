@@ -47,6 +47,45 @@ export function unevenRect(seed: number, wobble = 1.2) {
   return `polygon(${pts.join(', ')})`;
 }
 
+/** A thick painted frame like La Palatine's (frame cd.webp), for a w × h visual drawn on top of
+ *  it: an SVG ring (fill-rule evenodd) whose outer edge wanders 6–13 units outside the visual
+ *  (each side its own thickness, a slow drift, a slight slant and fine brush jitter) and whose
+ *  inner edge hides under the visual. Rounded only where the brush turns the corner. */
+export function brushFrame(seed: number, w = 1000, h = 600) {
+  const rand = rng(seed);
+  const pts: [number, number][] = [];
+  // one side: from corner a to corner b, pushed outwards along (nx, ny)
+  const side = (ax: number, ay: number, bx: number, by: number, nx: number, ny: number, o0: number, o1: number) => {
+    const len = Math.hypot(bx - ax, by - ay), n = Math.round(len / 10);
+    const f1 = 0.5 + rand() * 0.8, p1 = rand() * 6.3, f2 = 2 + rand() * 2.5, p2 = rand() * 6.3;
+    let j = 0;
+    for (let i = 1; i < n; i++) {
+      const t = i / n;
+      j = j * 0.55 + (rand() - 0.5) * 1.6; // smoothed jitter, like bristles
+      const bump = rand() < 0.04 ? 1.5 + rand() * 1.5 : 0;
+      const env = Math.min(1, 6 * t, 6 * (1 - t)); // calm near the corners so they join up
+      const o = o0 + (o1 - o0) * t + env * (2 * Math.sin(6.28 * f1 * t + p1) + 0.8 * Math.sin(6.28 * f2 * t + p2) + j + bump);
+      pts.push([ax + (bx - ax) * t + nx * o, ay + (by - ay) * t + ny * o]);
+    }
+  };
+  // the corner: a quarter turn around the visual's corner (cx, cy), from angle a0
+  const corner = (cx: number, cy: number, a0: number, o0: number, o1: number) => {
+    for (let k = 0; k <= 4; k++) {
+      const a = a0 + (k / 4) * Math.PI / 2, o = o0 + (o1 - o0) * (k / 4);
+      pts.push([cx + Math.cos(a) * o, cy + Math.sin(a) * o]);
+    }
+  };
+  const o = Array.from({ length: 4 }, () => 7 + rand() * 4); // thickness at each corner
+  const pi = Math.PI;
+  corner(0, 0, pi, o[0], o[0]);         side(0, 0, w, 0, 0, -1, o[0], o[1]);  // top
+  corner(w, 0, -pi / 2, o[1], o[1]);    side(w, 0, w, h, 1, 0, o[1], o[2]);   // right
+  corner(w, h, 0, o[2], o[2]);          side(w, h, 0, h, 0, 1, o[2], o[3]);   // bottom
+  corner(0, h, pi / 2, o[3], o[3]);     side(0, h, 0, 0, -1, 0, o[3], o[0]);  // left
+  const ring = 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') + 'Z';
+  const i = 24; // inner edge, hidden under the visual
+  return `${ring} M${i} ${i} L${i} ${h - i} L${w - i} ${h - i} L${w - i} ${i}Z`;
+}
+
 /** A rectangle with a ragged, marker-like edge: many small wobbles per side (CSS clip-path). */
 export function raggedRect(seed: number, wobble = 0.6, steps = 24) {
   const rand = rng(seed);

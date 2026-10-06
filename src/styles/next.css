@@ -9,6 +9,11 @@
   --muted: #5d5853;
   --line: #ddd5cc;
   --accent: #ffdeb9; /* peach marker, highlights only */
+  --brown: #4b3427; /* paper cut-outs: logo, frames, button, phone menu */
+  --on-brown: #f4efe9;
+  --blue: #b7cbe3;
+  --shade: 60 40 20; /* shadow colour (rgb) */
+  --tape: rgb(236 224 198 / 0.88);
 
   --serif: 'Newsreader Variable', 'Newsreader', Georgia, serif;
   --sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, sans-serif;
@@ -29,6 +34,31 @@
   --line: #36322e;
   --accent: #6b4a2a;
   color-scheme: dark;
+}
+/* White / gray variant (/next/white/): white and light-gray paper, dark-gray cut-outs, brighter
+   blue, grain at half strength. In dark mode the cut-outs turn light gray so they stay visible. */
+:root[data-palette='mono'] {
+  --bg: #efefef;
+  --surface: #fff;
+  --ink: #161616;
+  --muted: #5c5c5c;
+  --line: #dcdcdc;
+  --brown: #262626;
+  --on-brown: #fff;
+  --blue: #accff6;
+  --shade: 0 0 0;
+  --tape: rgb(228 228 226 / 0.9);
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .08'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+:root[data-palette='mono'][data-theme='dark'] {
+  --bg: #141414;
+  --surface: #232323;
+  --ink: #ededed;
+  --muted: #a3a3a3;
+  --line: #333;
+  --accent: #4a4a4a;
+  --brown: #e6e6e6;
+  --on-brown: #141414;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -150,13 +180,13 @@ img, video { display: block; max-width: 100%; height: auto; }
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-color: #4b3427;
+    background-color: var(--brown);
     background-image: var(--paper);
     clip-path: polygon(2% 4%, 98% 0%, 100% 97%, 0% 100%);
     transform: rotate(2deg);
     transition: opacity 0.2s ease;
   }
-  .n-burger__bar { display: block; width: 26px; height: 2px; background: #f4efe9; transition: transform 0.25s ease; }
+  .n-burger__bar { display: block; width: 26px; height: 2px; background: var(--on-brown); transition: transform 0.25s ease; }
   .is-menu-open .n-burger::before { opacity: 0; }
   .is-menu-open .n-burger__bar:first-child { transform: translateY(5px) rotate(45deg); }
   .is-menu-open .n-burger__bar:last-child { transform: translateY(-5px) rotate(-45deg); }
@@ -168,16 +198,16 @@ img, video { display: block; max-width: 100%; height: auto; }
     flex-direction: column;
     justify-content: center;
     gap: 28px;
-    background-color: #4b3427;
+    background-color: var(--brown);
     background-image: var(--paper);
-    color: #f4efe9;
+    color: var(--on-brown);
     font-family: var(--serif);
     font-size: 34px;
     font-variant-caps: small-caps;
   }
   .is-menu-open .n-nav { display: flex; }
   .is-menu-open, .is-menu-open body { overflow: hidden; }
-  .n-nav .n-theme { color: #f4efe9; margin-top: 12px; }
+  .n-nav .n-theme { color: var(--on-brown); margin-top: 12px; }
 }
 
 /* ---------- Layout: content stops at 1440px; type scales fluidly from 1024px to 1440px ---------- */
@@ -243,7 +273,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-cut--top { bottom: calc(100% - 1px); }
 .n-cut--bottom { top: calc(100% - 1px); transform: scaleY(-1); }
-.n-band { filter: drop-shadow(0 -2px 3px rgb(60 40 20 / 0.06)); }
+.n-band { filter: drop-shadow(0 -2px 3px rgb(var(--shade) / 0.06)); }
 :root[data-theme='dark'] .n-band { filter: none; }
 .n-featured__label { margin-bottom: clamp(40px, calc(40px + 16 * (100vw - 1024px) / 416), 56px); }
 
@@ -270,17 +300,17 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-card__title a { text-decoration: none; }
 .n-card__title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
-/* Thin brown marker line over the visual's edge (like La Palatine's video frame): soft corners,
-   finely fuzzy edge; the visual itself stays straight */
+/* Painted brown frame behind the visual (like La Palatine's video frame): the visual covers most
+   of the stroke, leaving only its wobbly outer edge. The svg reaches 20 units (of 1000 × 600)
+   past the visual on every side, so the frame scales evenly with it. */
 .n-card__visual {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
   position: relative;
 }
-.n-marker { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; fill: none; stroke: #4b3427; stroke-width: 3.5; }
-.n-marker rect { vector-effect: non-scaling-stroke; }
-.n-card__visual img, .n-card__visual video { border-radius: 6px; }
+.n-brush { position: absolute; top: -3.333%; left: -2%; width: 104%; height: 106.667%; pointer-events: none; fill: var(--brown); fill-rule: evenodd; }
+.n-card__visual img, .n-card__visual video { position: relative; z-index: 1; border-radius: 3px; }
 .n-card__visual img, .n-card__visual video { width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
 .n-card__foot {
   grid-column: 1 / -1;
@@ -311,38 +341,37 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
 /* Brown paper card, cut like La Palatine's concert cards: left edge shorter, top rising and
-   bottom dropping to the right. Beige text, straight. On hover the card flattens a little. */
+   bottom dropping to the right. Beige text, straight. A soft paper shadow underneath; on hover
+   the card flattens a little and lifts. */
 .n-cta--paper {
   position: relative;
   padding: 15px 28px 17px 26px;
   line-height: 1.2;
-  color: #f4efe9;
+  color: var(--on-brown);
   isolation: isolate;
-  filter: drop-shadow(0 2px 2px rgb(60 40 20 / 0.18));
+  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.22)) drop-shadow(0 8px 12px rgb(var(--shade) / 0.16));
+  transition: filter 0.25s ease, transform 0.25s ease;
 }
 .n-cta--paper::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: #4b3427;
+  background-color: var(--brown);
   background-image: var(--paper);
   clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%);
-  transition: clip-path 0.25s ease, inset 0.25s ease;
+  transition: clip-path 0.25s ease;
 }
-/* a pastel-blue card of the same cut, peeking out bottom-left; the brown one covers it on hover */
-.n-cta--paper::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background-color: #b7cbe3;
-  background-image: var(--paper);
-  clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%);
-  transform: translate(-7px, 7px);
+.n-cta--paper:hover, .n-cta--paper:focus-visible {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 2px 2px rgb(var(--shade) / 0.2)) drop-shadow(0 14px 18px rgb(var(--shade) / 0.18));
 }
-.n-cta--paper:hover::before, .n-cta--paper:focus-visible::before { inset: 0 0 -7px -7px; clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%); }
-@media (prefers-reduced-motion: reduce) { .n-cta--paper::before { transition: none; } }
+.n-cta--paper:hover::before, .n-cta--paper:focus-visible::before { clip-path: polygon(0% 4%, 100% 0%, 100% 100%, 0% 96%); }
+:root[data-theme='dark'] .n-cta--paper { filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.4)); }
+@media (prefers-reduced-motion: reduce) {
+  .n-cta--paper, .n-cta--paper::before { transition: none; }
+  .n-cta--paper:hover, .n-cta--paper:focus-visible { transform: none; }
+}
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
   content: '';
@@ -397,12 +426,66 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-trials figure { margin: 0; }
 .n-trials figcaption { margin-top: 8px; font-size: 15px; color: var(--muted); }
 
+/* Button trials: three more "Read the case" styles in the paper / marker language */
+.n-trials__buttons { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--s-6) var(--s-7); padding: var(--s-2) 0 var(--s-3); }
+.n-trials__buttons figcaption { margin-top: 22px; max-width: 18em; }
+.n-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
+  line-height: 1.2;
+  color: var(--ink);
+  text-decoration: none;
+  isolation: isolate;
+}
+.n-btn > svg:not(.n-btn__under):not(.n-btn__loop):not(.n-btn__dot) { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
+.n-btn:hover > svg:not(.n-btn__under):not(.n-btn__loop):not(.n-btn__dot) { transform: translateX(4px); }
+/* A · masking tape: see-through cream strip with torn ends, tilted; straightens and lifts on hover */
+.n-btn--tape {
+  padding: 13px 30px 14px;
+  color: #1d1b19;
+  transform: rotate(-2deg);
+  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.14)) drop-shadow(0 4px 6px rgb(var(--shade) / 0.08));
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+.n-btn--tape::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--tape);
+  background-image: var(--paper);
+  clip-path: polygon(0% 0%, 100% 0%, 98.5% 14%, 100% 28%, 98.2% 43%, 100% 58%, 98.6% 72%, 100% 86%, 98.4% 100%, 0% 100%, 1.6% 86%, 0% 71%, 1.8% 57%, 0% 42%, 1.5% 28%, 0% 14%);
+}
+.n-btn--tape:hover, .n-btn--tape:focus-visible { transform: rotate(0deg) translateY(-2px); filter: drop-shadow(0 2px 2px rgb(var(--shade) / 0.16)) drop-shadow(0 10px 14px rgb(var(--shade) / 0.14)); }
+/* B · marker loop: a short hand-drawn underline; on hover a loose loop is drawn around the words */
+.n-btn--loop { padding: 10px 18px; }
+.n-btn__under, .n-btn__loop { position: absolute; pointer-events: none; overflow: visible; fill: none; stroke: var(--brown); stroke-linecap: round; }
+.n-btn__under path, .n-btn__loop path { vector-effect: non-scaling-stroke; }
+.n-btn__under { left: 18px; right: 46px; bottom: 2px; width: calc(100% - 64px); height: 8px; stroke-width: 2.5; transition: opacity 0.2s ease; }
+.n-btn__loop { inset: -12px -14px; width: calc(100% + 28px); height: calc(100% + 24px); stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.6s cubic-bezier(0.5, 0, 0.3, 1); }
+.n-btn--loop:hover .n-btn__loop, .n-btn--loop:focus-visible .n-btn__loop { stroke-dashoffset: 0; }
+.n-btn--loop:hover .n-btn__under, .n-btn--loop:focus-visible .n-btn__under { opacity: 0; }
+/* C · paper circle: a round cut-out holding the arrow; turns and nudges on hover */
+.n-btn--circle { gap: 14px; }
+.n-btn__dot { width: 54px; height: 54px; overflow: visible; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); filter: drop-shadow(0 3px 4px rgb(var(--shade) / 0.16)); }
+.n-btn__dot-shape { fill: var(--brown); }
+.n-btn__dot-arrow { fill: none; stroke: var(--on-brown); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.n-btn--circle:hover .n-btn__dot, .n-btn--circle:focus-visible .n-btn__dot { transform: translateX(5px) rotate(-14deg); }
+@media (prefers-reduced-motion: reduce) {
+  .n-btn--tape, .n-btn__loop, .n-btn__dot { transition: none; }
+}
+
 .n-logo { display: block; overflow: visible; }
-.n-logo__big-shape { fill: #4b3427; }
-.n-logo__z { font-family: var(--serif); font-weight: 600; font-size: 104px; fill: #f4efe9; }
+.n-logo__big-shape { fill: var(--brown); }
+.n-logo__z { font-family: var(--serif); font-weight: 600; font-size: 104px; fill: var(--on-brown); }
 .n-logo--black .n-logo__small-shape { fill: #1d1b19; }
-.n-logo--black .n-logo__zain { fill: #f4efe9; }
-.n-logo--blue .n-logo__small-shape { fill: #b7cbe3; }
+.n-logo--black .n-logo__zain { fill: var(--on-brown); }
+.n-logo--blue .n-logo__small-shape { fill: var(--blue); }
 .n-logo--blue .n-logo__zain { fill: #1d1b19; }
 /* the two circles drift apart with the pointer (set in NextHome's script) */
 .n-logo__big, .n-logo__small { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -411,14 +494,22 @@ img, video { display: block; max-width: 100%; height: auto; }
 @media (prefers-reduced-motion: reduce) { .n-logo__big, .n-logo__small { transform: none; } }
 
 .n-trials__frames { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
-.n-frame { padding: 12px; background-color: #4b3427; background-image: var(--paper); }
+.n-frame { padding: 12px; background-color: var(--brown); background-image: var(--paper); }
 .n-frame img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 @media (max-width: 899px) { .n-trials__frames { grid-template-columns: 1fr; } }
 
 /* Logo trial with the full first name: two paper cut-outs (shape drawn by NextLogoWord's script)
-   whose paper grows and shrinks with the text; collapsed they are round (Z / ز) */
-.n-trials__logos--word { gap: var(--s-7); align-items: flex-start; padding-bottom: var(--s-3); }
-.n-lw { position: relative; display: inline-block; text-decoration: none; font-size: 44px; }
+   cut down to Z / ز and opened again in snips: quick cut, pause, quick cut… like scissors */
+.n-trials__logos--word { gap: var(--s-6) var(--s-7); align-items: flex-start; padding-bottom: var(--s-3); }
+.n-lw {
+  --snip: linear(0, 0.2 10%, 0.2 22%, 0.42 30%, 0.42 44%, 0.63 52%, 0.63 66%, 0.84 74%, 0.84 86%, 1 94%, 1);
+  --cut-time: 1.2s;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 44px;
+}
+@supports not (transition-timing-function: linear(0, 1)) { .n-lw { --snip: steps(5, end); } }
 .n-lw__pill { display: inline-flex; align-items: center; justify-content: center; background-image: var(--paper); }
 .n-lw__pill--big {
   height: 1.8em;
@@ -427,43 +518,43 @@ img, video { display: block; max-width: 100%; height: auto; }
   font-family: var(--serif);
   font-weight: 600;
   line-height: 1;
-  color: #f4efe9;
-  background-color: #4b3427;
+  color: var(--on-brown);
+  background-color: var(--brown);
 }
+/* flex, not inline-block: an inline-block with overflow hidden sits on its bottom edge, which
+   lifted "akaria" above the Z */
+.n-lw__latin { display: inline-flex; }
+.n-lw__rest { overflow: hidden; max-width: 2.9em; white-space: nowrap; transition: max-width var(--cut-time) var(--snip); }
+/* the Arabic hangs under the end of the Latin name and grows leftwards (the way Arabic is written) */
 .n-lw__pill--small {
   position: absolute;
   right: -0.5em;
-  bottom: -0.45em;
-  height: 1.12em;
-  min-width: 1.12em;
-  padding: 0 0.26em;
+  bottom: -0.75em;
+  height: 1.3em;
+  min-width: 1.3em;
+  padding: 0 0.32em;
 }
-.n-lw--black .n-lw__pill--small { background-color: #1d1b19; fill: #f4efe9; }
-.n-lw--blue .n-lw__pill--small { background-color: #b7cbe3; fill: #1d1b19; }
-.n-lw__rest {
-  display: inline-block;
-  overflow: hidden;
-  max-width: 3.6em;
-  white-space: nowrap;
-  transition: max-width 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
-}
-.n-lw__ar-wrap {
+.n-lw__ar {
   display: grid;
-  place-items: center;
-  width: 1.25em;
-  height: 0.8em;
+  justify-items: end;
+  align-items: center;
+  width: 2.61em; /* the word at 0.82em high */
   overflow: hidden;
-  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  transition: width var(--cut-time) var(--snip);
 }
-.n-lw__ar-wrap svg { grid-area: 1 / 1; height: 0.8em; width: auto; transition: opacity 0.5s ease; }
-.n-lw__word { width: 1.27em; }
-.n-lw__zain { opacity: 0; height: 0.62em !important; }
-/* collapsed (after 5s), unless hovered or focused; both directions animate */
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__rest { max-width: 0; opacity: 0; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-wrap { width: 0.6em; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__word { opacity: 0; }
-.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__zain { opacity: 1; }
+.n-lw__ar svg { grid-area: 1 / 1; height: 0.82em; width: auto; }
+.n-lw--black .n-lw__pill--small { background-color: #1d1b19; fill: var(--on-brown); }
+.n-lw--blue .n-lw__pill--small { background-color: var(--blue); fill: #1d1b19; }
+.n-lw--vermilion .n-lw__pill--small { background-color: #e4572e; fill: #1d1b19; }
+.n-lw--sage .n-lw__pill--small { background-color: #9fb89a; fill: #1d1b19; }
+.n-lw--ochre .n-lw__pill--small { background-color: #e2a83a; fill: #1d1b19; }
+.n-lw--pink .n-lw__pill--small { background-color: #e9a6a1; fill: #1d1b19; }
+/* collapsed (after 5s), unless hovered or focused; both directions animate. The kaf's top stroke
+   leans over the ز, so the rest of the word goes with the last snip and comes back with the first. */
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__rest { max-width: 0; }
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar { width: 0.36em; }
+.n-lw.is-collapsed:not(:hover):not(:focus-visible) .n-lw__ar-rest { opacity: 0; transition: opacity 0s linear calc(var(--cut-time) * 0.9); }
 @media (prefers-reduced-motion: reduce) {
-  .n-lw__rest, .n-lw__ar-wrap, .n-lw__ar-wrap svg { transition: none; }
+  .n-lw__rest, .n-lw__ar, .n-lw.is-collapsed .n-lw__ar-rest { transition: none !important; }
 }
-.n-trials__logos--word figcaption { margin-top: 30px; }
+.n-trials__logos--word figcaption { margin-top: 52px; }
