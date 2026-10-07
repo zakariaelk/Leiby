@@ -1,9 +1,11 @@
 // The paper behind each "Read the case" button, painted like the frames around the visuals: a
 // rounded box whose edge wobbles a pixel or two (a slow drift plus fine brush jitter). On hover
-// (or focus) the wobble travels around the outline like a bicycle chain; it stops where it is when
-// the pointer leaves. Redrawn whenever the button changes size (its arrow opens in jumps).
+// (or focus) the wobble travels around the outline like a bicycle chain, in small jumps every 75ms
+// (the same rhythm as the paper growing for the arrow); it stops where it is when the pointer
+// leaves. Redrawn whenever the button changes size.
 const M = 72; // bumps around the outline
 const SPEED = 45; // px per second along the edge
+const STEP = 75; // ms between jumps
 
 const seeded = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
@@ -58,10 +60,9 @@ document.querySelectorAll<HTMLElement>('.n-btn').forEach((btn, i) => {
   new ResizeObserver(draw).observe(paint);
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let raf = 0, last = 0;
-  const tick = (t: number) => { phase += ((t - (last || t)) / 1000) * SPEED; last = t; draw(); raf = requestAnimationFrame(tick); };
-  const start = () => { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } };
-  const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+  let timer = 0;
+  const start = () => { if (!timer) { phase += (STEP / 1000) * SPEED; draw(); timer = window.setInterval(() => { phase += (STEP / 1000) * SPEED; draw(); }, STEP); } };
+  const stop = () => { clearInterval(timer); timer = 0; };
   btn.addEventListener('pointerenter', start);
   btn.addEventListener('pointerleave', stop);
   btn.addEventListener('focus', start);

@@ -23,14 +23,17 @@
   --s-5: 48px; --s-6: 64px; --s-7: 96px; --s-8: 128px;
   --pad: clamp(16px, 4vw, 64px);
   --cut-h: clamp(14px, calc(14px + 8 * (100vw - 1024px) / 416), 22px); /* paper-cut edge height */
-  --lead: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px); /* intro text */
   --nav: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); /* name and nav */
+  /* Reading sizes from hansonwu.com (measured at 390 / 1024 / 1440px), fluid in between */
+  --t-body: clamp(20px, max(calc(20px + 4 * (100vw - 390px) / 634), calc(24px + 4 * (100vw - 1024px) / 416)), 28px); /* 20 / 24 / 28 */
+  --t-meta: clamp(16px, max(calc(16px + 4 * (100vw - 390px) / 634), calc(20px + 4 * (100vw - 1024px) / 416)), 24px); /* 16 / 20 / 24 */
+  --t-title: clamp(32px, max(calc(32px + 16 * (100vw - 390px) / 634), calc(48px + 12 * (100vw - 1024px) / 416)), 60px); /* 32 / 48 / 60 */
+  --t-btn: clamp(17px, max(calc(17px + 3 * (100vw - 390px) / 634), calc(20px + 2 * (100vw - 1024px) / 416)), 22px); /* 17 / 20 / 22 */
   /* Paper: fine grain plus soft fibres, a few percent on top of every background */
   --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.6'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.5'/%3E%3CfeFuncA type='table' tableValues='0 .16'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.7'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.6'/%3E%3CfeFuncA type='table' tableValues='0 .07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
   color-scheme: light;
 }
-@media (max-width: 899px) { :root { --lead: 20px; } }
 :root[data-theme='dark'] {
   --bg: #161514;
   --surface: #282522; /* lighter card band; text #ece7e1 on it is 12.6:1, grey text 5.6:1 */
@@ -41,7 +44,7 @@
   color-scheme: dark;
 }
 /* White / gray variant (/next/white/): white and light-gray paper, dark-gray cut-outs, brighter
-   blue, grain at half strength. In dark mode the cut-outs turn light gray so they stay visible. */
+   blue, a lighter grain than the beige version. In dark mode the cut-outs turn light gray so they stay visible. */
 :root[data-palette='mono'] {
   --bg: #f5f5f5;
   --surface: #fff;
@@ -53,7 +56,7 @@
   --blue: #accff6;
   --shade: 0 0 0;
   --frame: #d9d9d9; /* painted frames around the visuals */
-  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .08'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .13'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .06'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 :root[data-palette='mono'][data-theme='dark'] {
   --bg: #141414;
@@ -238,11 +241,10 @@ img, video { display: block; max-width: 100%; height: auto; }
   margin: var(--s-3) 0 0;
   font-family: var(--serif);
   font-weight: 470;
-  /* the longer line (~42.6em) fills 80% of the content width, up to 24px; below 20px it wraps */
-  font-size: clamp(20px, calc((100vw - 2 * var(--pad)) * 0.8 / 42.6), 24px);
+  font-size: var(--t-body); /* hansonwu.com body: 28 / 24 / 20px */
   max-width: 80%;
-  line-height: 1.6;
-  letter-spacing: 0.004em;
+  line-height: 1.5;
+  text-wrap: pretty; /* no lone last word */
 }
 /* Phones: two lines, "Product designer," / "Creative builder." */
 .n-intro__br { display: none; }
@@ -266,8 +268,9 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-tag {
   display: inline-block;
   vertical-align: top;
-  padding: 12px 24px 11px;
+  padding: 7px 18px 6px;
   font-family: var(--sans);
+  font-size: clamp(14px, calc(14px + 2 * (100vw - 1024px) / 416), 16px);
   font-weight: 430;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -301,7 +304,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* the Featured Work tag is a tab of the first sheet: it sits on the sheet's top, covering the cut
    edge where it stands, and shares the sheet's paper and shadow */
 .n-featured__label { position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); margin-block: 0; }
-.n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(11px + var(--cut-h) * 0.5); }
+.n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(6px + var(--cut-h) * 0.5); }
 
 .n-card {
   display: grid;
@@ -351,10 +354,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-card__meta-item--mid { justify-self: center; }
 .n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 3; justify-self: end; }
 /* right-aligned: room for the arrow is kept free, so the words stay put while the paper grows */
-.n-card__foot .n-btn { margin-right: 32px; transition: margin-right 0.75s steps(3, jump-start); }
+.n-card__foot .n-btn { margin-right: 34px; transition: margin-right 0.45s steps(6, jump-start); }
 .n-card__foot .n-btn:hover, .n-card__foot .n-btn:focus-visible { margin-right: 0; }
-.n-card__meta dt, .n-case__facts dt { font-family: var(--serif); font-weight: 500; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.3; }
-.n-card__meta dd, .n-case__facts dd { margin: 6px 0 0; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.45; color: var(--muted); }
+.n-card__meta dt, .n-case__facts dt { font-family: var(--serif); font-weight: 500; font-size: var(--t-meta); line-height: 1.5; } /* hansonwu.com: 24 / 20 / 16px */
+.n-card__meta dd, .n-case__facts dd { margin: 4px 0 0; font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
 
 /* "Read the case" on /next/marker/: a marker highlight */
 .n-cta {
@@ -371,15 +374,15 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-cta:hover svg { transform: translateX(4px); }
 /* "Read the case" (NextButton): the words on dark paper painted like the frames around the
    visuals (outline drawn by scripts/brush-button.ts). On hover the wobbly edge travels around like
-   a bicycle chain, and the paper grows in three jumps to make room for the arrow. */
+   a bicycle chain and the paper grows to make room for the arrow, both in quick jumps (75ms). */
 .n-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 14px 24px 15px 22px;
+  padding: 15px 26px 16px 24px;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
+  font-size: var(--t-btn);
   line-height: 1.2;
   color: var(--on-brown);
   text-decoration: none;
@@ -395,10 +398,10 @@ img, video { display: block; max-width: 100%; height: auto; }
   background-color: var(--brown);
   background-image: var(--paper);
 }
-/* jumps at 0, 0.25 and 0.5s; the arrow shows once the paper is full width */
-.n-btn__arrow { display: inline-flex; overflow: hidden; max-width: 0; margin-left: 0; opacity: 0; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s; }
-.n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { max-width: 20px; margin-left: 12px; opacity: 1; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s linear 0.5s; }
-.n-btn__arrow svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+/* six jumps, 75ms apart; the arrow shows once the paper is full width */
+.n-btn__arrow { display: inline-flex; overflow: hidden; max-width: 0; margin-left: 0; opacity: 0; transition: max-width 0.45s steps(6, jump-start), margin-left 0.45s steps(6, jump-start), opacity 0s; }
+.n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { max-width: 22px; margin-left: 12px; opacity: 1; transition: max-width 0.45s steps(6, jump-start), margin-left 0.45s steps(6, jump-start), opacity 0s linear 0.375s; }
+.n-btn__arrow svg { flex: none; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: reduce) {
   .n-btn__arrow, .n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { transition: none; }
 }
@@ -459,18 +462,17 @@ img, video { display: block; max-width: 100%; height: auto; }
   column-gap: clamp(48px, calc(48px + 48 * (100vw - 1024px) / 416), 96px);
   align-items: start;
 }
-.n-case__client { margin: 0; font-family: var(--serif); font-weight: 470; font-size: var(--nav); line-height: 1.4; }
+.n-case__client { margin: 0; font-family: var(--serif); font-weight: 470; font-size: var(--t-meta); line-height: 1.5; }
 .n-case__client strong { font-weight: 500; }
 .n-case__title {
   margin: var(--s-3) 0 0;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(44px, calc(44px + 20 * (100vw - 1024px) / 416), 64px);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  font-size: var(--t-title); /* hansonwu.com: 60 / 48 / 32px */
+  line-height: 1.2;
   text-wrap: balance;
 }
-.n-case__intro { margin: var(--s-3) 0 0; max-width: 40ch; font-family: var(--serif); font-weight: 470; font-size: var(--lead); line-height: 1.5; }
+.n-case__intro { margin: var(--s-3) 0 0; max-width: 40ch; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 .n-case__facts dl { display: grid; gap: 20px; margin: 0; }
 .n-case__facts .n-btn { margin-top: var(--s-5); }
 .n-case__cover { position: relative; margin-top: clamp(56px, calc(56px + 40 * (100vw - 1024px) / 416), 96px); }
@@ -478,17 +480,16 @@ img, video { display: block; max-width: 100%; height: auto; }
 @media (max-width: 899px) {
   .n-case { padding-top: 56px; padding-bottom: 64px; }
   .n-case__head { grid-template-columns: 1fr; }
-  .n-case__title { font-size: clamp(34px, 7.5vw, 44px); }
   .n-case__facts { margin-top: var(--s-5); }
 }
 @media (min-width: 600px) and (max-width: 899px) { .n-case__facts dl { grid-template-columns: 1fr 1fr; gap: 20px 32px; } }
 
 /* The story (part 2 styles it fully): one centred reading column in the serif */
 .n-case__sheet { padding-bottom: var(--s-8); }
-.n-prose { padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px); font-family: var(--serif); font-weight: 470; font-size: clamp(19px, calc(19px + 2 * (100vw - 1024px) / 416), 21px); line-height: 1.65; }
-.n-prose > * { max-width: 680px; margin-inline: auto; }
-.n-prose h2 { margin-top: 2.2em; margin-bottom: 0.6em; font-weight: 500; font-size: clamp(30px, calc(30px + 8 * (100vw - 1024px) / 416), 38px); line-height: 1.2; letter-spacing: -0.01em; }
-.n-prose h3 { margin-top: 1.8em; margin-bottom: 0.4em; font-weight: 500; font-size: 1.15em; line-height: 1.3; }
+.n-prose { padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px); font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; } /* hansonwu.com: 28 / 24 / 20px */
+.n-prose > * { max-width: 860px; margin-inline: auto; } /* as wide as the reference's text column */
+.n-prose h2 { margin-top: 2em; margin-bottom: 0.5em; font-weight: 500; font-size: clamp(26px, max(calc(26px + 8 * (100vw - 390px) / 634), calc(34px + 6 * (100vw - 1024px) / 416)), 40px); line-height: 1.2; }
+.n-prose h3 { margin-top: 1.6em; margin-bottom: 0.4em; font-weight: 500; font-size: var(--t-body); line-height: 1.4; }
 .n-prose img, .n-prose video { max-width: 100%; height: auto; border-radius: 4px; }
 .n-prose a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 
