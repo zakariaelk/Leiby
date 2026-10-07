@@ -2,13 +2,10 @@
 // Header: the name (morphs into its Arabic form every few seconds; the round Z / ز logo is the
 // favicon), "say my name" speaker, nav, light/dark switch.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
-
-interface Props { name?: 'serif' | 'sans' }
-const { name = 'serif' } = Astro.props;
 ---
 <header class="n-head">
   <div class="n-brand">
-    <a href="/next/" class:list={['n-name', name === 'sans' && 'n-name--sans']}>
+    <a href="/next/" class="n-name">
       <span class="n-name__latin">Zakaria El Khachia</span>
       <ArabicNameAmiri />
     </a>

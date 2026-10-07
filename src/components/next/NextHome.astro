@@ -1,7 +1,6 @@
 ---
 // Next design direction: home. Shared by /next/ and /next/white/ (white and gray paper, dark-gray
-// cut-outs, paper button), trial pages /next/tag-serif/ (section tags in the serif),
-// /next/name-sans/ (name in the sans) and /next/frames-light/ (light-gray painted frames),
+// cut-outs, light-gray painted frames, paper button), /next/tag-serif/ (section tags in the serif),
 // /next/marker/ (marker-highlight link) and /next/beige/ (the beige paper version, parked).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
@@ -10,8 +9,8 @@ import { posterFor } from '../../lib/media';
 import { brushFrame, cutMask as cut, tabCut } from '../../lib/papercut';
 import NextButton from './NextButton.astro';
 
-interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono'; tags?: 'sans' | 'serif'; name?: 'serif' | 'sans'; frames?: 'dark' | 'light' }
-const { cta = 'paper', palette = 'mono', tags = 'sans', name = 'serif', frames = 'dark' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono'; tags?: 'sans' | 'serif' }
+const { cta = 'paper', palette = 'mono', tags = 'sans' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -27,13 +26,13 @@ const rest = projects.filter((p) => !FEATURED.includes(p.id));
 const TILT = ['-0.6deg', '0.5deg', '-0.45deg']; // the frame sits a little off the visual
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
 ---
-<Next palette={palette} name={name}>
+<Next palette={palette}>
   <section class="n-intro n-wrap">
     <h1>Product designer, <br class="n-intro__br" /><span class="n-intro__second">creative builder.</span></h1>
     <p>12+ years designing and building web and mobile interfaces. <br />Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
   </section>
 
-  <section class:list={['n-featured', frames === 'light' && 'n-frames--light']} id="work" aria-labelledby="featured-title">
+  <section class="n-featured" id="work" aria-labelledby="featured-title">
     {featured.map(({ p, video, poster, posterSrc }, i) => (
       <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
         <div class="n-cut n-cut--top" style={cut(7 + i * 13)} aria-hidden="true"></div>

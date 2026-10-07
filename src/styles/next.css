@@ -52,6 +52,7 @@
   --on-brown: #fff;
   --blue: #accff6;
   --shade: 0 0 0;
+  --frame: #d9d9d9; /* painted frames around the visuals */
   --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .08'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 :root[data-palette='mono'][data-theme='dark'] {
@@ -63,6 +64,7 @@
   --accent: #4a4a4a;
   --brown: #e6e6e6;
   --on-brown: #141414;
+  --frame: #3d3d3d;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -93,23 +95,24 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-brand { display: flex; align-items: center; gap: 2px; }
 
-/* Name: one line, same weight and size as the nav. Once, shortly after the page opens, it slowly
+/* Name: one line, in the sans with the nav's settings. Once, shortly after the page opens, it slowly
    turns into its Arabic form and back; after that the Arabic shows on hover. A soft-edged sweep
    runs right to left, the way Arabic is written, erasing the Latin name as the Arabic is drawn in. */
 @property --sweep { syntax: '<percentage>'; inherits: true; initial-value: -20%; }
 .n-name {
   position: relative;
   display: inline-block;
-  font-family: var(--serif);
-  font-weight: 500;
+  font-family: var(--sans);
+  font-weight: 430;
   font-size: var(--nav);
   line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: #0c0c0c;
   text-decoration: none;
   white-space: nowrap;
   --sweep: -20%;
 }
-.n-name--sans { font-family: var(--sans); font-weight: 430; letter-spacing: -0.3px; color: #0c0c0c; }
-:root[data-theme='dark'] .n-name--sans { color: var(--ink); }
+:root[data-theme='dark'] .n-name { color: var(--ink); }
 .n-name__ar {
   position: absolute;
   left: 0;
@@ -297,7 +300,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 :root[data-theme='dark'] .n-band { filter: none; }
 /* the Featured Work tag is a tab of the first sheet: it sits on the sheet's top, covering the cut
    edge where it stands, and shares the sheet's paper and shadow */
-.n-frames--light { --frame: #d9d9d9; }
 .n-featured__label { position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); margin-block: 0; }
 .n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(11px + var(--cut-h) * 0.5); }
 
@@ -324,7 +326,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-card__title a { text-decoration: none; }
 .n-card__title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
-/* Painted brown frame behind the visual (like La Palatine's video frame): the visual covers most
+/* Painted frame behind the visual (like La Palatine's video frame; light gray here): the visual covers most
    of the stroke, leaving only its wobbly outer edge. The svg reaches 20 units (of 1000 × 600)
    past the visual on every side, so the frame scales evenly with it. */
 .n-card__visual {
@@ -367,9 +369,9 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
-/* "Read the case" (NextButton): the words on a dark cut-out of paper. On hover the paper is re-cut
-   every 0.25s (four cuts swapped like stop-motion frames) and grows in three jumps, in step with
-   the cuts, to make room for the arrow. It keeps its last cut when the pointer leaves. */
+/* "Read the case" (NextButton): the words on dark paper painted like the frames around the
+   visuals (outline drawn by scripts/brush-button.ts). On hover the wobbly edge travels around like
+   a bicycle chain, and the paper grows in three jumps to make room for the arrow. */
 .n-btn {
   position: relative;
   display: inline-flex;
@@ -386,27 +388,18 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 :root[data-theme='dark'] .n-btn { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)); }
 .n-btn__label { white-space: nowrap; }
-.n-btn__cut {
+.n-btn__paint {
   position: absolute;
-  inset: 0;
+  inset: -6px; /* room for the wobble; the outline is drawn 0.5–4.5px outside the button */
   z-index: -1;
   background-color: var(--brown);
   background-image: var(--paper);
-  animation: n-cut 1s step-end infinite paused;
 }
-.n-btn__cut--0 { clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%); }
-.n-btn__cut--1 { clip-path: polygon(1% 4%, 99% 2%, 100% 96%, 0% 100%); animation-delay: -0.75s; }
-.n-btn__cut--2 { clip-path: polygon(0% 0%, 100% 9%, 98.5% 92%, 0.5% 100%); animation-delay: -0.5s; }
-.n-btn__cut--3 { clip-path: polygon(0.5% 6%, 100% 3%, 99.5% 100%, 0% 94%); animation-delay: -0.25s; }
-@keyframes n-cut { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
-.n-btn:hover .n-btn__cut, .n-btn:focus-visible .n-btn__cut { animation-play-state: running; }
 /* jumps at 0, 0.25 and 0.5s; the arrow shows once the paper is full width */
 .n-btn__arrow { display: inline-flex; overflow: hidden; max-width: 0; margin-left: 0; opacity: 0; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s; }
 .n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { max-width: 20px; margin-left: 12px; opacity: 1; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s linear 0.5s; }
 .n-btn__arrow svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: reduce) {
-  .n-btn__cut { animation: none; opacity: 0; }
-  .n-btn__cut--0 { opacity: 1; }
   .n-btn__arrow, .n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { transition: none; }
 }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }

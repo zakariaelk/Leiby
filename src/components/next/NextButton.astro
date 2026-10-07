@@ -1,12 +1,16 @@
 ---
-// "Read the case" (or another label) on a dark cut-out of paper. On hover (or focus) the paper is
-// re-cut every quarter second, swapping between four cuts like stop-motion, and grows in three
-// jumps to make room for the arrow. external: opens in a new tab, arrow ↗.
+// "Read the case" (or another label) on dark paper painted like the frames around the visuals. On
+// hover (or focus) its wobbly edge travels around like a bicycle chain (scripts/brush-button.ts)
+// and the paper grows in three jumps to make room for the arrow. external: new tab, arrow ↗.
 interface Props { href: string; label?: string; name?: string; external?: boolean }
 const { href, label = 'Read the case', name, external = false } = Astro.props;
 ---
 <a class="n-btn" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
-  {[0, 1, 2, 3].map((k) => <span class:list={['n-btn__cut', `n-btn__cut--${k}`]} aria-hidden="true"></span>)}
+  <span class="n-btn__paint" aria-hidden="true"></span>
   <span class="n-btn__label">{label}</span>{name && <span class="sr-only">: {name}</span>}{external && <span class="sr-only"> (opens in a new tab)</span>}
   <span class="n-btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={external ? 'M7 17 17 7M9 7h8v8' : 'M5 12h14M13 6l6 6-6 6'} /></svg></span>
 </a>
+
+<script>
+  import '../../scripts/brush-button';
+</script>
