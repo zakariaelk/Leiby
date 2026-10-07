@@ -108,6 +108,8 @@ img, video { display: block; max-width: 100%; height: auto; }
   white-space: nowrap;
   --sweep: -20%;
 }
+.n-name--sans { font-family: var(--sans); font-weight: 430; letter-spacing: -0.3px; color: #0c0c0c; }
+:root[data-theme='dark'] .n-name--sans { color: var(--ink); }
 .n-name__ar {
   position: absolute;
   left: 0;
@@ -157,9 +159,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 :root[data-theme='dark'] .n-theme .sun { display: none; }
 :root[data-theme='dark'] .n-theme .moon { display: block; }
 
-.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--sans); font-weight: 500; font-size: var(--nav); } /* the name's size, in the sans */
+.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--sans); font-size: var(--nav); } /* the name's size, in the sans */
 .n-burger { display: none; }
-.n-nav a { text-decoration: none; }
+.n-nav a { text-decoration: none; color: #0c0c0c; letter-spacing: -0.3px; font-weight: 430; }
+:root[data-theme='dark'] .n-nav a { color: var(--ink); }
 .n-nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
 /* Phones: brown paper square with two white bars; the menu opens full screen in the same brown */
 @media (max-width: 700px) {
@@ -208,6 +211,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   }
   .is-menu-open .n-nav { display: flex; }
   .is-menu-open, .is-menu-open body { overflow: hidden; }
+  .n-nav a { color: inherit; letter-spacing: normal; font-weight: 500; }
   .n-nav .n-theme { color: var(--on-brown); margin-top: 12px; }
 }
 
@@ -257,24 +261,18 @@ img, video { display: block; max-width: 100%; height: auto; }
   line-height: 1.2;
 }
 .n-tag {
-  position: relative;
   display: inline-block;
-  padding: 10px 20px 11px;
+  vertical-align: top;
+  padding: 12px 24px 11px;
   font-family: var(--sans);
+  font-weight: 430;
   letter-spacing: 0.02em;
-  color: var(--on-brown);
-  isolation: isolate;
-}
-.n-tag::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--brown);
+  color: var(--ink);
+  background-color: var(--surface);
   background-image: var(--paper);
-  clip-path: polygon(0% 10%, 100% 0%, 100% 100%, 0% 100%);
+  clip-path: var(--tab); /* tabCut(): uneven cut edges, straight bottom */
 }
-.n-tags--serif .n-tag { font-family: var(--serif); letter-spacing: 0.01em; }
+.n-tags--serif .n-tag { font-family: var(--serif); font-weight: 500; letter-spacing: 0.01em; }
 
 /* ---------- Featured work: bands of torn paper, alternating light and beige ---------- */
 .n-band { position: relative; z-index: 1; background-color: var(--band); background-image: var(--paper); }
@@ -297,11 +295,11 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-cut--bottom { top: calc(100% - 1px); transform: scaleY(-1); }
 .n-band { filter: drop-shadow(0 -2px 3px rgb(var(--shade) / 0.06)); }
 :root[data-theme='dark'] .n-band { filter: none; }
-/* the Featured Work tag sits behind the first sheet: it reaches 4px into the sheet, so the sheet's
-   wavy cut edge is its visible bottom (extra bottom padding keeps the words clear of it) */
-.n-featured__label { position: relative; z-index: 0; margin-bottom: -4px; }
-.n-featured__label .n-tag { padding-bottom: calc(11px + var(--cut-h) * 0.6 + 4px); }
-.n-label .n-tag { vertical-align: top; } /* no gap under the tag */
+/* the Featured Work tag is a tab of the first sheet: it sits on the sheet's top, covering the cut
+   edge where it stands, and shares the sheet's paper and shadow */
+.n-frames--light { --frame: #d9d9d9; }
+.n-featured__label { position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); margin-block: 0; }
+.n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(11px + var(--cut-h) * 0.5); }
 
 .n-card {
   display: grid;
@@ -335,7 +333,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   align-self: center;
   position: relative;
 }
-.n-brush { position: absolute; top: -3.333%; left: -2%; width: 104%; height: 106.667%; pointer-events: none; fill: var(--brown); fill-rule: evenodd; transform: rotate(var(--tilt, 0deg)); }
+.n-brush { position: absolute; top: -3.333%; left: -2%; width: 104%; height: 106.667%; pointer-events: none; fill: var(--frame, var(--brown)); fill-rule: evenodd; transform: rotate(var(--tilt, 0deg)); }
 .n-card__visual img, .n-card__visual video { position: relative; z-index: 1; border-radius: 3px; }
 .n-card__visual img, .n-card__visual video { width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
 .n-card__foot {
@@ -439,6 +437,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* ---------- Selected work list ---------- */
 .n-list { padding-top: var(--s-8); padding-bottom: var(--s-6); }
 .n-list .n-label { margin-bottom: 0; } /* the tag stands on the list's top rule */
+.n-list .n-label { filter: drop-shadow(0 -2px 3px rgb(var(--shade) / 0.06)); } /* on the label: the tab's clip would cut its own shadow */
 .n-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .n-list a {
   display: grid;

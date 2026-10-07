@@ -42,6 +42,18 @@ export function cutMask(seed: number) {
   return `--cut:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
+/** A tab of paper (CSS clip-path polygon, %): left, top and right edges cut in a few long, slightly
+ *  off strokes like cutEdge; the bottom stays straight, where the tab meets its sheet or line. */
+export function tabCut(seed: number) {
+  const rand = rng(seed);
+  const p = (x: number, y: number) => `${x.toFixed(1)}% ${y.toFixed(1)}%`;
+  const pts = [p(0, 100), p(rand() * 1.5, 50 + rand() * 15), p(0.5 + rand() * 2, 6 + rand() * 8)];
+  let x = 0;
+  while (x < 90) { x = Math.min(90, x + 16 + rand() * 20); pts.push(p(x, rand() * 12)); }
+  pts.push(p(97.5 + rand() * 2, 4 + rand() * 9), p(98.5 + rand() * 1.5, 45 + rand() * 15), p(100, 100));
+  return `polygon(${pts.join(', ')})`;
+}
+
 /** A slightly uneven rectangle as a CSS clip-path polygon (for frames and images). */
 export function unevenRect(seed: number, wobble = 1.2) {
   const rand = rng(seed);
