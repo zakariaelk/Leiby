@@ -39,7 +39,7 @@ const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, ''
       </div>
       <div class="n-case__facts">
         <dl>{meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}</dl>
-        {d.link && <NextButton href={d.link} label={`Visit ${linkLabel}`} seed={53 + index} external />}
+        {d.link && <NextButton href={d.link} label={`Visit ${linkLabel}`} external />}
       </div>
     </div>
     <div class="n-case__cover">

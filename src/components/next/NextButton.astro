@@ -1,16 +1,12 @@
 ---
-// "Read the case" (or another label): the words, then a round paper cut-out holding the arrow. On
-// hover (or focus) the paper turns 15° every quarter second, in jerky stop-motion steps, for as
-// long as the pointer stays; the arrow stays still. external: opens in a new tab, arrow ↗.
-import { blob } from '../../lib/papercut';
-
-interface Props { href: string; label?: string; name?: string; seed?: number; external?: boolean }
-const { href, label = 'Read the case', name, seed = 41, external = false } = Astro.props;
+// "Read the case" (or another label) on a dark cut-out of paper. On hover (or focus) the paper is
+// re-cut every quarter second, swapping between four cuts like stop-motion, and grows in three
+// jumps to make room for the arrow. external: opens in a new tab, arrow ↗.
+interface Props { href: string; label?: string; name?: string; external?: boolean }
+const { href, label = 'Read the case', name, external = false } = Astro.props;
 ---
 <a class="n-btn" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+  {[0, 1, 2, 3].map((k) => <span class:list={['n-btn__cut', `n-btn__cut--${k}`]} aria-hidden="true"></span>)}
   <span class="n-btn__label">{label}</span>{name && <span class="sr-only">: {name}</span>}{external && <span class="sr-only"> (opens in a new tab)</span>}
-  <svg class="n-btn__dot" viewBox="0 0 100 100" aria-hidden="true">
-    <g class="n-btn__dot-turn"><path class="n-btn__dot-shape" d={blob(seed, 50, 50, 46)} /></g>
-    <path class="n-btn__dot-arrow" d="M29 50h40M55 36l14 14-14 14" transform={external ? 'rotate(-45 50 50)' : undefined} />
-  </svg>
+  <span class="n-btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={external ? 'M7 17 17 7M9 7h8v8' : 'M5 12h14M13 6l6 6-6 6'} /></svg></span>
 </a>

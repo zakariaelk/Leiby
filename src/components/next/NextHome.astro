@@ -1,7 +1,7 @@
 ---
 // Next design direction: home. Shared by /next/ and /next/white/ (white and gray paper, dark-gray
-// cut-outs, paper-circle button), /next/marker/ (marker-highlight link) and /next/beige/ (the
-// beige paper version, parked).
+// cut-outs, paper-circle button), /next/tag-serif/ (section tags in the serif), /next/marker/
+// (marker-highlight link) and /next/beige/ (the beige paper version, parked).
 import { Image, getImage } from 'astro:assets';
 import Next from '../../layouts/Next.astro';
 import { getProjects } from '../../lib/data';
@@ -9,8 +9,8 @@ import { posterFor } from '../../lib/media';
 import { brushFrame, cutMask as cut } from '../../lib/papercut';
 import NextButton from './NextButton.astro';
 
-interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono' }
-const { cta = 'paper', palette = 'mono' } = Astro.props;
+interface Props { cta?: 'paper' | 'marker'; palette?: 'paper' | 'mono'; tags?: 'sans' | 'serif' }
+const { cta = 'paper', palette = 'mono', tags = 'sans' } = Astro.props;
 
 const FEATURED = ['mitigating-risk-with-location-based-alerts', '3e-international', 'ngosafety-website-redesign'];
 const projects = await getProjects();
@@ -33,7 +33,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
   </section>
 
   <section class="n-featured" id="work" aria-labelledby="featured-title">
-    <h2 class="n-label n-featured__label n-wrap" id="featured-title">Featured work</h2>
+    <h2 class:list={['n-label', 'n-featured__label', 'n-wrap', tags === 'serif' && 'n-tags--serif']} id="featured-title"><span class="n-tag">Featured Work</span></h2>
     {featured.map(({ p, video, poster, posterSrc }, i) => (
       <div class:list={['n-band', i % 2 ? 'n-band--beige' : 'n-band--light']}>
         <div class="n-cut n-cut--top" style={cut(7 + i * 13)} aria-hidden="true"></div>
@@ -55,7 +55,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
               {p.data.role && <div class="n-card__meta-item n-card__meta-item--mid"><dt>Role</dt><dd>{p.data.role}</dd></div>}
             </dl>
             {cta === 'paper' ? (
-              <NextButton href={`/next/work/${p.id}/`} name={p.data.projectName ?? p.data.title} seed={41 + i * 6} />
+              <NextButton href={`/next/work/${p.id}/`} name={p.data.projectName ?? p.data.title} />
             ) : (
               <a class:list={['n-cta', `n-cta--${cta}`]} href={`/next/work/${p.id}/`}>
                 <span>Read the case</span><span class="sr-only">: {p.data.projectName ?? p.data.title}</span><Fragment set:html={arrow} />
@@ -71,7 +71,7 @@ const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
   </section>
 
   <section class="n-list n-wrap" aria-labelledby="more-label">
-    <p class="n-label" id="more-label">Selected work</p>
+    <p class:list={['n-label', tags === 'serif' && 'n-tags--serif']} id="more-label"><span class="n-tag">Selected Work</span></p>
     <ul>
       {rest.map((p) => (
         <li>

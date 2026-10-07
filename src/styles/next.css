@@ -22,6 +22,7 @@
   --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px;
   --s-5: 48px; --s-6: 64px; --s-7: 96px; --s-8: 128px;
   --pad: clamp(16px, 4vw, 64px);
+  --cut-h: clamp(14px, calc(14px + 8 * (100vw - 1024px) / 416), 22px); /* paper-cut edge height */
   --lead: clamp(21px, calc(21px + 4 * (100vw - 1024px) / 416), 25px); /* intro text */
   --nav: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); /* name and nav */
   /* Paper: fine grain plus soft fibres, a few percent on top of every background */
@@ -156,7 +157,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 :root[data-theme='dark'] .n-theme .sun { display: none; }
 :root[data-theme='dark'] .n-theme .moon { display: block; }
 
-.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--serif); font-weight: 500; font-size: var(--nav); } /* same as the name */
+.n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--sans); font-weight: 500; font-size: var(--nav); } /* the name's size, in the sans */
 .n-burger { display: none; }
 .n-nav a { text-decoration: none; }
 .n-nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
@@ -220,8 +221,8 @@ img, video { display: block; max-width: 100%; height: auto; }
   margin: 0;
   font-family: var(--serif);
   font-weight: 500;
-  /* always one line: never wider than the content area (the line is ~14.9em wide) */
-  font-size: min(clamp(64px, calc(64px + 24 * (100vw - 1024px) / 416), 88px), calc((min(100vw, 1440px) - 2 * var(--pad)) / 15.2));
+  /* one line, 80% of the content width (the line is ~14.5em wide at these sizes), up to 64px (from ~1260px) */
+  font-size: clamp(30px, calc((100vw - 2 * var(--pad)) * 0.8 / 14.5), 64px);
   white-space: nowrap;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -230,32 +231,53 @@ img, video { display: block; max-width: 100%; height: auto; }
   margin: var(--s-3) 0 0;
   font-family: var(--serif);
   font-weight: 470;
-  font-size: var(--lead);
-  line-height: 1.5;
+  /* the longer line (~42.6em) fills 80% of the content width, up to 24px; below 20px it wraps */
+  font-size: clamp(20px, calc((100vw - 2 * var(--pad)) * 0.8 / 42.6), 24px);
+  max-width: 80%;
+  line-height: 1.6;
+  letter-spacing: 0.004em;
 }
-/* Phones and tablets in portrait: two lines, "Product designer," / "Creative builder." */
+/* Phones: two lines, "Product designer," / "Creative builder." */
 .n-intro__br { display: none; }
-@media (max-width: 1023px) {
-  .n-intro h1 { white-space: normal; font-size: min(64px, calc((100vw - 2 * var(--pad)) / 8.6)); }
+@media (max-width: 700px) {
+  .n-intro h1 { white-space: normal; font-size: min(calc((100vw - 2 * var(--pad)) / 8.6), 48px); }
+  .n-intro p { max-width: none; }
   .n-intro__br { display: inline; }
   .n-intro__second { display: inline-block; }
   .n-intro__second::first-letter { text-transform: uppercase; }
 }
 .n-intro a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; font-weight: 500; }
 
-/* ---------- Section labels ---------- */
+/* ---------- Section labels: a dark cut-out paper tag (the button's cut, flat at the bottom) ---------- */
 .n-label {
   margin-top: 0;
   margin-bottom: var(--s-4); /* not the shorthand: keeps .n-wrap's auto side margins */
-  font-size: clamp(14px, calc(14px + 2 * (100vw - 1024px) / 256), 16px);
+  font-size: var(--nav);
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
+  line-height: 1.2;
 }
+.n-tag {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px 11px;
+  font-family: var(--sans);
+  letter-spacing: 0.02em;
+  color: var(--on-brown);
+  isolation: isolate;
+}
+.n-tag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--brown);
+  background-image: var(--paper);
+  clip-path: polygon(0% 10%, 100% 0%, 100% 100%, 0% 100%);
+}
+.n-tags--serif .n-tag { font-family: var(--serif); letter-spacing: 0.01em; }
 
 /* ---------- Featured work: bands of torn paper, alternating light and beige ---------- */
-.n-band { position: relative; background-color: var(--band); background-image: var(--paper); }
+.n-band { position: relative; z-index: 1; background-color: var(--band); background-image: var(--paper); }
 .n-band--light { --band: var(--surface); }
 .n-band--beige { --band: var(--bg); }
 /* Paper-cut edge on top of each band (and under the last): the band's own paper, masked by a
@@ -264,7 +286,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   position: absolute;
   left: 0;
   width: 100%;
-  height: clamp(14px, calc(14px + 8 * (100vw - 1024px) / 416), 22px);
+  height: var(--cut-h);
   background-color: var(--band);
   background-image: var(--paper);
   -webkit-mask: var(--cut) 0 0 / 100% 100% no-repeat;
@@ -275,7 +297,11 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-cut--bottom { top: calc(100% - 1px); transform: scaleY(-1); }
 .n-band { filter: drop-shadow(0 -2px 3px rgb(var(--shade) / 0.06)); }
 :root[data-theme='dark'] .n-band { filter: none; }
-.n-featured__label { margin-bottom: clamp(40px, calc(40px + 16 * (100vw - 1024px) / 416), 56px); }
+/* the Featured Work tag sits behind the first sheet: it reaches 4px into the sheet, so the sheet's
+   wavy cut edge is its visible bottom (extra bottom padding keeps the words clear of it) */
+.n-featured__label { position: relative; z-index: 0; margin-bottom: -4px; }
+.n-featured__label .n-tag { padding-bottom: calc(11px + var(--cut-h) * 0.6 + 4px); }
+.n-label .n-tag { vertical-align: top; } /* no gap under the tag */
 
 .n-card {
   display: grid;
@@ -285,7 +311,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px);
   padding-bottom: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px);
 }
-.n-card__client { grid-column: 1; grid-row: 1; margin: 0; font-family: var(--serif); font-size: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); line-height: 1.4; }
+.n-card__client { grid-column: 1; grid-row: 1; margin: 0; font-family: var(--serif); font-weight: 470; font-size: clamp(18px, calc(18px + 3 * (100vw - 1024px) / 256), 21px); line-height: 1.4; }
 .n-card__client strong { font-weight: 500; }
 .n-card__title {
   grid-column: 1;
@@ -324,7 +350,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-card__meta { display: contents; margin: 0; }
 .n-card__meta-item--mid { justify-self: center; }
 .n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 3; justify-self: end; }
-.n-card__meta dt, .n-case__facts dt { font-family: var(--serif); font-weight: 600; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.3; }
+/* right-aligned: room for the arrow is kept free, so the words stay put while the paper grows */
+.n-card__foot .n-btn { margin-right: 32px; transition: margin-right 0.75s steps(3, jump-start); }
+.n-card__foot .n-btn:hover, .n-card__foot .n-btn:focus-visible { margin-right: 0; }
+.n-card__meta dt, .n-case__facts dt { font-family: var(--serif); font-weight: 500; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.3; }
 .n-card__meta dd, .n-case__facts dd { margin: 6px 0 0; font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px); line-height: 1.45; color: var(--muted); }
 
 /* "Read the case" on /next/marker/: a marker highlight */
@@ -334,38 +363,53 @@ img, video { display: block; max-width: 100%; height: auto; }
   align-items: center;
   gap: 12px;
   font-family: var(--serif);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
   text-decoration: none;
 }
 .n-cta svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
 .n-cta:hover svg { transform: translateX(4px); }
-/* "Read the case" (NextButton): the words, then a round paper cut-out holding the arrow. On hover
-   the paper turns 15° every 0.25s (stop-motion steps) for as long as the pointer stays; it keeps
-   its angle when the pointer leaves. The first 15° is immediate (the group), the rest is the loop. */
+/* "Read the case" (NextButton): the words on a dark cut-out of paper. On hover the paper is re-cut
+   every 0.25s (four cuts swapped like stop-motion frames) and grows in three jumps, in step with
+   the cuts, to make room for the arrow. It keeps its last cut when the pointer leaves. */
 .n-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  padding: 14px 24px 15px 22px;
   font-family: var(--serif);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(18px, calc(18px + 2 * (100vw - 1024px) / 416), 20px);
   line-height: 1.2;
-  color: var(--ink);
+  color: var(--on-brown);
   text-decoration: none;
+  isolation: isolate;
+  filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.2)) drop-shadow(0 6px 10px rgb(var(--shade) / 0.14));
 }
+:root[data-theme='dark'] .n-btn { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)); }
 .n-btn__label { white-space: nowrap; }
-.n-btn__dot { flex: none; width: 54px; height: 54px; overflow: visible; filter: drop-shadow(0 3px 4px rgb(var(--shade) / 0.16)); }
-:root[data-theme='dark'] .n-btn__dot { filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.4)); }
-.n-btn__dot-turn, .n-btn__dot-shape { transform-box: view-box; transform-origin: 50% 50%; }
-.n-btn__dot-shape { fill: var(--brown); animation: n-turn 6s steps(24, end) infinite paused; }
-.n-btn:hover .n-btn__dot-turn, .n-btn:focus-visible .n-btn__dot-turn { transform: rotate(15deg); }
-.n-btn:hover .n-btn__dot-shape, .n-btn:focus-visible .n-btn__dot-shape { animation-play-state: running; }
-@keyframes n-turn { to { transform: rotate(360deg); } }
-.n-btn__dot-arrow { fill: none; stroke: var(--on-brown); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.n-btn__cut {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--brown);
+  background-image: var(--paper);
+  animation: n-cut 1s step-end infinite paused;
+}
+.n-btn__cut--0 { clip-path: polygon(0% 10%, 100% 0%, 99% 100%, 1% 92%); }
+.n-btn__cut--1 { clip-path: polygon(1% 4%, 99% 2%, 100% 96%, 0% 100%); animation-delay: -0.75s; }
+.n-btn__cut--2 { clip-path: polygon(0% 0%, 100% 9%, 98.5% 92%, 0.5% 100%); animation-delay: -0.5s; }
+.n-btn__cut--3 { clip-path: polygon(0.5% 6%, 100% 3%, 99.5% 100%, 0% 94%); animation-delay: -0.25s; }
+@keyframes n-cut { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
+.n-btn:hover .n-btn__cut, .n-btn:focus-visible .n-btn__cut { animation-play-state: running; }
+/* jumps at 0, 0.25 and 0.5s; the arrow shows once the paper is full width */
+.n-btn__arrow { display: inline-flex; overflow: hidden; max-width: 0; margin-left: 0; opacity: 0; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s; }
+.n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { max-width: 20px; margin-left: 12px; opacity: 1; transition: max-width 0.75s steps(3, jump-start), margin-left 0.75s steps(3, jump-start), opacity 0s linear 0.5s; }
+.n-btn__arrow svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: reduce) {
-  .n-btn__dot-shape { animation: none; }
-  .n-btn:hover .n-btn__dot-turn, .n-btn:focus-visible .n-btn__dot-turn { transform: none; }
+  .n-btn__cut { animation: none; opacity: 0; }
+  .n-btn__cut--0 { opacity: 1; }
+  .n-btn__arrow, .n-btn:hover .n-btn__arrow, .n-btn:focus-visible .n-btn__arrow { transition: none; }
 }
 .n-cta--marker { position: relative; padding: 6px 14px; color: var(--ink); isolation: isolate; }
 .n-cta--marker::before {
@@ -394,6 +438,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 
 /* ---------- Selected work list ---------- */
 .n-list { padding-top: var(--s-8); padding-bottom: var(--s-6); }
+.n-list .n-label { margin-bottom: 0; } /* the tag stands on the list's top rule */
 .n-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .n-list a {
   display: grid;
@@ -422,7 +467,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   column-gap: clamp(48px, calc(48px + 48 * (100vw - 1024px) / 416), 96px);
   align-items: start;
 }
-.n-case__client { margin: 0; font-family: var(--serif); font-size: var(--nav); line-height: 1.4; }
+.n-case__client { margin: 0; font-family: var(--serif); font-weight: 470; font-size: var(--nav); line-height: 1.4; }
 .n-case__client strong { font-weight: 500; }
 .n-case__title {
   margin: var(--s-3) 0 0;
@@ -448,10 +493,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 
 /* The story (part 2 styles it fully): one centred reading column in the serif */
 .n-case__sheet { padding-bottom: var(--s-8); }
-.n-prose { padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px); font-family: var(--serif); font-size: clamp(19px, calc(19px + 2 * (100vw - 1024px) / 416), 21px); line-height: 1.65; }
+.n-prose { padding-top: clamp(64px, calc(64px + 32 * (100vw - 1024px) / 416), 96px); font-family: var(--serif); font-weight: 470; font-size: clamp(19px, calc(19px + 2 * (100vw - 1024px) / 416), 21px); line-height: 1.65; }
 .n-prose > * { max-width: 680px; margin-inline: auto; }
 .n-prose h2 { margin-top: 2.2em; margin-bottom: 0.6em; font-weight: 500; font-size: clamp(30px, calc(30px + 8 * (100vw - 1024px) / 416), 38px); line-height: 1.2; letter-spacing: -0.01em; }
-.n-prose h3 { margin-top: 1.8em; margin-bottom: 0.4em; font-weight: 600; font-size: 1.15em; line-height: 1.3; }
+.n-prose h3 { margin-top: 1.8em; margin-bottom: 0.4em; font-weight: 500; font-size: 1.15em; line-height: 1.3; }
 .n-prose img, .n-prose video { max-width: 100%; height: auto; border-radius: 4px; }
 .n-prose a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 
