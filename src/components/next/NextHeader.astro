@@ -2,10 +2,13 @@
 // Header: the name (morphs into its Arabic form every few seconds; the round Z / ز logo is the
 // favicon), "say my name" speaker, nav, light/dark switch.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
+
+interface Props { base?: string; contact?: string }
+const { base = '/next/', contact = `${base}#contact` } = Astro.props;
 ---
 <header class="n-head">
   <div class="n-brand">
-    <a href="/next/" class="n-name">
+    <a href={base} class="n-name">
       <span class="n-name__latin">Zakaria El Khachia</span>
       <ArabicNameAmiri />
     </a>
@@ -22,9 +25,9 @@ import ArabicNameAmiri from './ArabicNameAmiri.astro';
     <span class="n-burger__bar"></span><span class="n-burger__bar"></span>
   </button>
   <nav class="n-nav" id="n-menu" aria-label="Main">
-    <a href="/next/#work">Work</a>
-    <a href="/next/about/">About</a>
-    <a href="/next/#contact">Contact</a>
+    <a href={`${base}#work`}>Work</a>
+    <a href={`${base}about/`}>About</a>
+    <a href={contact}>Contact</a>
     <button type="button" class="n-icon n-theme" aria-label="Switch to dark mode">
       <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="4" />

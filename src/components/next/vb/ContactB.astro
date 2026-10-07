@@ -1,0 +1,16 @@
+---
+// Version B: the closing invitation (centred, like cathrine.co) and the footer, on every page.
+import NextButton from '../NextButton.astro';
+import { settings } from '../../../lib/versions';
+const year = new Date().getFullYear();
+---
+<section class="b-contact b-wrap" id="contact" aria-labelledby="contact-title">
+  <h2 class="b-contact__title" id="contact-title">Got something in mind? Let's talk.</h2>
+  <p class="b-contact__text">{settings.availability}, from quick questions to full projects.</p>
+  <NextButton href={`mailto:${settings.email}`} label="Say hello" />
+</section>
+<footer class="b-foot b-wrap">
+  <a href={`mailto:${settings.email}`}>{settings.email}</a>
+  <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+  <span>© {year} {settings.name}</span>
+</footer>

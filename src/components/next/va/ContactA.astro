@@ -1,0 +1,13 @@
+---
+// Version A: the closing invitation and the footer, the same on every page (after hansonwu.com).
+import { settings } from '../../../lib/versions';
+const year = new Date().getFullYear();
+---
+<section class="a-contact a-wrap" id="contact" aria-labelledby="contact-title">
+  <h2 class="a-contact__title" id="contact-title">Want to work together?</h2>
+  <p class="a-contact__text">{settings.availability}. Say hello at <a href={`mailto:${settings.email}`}>{settings.email}</a> or find me on <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>.</p>
+</section>
+<footer class="a-foot a-wrap">
+  <p>© {year} {settings.name}</p>
+  <p><a href={`mailto:${settings.email}`}>Email</a><a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>

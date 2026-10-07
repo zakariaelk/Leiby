@@ -1,0 +1,60 @@
+---
+// Version B of the next design (after cathrine.co): playful studio. A short headline with a paper
+// sticker, one line about me and a friendly way into the About page, the names I've worked with
+// drifting by, then the work as a grid of cards, each with a title and one line.
+import { Image } from 'astro:assets';
+import Next from '../../../layouts/Next.astro';
+import FramedMedia from '../../../components/next/FramedMedia.astro';
+import ContactB from '../../../components/next/vb/ContactB.astro';
+import { cutMask, tabCut } from '../../../lib/papercut';
+import { workList, caseHref } from '../../../lib/versions';
+import '../../../styles/next-b.css';
+
+const base = '/next/b/';
+const { projects, featured, more } = await workList();
+const names = [...new Set(projects.map((p) => p.data.org ?? p.data.client))];
+---
+<Next base={base} variant="b" title="Zakaria El Khachia · Product designer & builder" description="Product designer and creative builder, turning messy information into tools people trust.">
+  <section class="b-hero b-wrap">
+    <h1 class="b-hero__title">Product designer and creative builder, turning messy information into <span class="b-sticker" style={`--tab:${tabCut(21)}`}>tools people trust.</span></h1>
+    <p class="b-hero__text">12+ years designing and building for the web and mobile. Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, I designed and shipped safety tools for humanitarian workers in conflict zones.</p>
+    <a class="b-pill" href={`${base}about/`}><span class="b-pill__face"><img src="/img/zakaria-face.svg" alt="" width="40" height="40" /></span>About Zakaria</a>
+  </section>
+
+  <section class="b-names" aria-label="Some of the teams and clients I've worked with">
+    <ul class="b-names__track">
+      {[...names, ...names].map((n, i) => <li aria-hidden={i >= names.length ? 'true' : undefined}>{n}</li>)}
+    </ul>
+  </section>
+
+  <section class="b-work" id="work" aria-labelledby="work-title">
+    <div class="n-band n-band--light b-sheet">
+      <div class="n-cut n-cut--top" style={cutMask(7)} aria-hidden="true"></div>
+      <h2 class="n-label n-featured__label n-wrap" id="work-title"><span class="n-tag" style={`--tab:${tabCut(3)}`}>Selected Work</span></h2>
+      <div class="b-grid b-wrap">
+        {featured.map(({ p, video, poster, posterSrc }, i) => (
+          <article class:list={['b-card', i === 0 && 'b-card--wide']}>
+            <a href={caseHref(base, p.id)}>
+              <FramedMedia image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${p.data.org ?? p.data.client}: ${p.data.projectName ?? p.data.title}`} seed={7 + i * 5} tilt={i % 2 ? '0.5deg' : '-0.5deg'} eager={i === 0} sizes={i === 0 ? '(min-width: 1440px) 1312px, 92vw' : '(min-width: 900px) 45vw, 92vw'} />
+              <h3 class="b-card__title">{p.data.org ?? p.data.client}</h3>
+              {p.data.role && <p class="b-card__meta">{p.data.role} · {p.data.year}</p>}
+              <p class="b-card__text">{p.data.statement ?? p.data.intro}</p>
+            </a>
+          </article>
+        ))}
+        {more.map((p) => (
+          <article class="b-card">
+            <a href={caseHref(base, p.id)}>
+              <Image class="b-card__img" src={p.data.cover} alt={`${p.data.client}: ${p.data.title}`} widths={[480, 720, 1000]} sizes="(min-width: 900px) 45vw, 92vw" />
+              <h3 class="b-card__title">{p.data.client}</h3>
+              <p class="b-card__text">{p.data.intro}</p>
+            </a>
+          </article>
+        ))}
+      </div>
+      <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <ContactB />
+</Next>

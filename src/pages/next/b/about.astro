@@ -1,0 +1,67 @@
+---
+// Version B About page (after cathrine.co/about): a big, friendly statement with a sticker of my
+// face, a little stack of photo spots next to the story, then what I do, where I've worked and
+// what I speak, each with its name on the left and the list on the right.
+import Next from '../../../layouts/Next.astro';
+import PhotoSlot from '../../../components/next/PhotoSlot.astro';
+import ContactB from '../../../components/next/vb/ContactB.astro';
+import { EXPERIENCE, EDUCATION, EXPERTISE, LANGUAGES, TOOLS, settings } from '../../../lib/versions';
+import '../../../styles/next-b.css';
+
+const base = '/next/b/';
+---
+<Next base={base} variant="b" title="About · Zakaria El Khachia" description="Product designer and creative builder: twelve years across Casablanca, Beijing and The Hague.">
+  <section class="b-about-hero b-wrap">
+    <div>
+      <h1 class="b-about-hero__title">I like my interfaces calm and my problems a little messy.</h1>
+      <p class="b-based">Based near Rotterdam, the Netherlands · {settings.availability}</p>
+    </div>
+    <PhotoSlot class="b-about-hero__sticker" seed={31} tilt="-3deg" note="That's me, more or less" />
+  </section>
+
+  <section class="b-about b-wrap" aria-label="About me">
+    <div class="b-deck" aria-hidden="true">
+      <PhotoSlot class="b-deck__card b-deck__card--3" seed={41} tilt="4deg" face={false} />
+      <PhotoSlot class="b-deck__card b-deck__card--2" seed={47} tilt="-3deg" face={false} />
+      <PhotoSlot class="b-deck__card b-deck__card--1" seed={53} tilt="1deg" />
+    </div>
+    <div class="b-about__text">
+      <h2 class="b-h2">About</h2>
+      <p>My path runs through three cities. I studied computer science in Casablanca, then moved to China to learn Mandarin at Nankai University and stayed in Beijing for eight years, where I grew from web designer and developer into leading a web team. Since 2021 I've lived in the Netherlands, where I spent five years at INSO designing tools that help humanitarian workers stay safe.</p>
+      <h2 class="b-h2">How I work</h2>
+      <p>Because I started out writing code, I still build a lot of what I design. That means fewer surprises between the mockup and the live product, and decisions made with real constraints in mind.</p>
+      <p>The work I'm proudest of happened when I stopped acting like a supplier and became part of the team, starting with users and data rather than opinions, keeping the loops short and shipping early so we could learn.</p>
+      <h2 class="b-h2">Away from the screen</h2>
+      <p>Music is never far away. It's what's playing while I sketch, and often what I'm listening to when an idea finally clicks.</p>
+    </div>
+  </section>
+
+  <section class="b-rows b-wrap" aria-label="What I do, experience and more">
+    <div class="b-row">
+      <h2 class="b-h2">What I do</h2>
+      <ul class="b-list b-list--2">{EXPERTISE.map((e) => <li>{e}</li>)}</ul>
+    </div>
+    <div class="b-row">
+      <h2 class="b-h2">Experience</h2>
+      <ol class="b-jobs">
+        {EXPERIENCE.map((e) => <li><span class="b-jobs__role">{e.role}</span><span class="b-jobs__org">{e.org}, {e.place}</span><span class="b-jobs__years">{e.years}</span></li>)}
+      </ol>
+    </div>
+    <div class="b-row">
+      <h2 class="b-h2">Education</h2>
+      <ol class="b-jobs">
+        {EDUCATION.map((e) => <li><span class="b-jobs__role">{e.role}</span><span class="b-jobs__org">{e.org}, {e.place}</span><span class="b-jobs__years">{e.years}</span></li>)}
+      </ol>
+    </div>
+    <div class="b-row">
+      <h2 class="b-h2">Languages</h2>
+      <ul class="b-list b-list--2">{LANGUAGES.map((e) => <li>{e}</li>)}</ul>
+    </div>
+    <div class="b-row">
+      <h2 class="b-h2">Tools</h2>
+      <ul class="b-list b-list--2">{TOOLS.map((e) => <li>{e}</li>)}</ul>
+    </div>
+  </section>
+
+  <ContactB />
+</Next>

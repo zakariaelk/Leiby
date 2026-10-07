@@ -6,11 +6,13 @@ import '@fontsource-variable/hanken-grotesk';
 import '../styles/next.css';
 import NextHeader from '../components/next/NextHeader.astro';
 
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono' }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono' } = Astro.props;
+// base: where the header links point (versions /next/a/ and /next/b/ keep visitors inside them);
+// variant: a class on <html> for that version's own styles.
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant } = Astro.props;
 ---
 <!doctype html>
-<html lang="en" data-palette={palette}>
+<html lang="en" data-palette={palette} class={variant ? `v-${variant}` : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +31,7 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
     </script>
   </head>
   <body>
-    <NextHeader />
+    <NextHeader base={base} contact={variant ? '#contact' : undefined} />
     <main id="main"><slot /></main>
   </body>
 </html>

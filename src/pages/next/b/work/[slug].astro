@@ -1,0 +1,83 @@
+---
+// Version B case study (after cathrine.co/work/…): title on the left and what it's about on the
+// right, the facts, the cover, the three headline results as paper cards and a row of jump links
+// for skimming. The story follows in sections, each with its name pinned on the left while you
+// read it. Wording unchanged; case-enhance.ts labels the parts and builds the sections.
+import { render } from 'astro:content';
+import Next from '../../../../layouts/Next.astro';
+import FramedMedia from '../../../../components/next/FramedMedia.astro';
+import NextButton from '../../../../components/next/NextButton.astro';
+import ContactB from '../../../../components/next/vb/ContactB.astro';
+import { cutMask, tabCut } from '../../../../lib/papercut';
+import { getProjects } from '../../../../lib/data';
+import { CASE, RESULTS, caseHref } from '../../../../lib/versions';
+import '../../../../styles/next-b.css';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  const project = projects.find((p) => p.id === CASE)!;
+  const next = projects.find((p) => p.id === 'ngosafety-website-redesign')!;
+  return [{ params: { slug: CASE }, props: { project, next } }];
+}
+
+const base = '/next/b/';
+const { project, next } = Astro.props;
+const d = project.data;
+const { Content, headings } = await render(project);
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const chips = d.menu.flatMap((g) => g.items).map((it) => ({ label: it.label, slug: headings.find((h) => norm(h.text) === norm(it.heading))?.slug })).filter((c) => c.slug);
+const facts = [
+  { label: 'Role', value: d.role },
+  { label: 'Timeline', value: d.duration },
+  { label: 'Project type', value: d.projectType },
+  { label: 'Team', value: d.team },
+].filter((f) => f.value);
+const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+---
+<Next base={base} variant="b" title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
+  <header class="b-case b-wrap">
+    <div class="b-case__lead">
+      <a class="b-back" href={`${base}#work`}>All work</a>
+      <p class="b-case__org">{d.org ?? d.client}</p>
+      <h1 class="b-case__title">{d.headline}</h1>
+    </div>
+    <div class="b-case__about">
+      {d.summary && <p class="b-case__summary">{d.summary}</p>}
+      <dl class="b-facts">{facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}</dl>
+      {d.link && <NextButton href={d.link} label={`Visit ${linkLabel}`} external />}
+    </div>
+  </header>
+
+  <div class="b-wrap b-case__cover">
+    <FramedMedia image={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} seed={11} eager />
+  </div>
+
+  <section class="b-wrap b-results" aria-labelledby="results-title">
+    <h2 class="b-kicker" id="results-title">Results in short</h2>
+    <ul>{RESULTS.map((r) => <li><strong>{r.value}</strong><span>{r.label}</span><small>{r.note}</small></li>)}</ul>
+  </section>
+
+  <div class="n-band n-band--light b-sheet">
+    <div class="n-cut n-cut--top" style={cutMask(29)} aria-hidden="true"></div>
+    <h2 class="n-label n-featured__label n-wrap" id="story-title"><span class="n-tag" style={`--tab:${tabCut(5)}`}>The Story</span></h2>
+    <nav class="b-chips b-wrap" aria-label="Jump to a section">
+      <span class="b-kicker">In this case</span>
+      <ul>{chips.map((c) => <li><a href={`#${c.slug}`}>{c.label}</a></li>)}</ul>
+    </nav>
+    <div class="b-story b-wrap" data-story data-sections><Content /></div>
+    <nav class="b-next b-wrap" aria-label="Next project">
+      <a href={caseHref(base, next.id)}>
+        <span class="b-kicker">Next project</span>
+        <span class="b-next__title">{next.data.org ?? next.data.client}</span>
+        <span class="b-next__text">{next.data.statement ?? next.data.intro}</span>
+      </a>
+    </nav>
+    <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
+  </div>
+
+  <ContactB />
+</Next>
+
+<script>
+  import '../../../../scripts/case-enhance';
+</script>

@@ -1,0 +1,15 @@
+---
+// A square spot for a photo on the About pages, in the light-gray painted frame. Until real photos
+// are added it shows the face illustration (or nothing) with a small "photo coming" note.
+import { brushFrame } from '../../lib/papercut';
+
+interface Props { seed?: number; tilt?: string; face?: boolean; note?: string; class?: string }
+const { seed = 13, tilt = '0.6deg', face = true, note = 'Photo coming soon', class: cls } = Astro.props;
+---
+<figure class:list={['v-photo', cls]}>
+  <svg class="n-brush" style={`--tilt:${tilt}`} viewBox="-20 -20 1040 1040" preserveAspectRatio="none" aria-hidden="true"><path d={brushFrame(seed, 1000, 1000, 0.7)} /></svg>
+  <div class="v-photo__paper">
+    {face && <img src="/img/zakaria-face.svg" alt="Line drawing of Zakaria's face" width="1254" height="1254" loading="lazy" />}
+  </div>
+  <figcaption class="v-photo__note">{note}</figcaption>
+</figure>

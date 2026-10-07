@@ -105,6 +105,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-name {
   position: relative;
   display: inline-block;
+  padding-block: 10px; /* a comfortable tap target */
   font-family: var(--sans);
   font-weight: 430;
   font-size: var(--nav);
@@ -487,6 +488,18 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-prose h3 { margin-top: 1.6em; margin-bottom: 0.4em; font-weight: 500; font-size: var(--t-body); line-height: 1.4; }
 .n-prose img, .n-prose video { max-width: 100%; height: auto; border-radius: 4px; }
 .n-prose a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+
+/* ---------- Shared by the full versions (/next/a/, /next/b/): framed visuals and photo spots ---------- */
+.v-frame { position: relative; }
+.v-frame img, .v-frame video { position: relative; z-index: 1; display: block; width: 100%; height: auto; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 3px; }
+.v-photo { position: relative; margin: 0; }
+.v-photo .n-brush { top: -2%; left: -2%; width: 104%; height: 104%; }
+.v-photo__paper { position: relative; z-index: 1; aspect-ratio: 1; display: grid; place-items: center; border-radius: 3px; background-color: var(--surface); background-image: var(--paper); }
+.v-photo__paper img { width: 78%; height: auto; }
+:root[data-theme='dark'] .v-photo__paper img { filter: invert(1); }
+.v-photo__note { position: absolute; z-index: 2; left: 16px; bottom: 16px; padding: 5px 12px; font-family: var(--sans); font-size: 14px; color: var(--muted); background: var(--bg); background-image: var(--paper); clip-path: polygon(1% 4%, 99% 0%, 100% 96%, 0% 100%); }
+
+[data-story] video { cursor: pointer; }
 
 /* ---------- Logos: the round Z / ز (favicon source) and the Zakaria / زكرياء cut-outs, not on the page for now ---------- */
 
