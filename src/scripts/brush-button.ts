@@ -1,11 +1,11 @@
 // The paper behind each "Read the case" button, painted like the frames around the visuals: a
 // rounded box whose edge wobbles a pixel or two (a slow drift plus fine brush jitter). On hover
-// (or focus) the wobble travels around the outline like a bicycle chain, in small jumps every 75ms
-// (the same rhythm as the paper growing for the arrow); it stops where it is when the pointer
-// leaves. Redrawn whenever the button changes size.
+// (or focus) the wobble travels around the outline like a bicycle chain, in visible jumps (about
+// 6 a second, stop-motion); it stops where it is when the pointer leaves. Redrawn whenever the
+// button changes size.
 const M = 72; // bumps around the outline
-const SPEED = 45; // px per second along the edge
-const STEP = 75; // ms between jumps
+const SPEED = 50; // px per second along the edge
+const STEP = 160; // ms between jumps (8px each)
 
 const seeded = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 

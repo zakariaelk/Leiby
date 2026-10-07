@@ -56,7 +56,7 @@
   --blue: #accff6;
   --shade: 0 0 0;
   --frame: #d9d9d9; /* painted frames around the visuals */
-  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .13'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .06'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.55'/%3E%3CfeFuncG type='linear' slope='.55'/%3E%3CfeFuncB type='linear' slope='.55'/%3E%3CfeFuncA type='table' tableValues='0 .10'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='turbulence' baseFrequency='.012 .02' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.65'/%3E%3CfeFuncG type='linear' slope='.65'/%3E%3CfeFuncB type='linear' slope='.65'/%3E%3CfeFuncA type='table' tableValues='0 .045'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 :root[data-palette='mono'][data-theme='dark'] {
   --bg: #141414;
@@ -241,8 +241,7 @@ img, video { display: block; max-width: 100%; height: auto; }
   margin: var(--s-3) 0 0;
   font-family: var(--serif);
   font-weight: 470;
-  font-size: var(--t-body); /* hansonwu.com body: 28 / 24 / 20px */
-  max-width: 80%;
+  font-size: var(--t-body); /* hansonwu.com body: 28 / 24 / 20px; full width keeps it to two lines from ~1180px */
   line-height: 1.5;
   text-wrap: pretty; /* no lone last word */
 }
@@ -250,7 +249,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-intro__br { display: none; }
 @media (max-width: 700px) {
   .n-intro h1 { white-space: normal; font-size: min(calc((100vw - 2 * var(--pad)) / 8.6), 48px); }
-  .n-intro p { max-width: none; }
   .n-intro__br { display: inline; }
   .n-intro__second { display: inline-block; }
   .n-intro__second::first-letter { text-transform: uppercase; }
@@ -268,9 +266,9 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-tag {
   display: inline-block;
   vertical-align: top;
-  padding: 7px 18px 6px;
+  padding: 8px 20px 7px;
   font-family: var(--sans);
-  font-size: clamp(14px, calc(14px + 2 * (100vw - 1024px) / 416), 16px);
+  font-size: clamp(16px, calc(16px + 2 * (100vw - 1024px) / 416), 18px);
   font-weight: 430;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -304,7 +302,7 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* the Featured Work tag is a tab of the first sheet: it sits on the sheet's top, covering the cut
    edge where it stands, and shares the sheet's paper and shadow */
 .n-featured__label { position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); margin-block: 0; }
-.n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(6px + var(--cut-h) * 0.5); }
+.n-featured__label .n-tag { background-color: var(--band); padding-bottom: calc(7px + var(--cut-h) * 0.5); }
 
 .n-card {
   display: grid;
@@ -353,9 +351,6 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-card__meta { display: contents; margin: 0; }
 .n-card__meta-item--mid { justify-self: center; }
 .n-card__foot .n-cta, .n-card__foot .n-btn { grid-column: 3; justify-self: end; }
-/* right-aligned: room for the arrow is kept free, so the words stay put while the paper grows */
-.n-card__foot .n-btn { margin-right: 34px; transition: margin-right 0.45s steps(6, jump-start); }
-.n-card__foot .n-btn:hover, .n-card__foot .n-btn:focus-visible { margin-right: 0; }
 .n-card__meta dt, .n-case__facts dt { font-family: var(--serif); font-weight: 500; font-size: var(--t-meta); line-height: 1.5; } /* hansonwu.com: 24 / 20 / 16px */
 .n-card__meta dd, .n-case__facts dd { margin: 4px 0 0; font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
 
