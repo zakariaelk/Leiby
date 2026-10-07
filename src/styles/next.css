@@ -488,6 +488,39 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-prose img, .n-prose video { max-width: 100%; height: auto; border-radius: 4px; }
 .n-prose a { text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 
+/* ---------- Font test panel (any /next/ page with ?fonts) ---------- */
+.n-fontlab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 80;
+  display: grid;
+  gap: 10px;
+  width: min(340px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 14px;
+  border-radius: 10px;
+  background: #161616;
+  color: #f2f2f2;
+  font: 14px/1.35 system-ui, sans-serif;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+}
+.n-fontlab[hidden] { display: none; }
+.n-fontlab__title { padding: 0; border: 0; background: none; text-align: left; font-weight: 600; }
+.n-fontlab.is-min > :not(.n-fontlab__title) { display: none; }
+.n-fontlab__title span { display: block; font-weight: 400; color: #a8a8a8; }
+.n-fontlab__pairs { display: grid; gap: 6px; }
+.n-fontlab button { font: inherit; color: inherit; cursor: pointer; }
+.n-fontlab__pairs button { display: grid; text-align: left; padding: 8px 10px; border: 1px solid #333; border-radius: 6px; background: #1f1f1f; }
+.n-fontlab__pairs button span { color: #a8a8a8; }
+.n-fontlab__pairs button[aria-pressed='true'] { border-color: #accff6; background: #26313d; }
+.n-fontlab label { display: grid; grid-template-columns: 48px 1fr; align-items: center; gap: 8px; }
+.n-fontlab select { font: inherit; padding: 6px; border-radius: 6px; border: 1px solid #333; background: #1f1f1f; color: inherit; }
+.n-fontlab__close { justify-self: end; padding: 6px 12px; border: 1px solid #444; border-radius: 6px; background: transparent; }
+/* other fonts have other widths: let the headline wrap rather than run off the page */
+.is-fontlab .n-intro h1 { white-space: normal; }
+
 /* ---------- Logos: the round Z / ز (favicon source) and the Zakaria / زكرياء cut-outs, not on the page for now ---------- */
 
 .n-logo { display: block; overflow: visible; }

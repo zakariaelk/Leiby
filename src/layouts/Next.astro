@@ -4,6 +4,7 @@ import '@fontsource-variable/newsreader/opsz.css';
 import '@fontsource-variable/newsreader/opsz-italic.css';
 import '@fontsource-variable/hanken-grotesk';
 import '../styles/next.css';
+import NextFontLab from '../components/next/NextFontLab.astro';
 import NextHeader from '../components/next/NextHeader.astro';
 
 interface Props { title?: string; description?: string; palette?: 'paper' | 'mono' }
@@ -31,5 +32,6 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
   <body>
     <NextHeader />
     <main id="main"><slot /></main>
+    <NextFontLab />
   </body>
 </html>
