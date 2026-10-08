@@ -100,6 +100,13 @@ img, video { display: block; max-width: 100%; height: auto; }
 /* version A: the round Z / ز logo alone, 90px high on large screens */
 .n-brand__logo { display: block; line-height: 0; border-radius: 50%; }
 .n-brand__logo .n-logo { width: clamp(60px, calc(60px + 30 * (100vw - 390px) / 1050), 90px); height: auto; }
+/* on hover the two paper circles turn 15° every quarter second, like stop-motion: the Z's one
+   counter-clockwise, the blue one clockwise; they keep their angle when the pointer leaves */
+.n-brand__logo .n-logo__big-shape, .n-brand__logo .n-logo__small-shape { transform-box: fill-box; transform-origin: center; animation: n-spin 6s steps(24, end) infinite paused; }
+.n-brand__logo .n-logo__big-shape { animation-direction: reverse; }
+.n-brand__logo:hover :is(.n-logo__big-shape, .n-logo__small-shape), .n-brand__logo:focus-visible :is(.n-logo__big-shape, .n-logo__small-shape) { animation-play-state: running; }
+@keyframes n-spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .n-brand__logo .n-logo__big-shape, .n-brand__logo .n-logo__small-shape { animation: none; } }
 
 /* Name: one line, in the sans with the nav's settings. Once, shortly after the page opens, it slowly
    turns into its Arabic form and back; after that the Arabic shows on hover. A soft-edged sweep

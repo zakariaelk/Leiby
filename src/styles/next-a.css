@@ -37,7 +37,7 @@
 .a-about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); padding-top: var(--a-gap); padding-bottom: var(--a-gap); }
 .a-about p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 
-.a-contact { padding-top: var(--a-gap-s); padding-bottom: var(--a-gap); border-top: 1px solid var(--line); }
+.a-contact { padding-top: var(--a-gap-s); padding-bottom: var(--a-gap); }
 .a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, max(calc(36px + 8 * (100vw - 390px) / 634), calc(44px + 8 * (100vw - 1024px) / 416)), 52px); line-height: 1.15; }
 .a-contact__text { max-width: 30em; margin: 24px 0 0; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; color: var(--muted); }
 .a-contact__text a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
@@ -49,8 +49,10 @@
    big visual on the right; the whole row is the link */
 /* each featured project on its own sheet: the faint torn line between them, a short way down to the
    work, more room below it */
-.a-band { padding-top: calc(var(--a-gap-s) * 0.5); padding-bottom: calc(var(--a-gap) * 0.7); }
-:root[data-theme='dark'].v-a .a-band, :root[data-theme='dark'].v-a .a-band--gray { filter: drop-shadow(0 -2px 3px rgb(0 0 0 / 0.35)); }
+.a-band { padding-top: calc(var(--a-gap-s) * 0.5); padding-bottom: calc(var(--a-gap) * 0.35); }
+:root[data-theme='dark'].v-a .a-band, :root[data-theme='dark'].v-a .a-band--gray, :root[data-theme='dark'].v-a .a-band--contact {
+  filter: drop-shadow(0 -1px 0 rgb(255 255 255 / 0.08)) drop-shadow(0 -3px 6px rgb(0 0 0 / 0.55));
+}
 /* visuals trimmed like paper cut out with scissors (clip-path from FramedMedia), resting on the sheet */
 .v-frame--cut { filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.08)) drop-shadow(0 8px 16px rgb(var(--shade) / 0.06)); }
 .a-feat__link {
@@ -84,8 +86,8 @@
 
 /* Highlight test: "designer" and "builder" get zakariaelk.com's hand-drawn marker, drawn left to
    right (the shape is a mask, so the colour lives here), then the words go a touch bolder */
-.v-a { --marker: var(--blue); } /* the logo's blue */
-:root[data-theme='dark'].v-a { --marker: #35506c; }
+.v-a { --marker: #bddafb; } /* the logo's blue, a touch lighter so the words stay crisp */
+:root[data-theme='dark'].v-a { --marker: #749ecd; }
 .a-mark--peach { --marker: #ffdeb9; } /* as on zakariaelk.com (/tests/highlight/) */
 :root[data-theme='dark'] .a-mark--peach { --marker: #5a4632; }
 .a-mark { position: relative; display: inline-block; isolation: isolate; transition: font-weight 0.35s ease; }
@@ -121,7 +123,7 @@
 .a-say {
   position: absolute;
   left: 50%;
-  bottom: 0.8em; /* just clear of the "a": its x-height top is 0.75em above the bottom of this box */
+  bottom: 0.9em; /* clear of the "a": its x-height top is 0.75em above the bottom of this box */
   width: 0.54em;
   height: 0.54em;
   padding: 0;
@@ -130,7 +132,7 @@
   font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
   color: inherit;
   cursor: pointer;
-  transform: translateX(-34%) rotate(-45deg); /* the speaker's body sits left in its box: nudge it over the a */
+  transform: translateX(-18%) rotate(-45deg); /* the speaker's body sits left in its box: nudge it right */
 }
 .a-say::before { content: ''; position: absolute; inset: -0.3em; } /* a comfortable tap area */
 .a-say svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
