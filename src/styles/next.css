@@ -172,6 +172,12 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .n-icon .wave { opacity: 0.35; transition: opacity 0.2s ease; }
 .n-icon.is-playing .wave { opacity: 1; }
+/* while the name plays, the speaker's waves pulse outwards (header and intro speakers) */
+@keyframes n-wave { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .n-say.is-playing .wave { animation: n-wave 0.9s ease-in-out infinite; }
+  .n-say.is-playing .wave + .wave { animation-delay: 0.2s; }
+}
 /* the sun and moon drawn at the nav text's weight (Hanken 430: a 1.85px stem at 21px) */
 .n-theme svg { stroke-width: 2.2; }
 .n-theme .moon { display: none; }

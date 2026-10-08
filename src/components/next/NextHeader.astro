@@ -52,12 +52,17 @@ const { base = '/next/', contact = `${base}#contact`, work = `${base}#work`, log
 <script>
   // Say my name (the speaker in the header, or in the intro in version A)
   let audio: HTMLAudioElement | null = null;
+  let stopAt = 0;
   document.querySelectorAll<HTMLButtonElement>('.n-say').forEach((say) => say.addEventListener('click', () => {
     audio ??= new Audio(say.dataset.audio);
     audio.currentTime = 0;
-    say.classList.add('is-playing');
-    audio.onended = () => say.classList.remove('is-playing');
-    audio.play().catch(() => say.classList.remove('is-playing'));
+    say.classList.add('is-playing'); // the waves pulse while it plays
+    const stop = () => { clearTimeout(stopAt); say.classList.remove('is-playing'); };
+    audio.onended = audio.onpause = audio.onerror = stop;
+    // and in any case once the clip's length has passed
+    clearTimeout(stopAt);
+    stopAt = window.setTimeout(stop, ((Number.isFinite(audio.duration) && audio.duration) || 2.2) * 1000 + 400);
+    audio.play().catch(stop);
   }));
 
   // Phone menu: full-screen panel; closes on Escape, on a link, or on the button again

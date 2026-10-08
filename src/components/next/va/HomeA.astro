@@ -7,6 +7,7 @@
 //   'client'       the same, with the client above the title and only the role below it
 //   'screen-1..3'  one screen per project: a big title over a visual sized to fit the screen;
 //                  2 adds the client as a paper tab on the visual, 3 puts Role / For beside the title
+// button: a round paper button with an arrow under each featured project's facts (black, blue, black)
 // highlight: "designer" and "builder" get the hand-drawn marker of zakariaelk.com, in the logo blue
 //   (or 'peach', the colour on zakariaelk.com)
 import { getImage } from 'astro:assets';
@@ -14,14 +15,14 @@ import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
 import ContactA from './ContactA.astro';
 import IntroA from './IntroA.astro';
-import { cutMask, tabCut, unevenRect } from '../../../lib/papercut';
+import { blob, cutMask, tabCut, unevenRect } from '../../../lib/papercut';
 import { workList, caseHref, EXPERTISE, SHORT_TITLES } from '../../../lib/versions';
 import '../../../styles/next-a.css';
 
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
-interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean }
-const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false } = Astro.props;
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean }
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = false } = Astro.props;
 
 const base = '/next/a/';
 const { featured, more } = await workList();
@@ -67,10 +68,17 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
               <a class="a-feat__link" href={caseHref(base, p.id)}>
                 {layout === 'client' && <p class="a-feat__client">{orgOf(p)}</p>}
                 <h3 class="a-feat__title">{titleOf(p)}</h3>
-                <dl class="a-meta a-feat__meta">
-                  {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
-                  {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
-                </dl>
+                <div class="a-feat__meta">
+                  <dl class="a-meta">
+                    {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
+                    {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
+                  </dl>
+                  {button && (
+                    <span class:list={['a-go', i % 2 ? 'a-go--blue' : 'a-go--black']} aria-hidden="true">
+                      <svg viewBox="0 0 100 100"><path class="a-go__shape" d={blob(41 + i * 6, 50, 50, 46)} /><path class="a-go__arrow" d="M30 50h40M56 36l14 14-14 14" /></svg>
+                    </span>
+                  )}
+                </div>
                 <div class="a-feat__visual">
                   <FramedMedia frame={false} cut={unevenRect(31 + i * 7, 0.8)} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} sizes="(min-width: 900px) 54vw, 92vw" eager={i === 0} />
                 </div>
