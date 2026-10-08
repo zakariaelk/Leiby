@@ -6,6 +6,8 @@
 .v-a {
   --a-gap: clamp(120px, calc(120px + 120 * (100vw - 390px) / 1050), 240px); /* between blocks */
   --a-gap-s: clamp(64px, calc(64px + 56 * (100vw - 390px) / 1050), 120px); /* inside a block */
+  --a-meta: clamp(16px, max(calc(16px + 2 * (100vw - 390px) / 634), calc(18px + 2 * (100vw - 1024px) / 416)), 20px); /* 16 / 18 / 20 */
+  --a-gray: #f3f3f3; /* the gray paper under the work list */
   --a-sub: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 8 * (100vw - 1024px) / 416)), 44px); /* 28 / 36 / 44 */
 }
 .a-wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--pad); }
@@ -31,14 +33,6 @@
 .a-sheet { padding-bottom: var(--a-gap); }
 .a-based { margin: 28px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
 .a-sheet > .a-wrap:first-of-type, .a-sheet > .a-glance { padding-top: var(--a-gap-s); }
-.a-project + .a-project { margin-top: var(--a-gap); }
-.a-project__link { display: block; color: inherit; text-decoration: none; }
-.a-project__org { margin: clamp(24px, 2.5vw, 36px) 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
-.a-project__org span { color: var(--muted); }
-.a-project__title, .a-card__title { max-width: 30em; margin: 10px 0 0; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; text-wrap: pretty; }
-.a-project__link:hover .a-project__title, .a-project__link:hover .a-card__title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
-.a-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); margin-top: var(--a-gap); }
-.a-card__img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 3px; }
 
 .a-about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); padding-top: var(--a-gap); padding-bottom: var(--a-gap); }
 .a-about p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
@@ -53,8 +47,12 @@
 
 /* Featured work, the chosen layout: a short title with the facts stacked below it on the left, a
    big visual on the right; the whole row is the link */
-.a-featured { padding-top: var(--a-gap-s); }
-.a-feat + .a-feat, .a-screen + .a-screen { margin-top: var(--a-gap); }
+/* each featured project on its own sheet: the faint torn line between them, a short way down to the
+   work, more room below it */
+.a-band { padding-top: calc(var(--a-gap-s) * 0.5); padding-bottom: calc(var(--a-gap) * 0.7); }
+:root[data-theme='dark'].v-a .a-band, :root[data-theme='dark'].v-a .a-band--gray { filter: drop-shadow(0 -2px 3px rgb(0 0 0 / 0.35)); }
+/* visuals trimmed like paper cut out with scissors (clip-path from FramedMedia), resting on the sheet */
+.v-frame--cut { filter: drop-shadow(0 1px 1px rgb(var(--shade) / 0.08)) drop-shadow(0 8px 16px rgb(var(--shade) / 0.06)); }
 .a-feat__link {
   display: grid;
   grid-template-columns: minmax(0, 44fr) minmax(0, 54fr);
@@ -70,8 +68,8 @@
 .a-feat .v-frame img, .a-feat .v-frame video, .a-screen .v-frame img, .a-screen .v-frame video { border-radius: 0; }
 .a-feat__link:hover .a-feat__title, .a-screen__link:hover .a-screen__title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
 .a-meta { display: grid; gap: 28px; }
-.a-meta dt { font-family: var(--serif); font-weight: 500; font-size: var(--t-meta); line-height: 1.4; }
-.a-meta dd { margin: 4px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
+.a-meta dt { font-family: var(--serif); font-weight: 500; font-size: var(--a-meta); line-height: 1.4; }
+.a-meta dd { margin: 4px 0 0; font-family: var(--sans); font-size: var(--a-meta); line-height: 1.3; color: var(--muted); }
 
 /* Drafts (/tests): one screen per project. A big title, then the visual at full width but no
    taller than what's left of the screen, so title and visual are seen together */
@@ -86,13 +84,15 @@
 
 /* Highlight test: "designer" and "builder" get zakariaelk.com's hand-drawn marker, drawn left to
    right (the shape is a mask, so the colour lives here), then the words go a touch bolder */
-.v-a { --marker: #ffdeb9; }
-:root[data-theme='dark'].v-a { --marker: #5a4632; }
+.v-a { --marker: var(--blue); } /* the logo's blue */
+:root[data-theme='dark'].v-a { --marker: #35506c; }
+.a-mark--peach { --marker: #ffdeb9; } /* as on zakariaelk.com (/tests/highlight/) */
+:root[data-theme='dark'] .a-mark--peach { --marker: #5a4632; }
 .a-mark { position: relative; display: inline-block; isolation: isolate; transition: font-weight 0.35s ease; }
 .a-mark::after {
   content: '';
   position: absolute;
-  inset: 0.16em -0.14em 0.04em; /* reaches a little past the word, like a marker stroke */
+  inset: 0.16em -0.1em 0.04em; /* reaches a little past the word, like a marker stroke */
   z-index: -1;
   background-color: var(--marker);
   -webkit-mask-image: linear-gradient(90deg, #000 47%, transparent 53%), url('/img/svg/marker-highlight.svg');
@@ -115,6 +115,61 @@
   .a-mark, .a-mark.is-drawn { transition: none; }
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
+
+/* The speaker sits on the last "a" of my name like an accent, tilted up; it plays how to say it */
+.a-say-a { position: relative; }
+.a-say {
+  position: absolute;
+  left: 50%;
+  bottom: 0.8em; /* just clear of the "a": its x-height top is 0.75em above the bottom of this box */
+  width: 0.54em;
+  height: 0.54em;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
+  color: inherit;
+  cursor: pointer;
+  transform: translateX(-34%) rotate(-45deg); /* the speaker's body sits left in its box: nudge it over the a */
+}
+.a-say::before { content: ''; position: absolute; inset: -0.3em; } /* a comfortable tap area */
+.a-say svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.a-say .wave { opacity: 0.5; transition: opacity 0.2s ease; }
+.a-say:hover .wave, .a-say:focus-visible .wave, .a-say.is-playing .wave { opacity: 1; }
+.a-say:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 50%; }
+
+/* The rest of the work: the /next/ list on gray paper, the white tab on its top line */
+.a-band--gray { --band: var(--a-gray); padding-bottom: var(--a-gap-s); }
+:root[data-theme='dark'].v-a { --a-gray: #1b1b1b; }
+.a-selected { padding-top: var(--a-gap-s); padding-bottom: 0; }
+.a-selected .n-label { margin: 0; font-size: var(--nav); }
+/* hovering a row: its cover follows the pointer as a small cut-out of paper (scripts/list-peek.ts) */
+.a-peek {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: clamp(240px, 22vw, 340px);
+  aspect-ratio: 5 / 3;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgb(var(--shade) / 0.12)) drop-shadow(0 14px 24px rgb(var(--shade) / 0.14));
+}
+.a-peek__card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  clip-path: var(--cut);
+  background: var(--surface);
+  opacity: 0;
+  transform: scale(0.82) rotate(calc(var(--tilt, 0deg) - 6deg));
+  transition: opacity 0.22s ease, transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.15);
+}
+.a-peek.is-shown .a-peek__card { opacity: 1; transform: scale(1) rotate(var(--tilt, 0deg)); }
+.a-peek img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.2s ease; }
+.a-peek img.is-on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .a-peek__card, .a-peek img { transition: none; } }
+@media (hover: none), (pointer: coarse) { .a-peek { display: none; } }
 
 /* ---------- Case study ---------- */
 .a-case { padding-top: clamp(40px, calc(40px + 56 * (100vw - 390px) / 1050), 96px); }
@@ -183,7 +238,7 @@
 
 /* ---------- Tablets and phones: one column, still one thing at a time ---------- */
 @media (max-width: 899px) {
-  .a-more, .a-about, .a-glance__grid, .a-stats, .a-intro, .a-cols { grid-template-columns: minmax(0, 1fr); }
+  .a-about, .a-glance__grid, .a-stats, .a-intro, .a-cols { grid-template-columns: minmax(0, 1fr); }
   .a-feat__link { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
   .a-feat__client, .a-feat__title, .a-feat__visual, .a-feat__meta { grid-column: 1; grid-row: auto; }
   .a-feat__visual { order: 2; margin-top: 24px; }

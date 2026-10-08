@@ -1,93 +1,104 @@
 ---
-// Version A home (the chosen direction), also behind every /tests page. A one-sentence intro, then
-// the featured work, the rest of the work in two columns, a short About and a way to get in touch.
+// Version A home (the chosen direction), also behind every /tests page. A one-sentence intro with
+// my name (its speaker sits on the last "a"), then each featured project on its own sheet, the rest
+// of the work as a list on gray paper (hovering a row shows its cover), a short About and contact.
 // featured: how each featured project is shown
 //   'split'        short title + Industry / Role on the left, a big visual on the right (default)
 //   'client'       the same, with the client above the title and only the role below it
 //   'screen-1..3'  one screen per project: a big title over a visual sized to fit the screen;
 //                  2 adds the client as a paper tab on the visual, 3 puts Role / For beside the title
-// highlight: "designer" and "builder" get the hand-drawn marker of zakariaelk.com
-import { Image } from 'astro:assets';
+// highlight: "designer" and "builder" get the hand-drawn marker of zakariaelk.com, in the logo blue
+//   (or 'peach', the colour on zakariaelk.com)
+import { getImage } from 'astro:assets';
 import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
 import ContactA from './ContactA.astro';
-import { cutMask, tabCut } from '../../../lib/papercut';
+import { cutMask, tabCut, unevenRect } from '../../../lib/papercut';
 import { workList, caseHref, EXPERTISE, SHORT_TITLES } from '../../../lib/versions';
 import '../../../styles/next-a.css';
 
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
-interface Props { featured?: Featured; highlight?: boolean; title?: string }
-const { featured: layout = 'split', highlight = false, title = 'Zakaria El Khachia · Product designer & builder' } = Astro.props;
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string }
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder' } = Astro.props;
 
 const base = '/next/a/';
 const { featured, more } = await workList();
 const screen = layout.startsWith('screen');
 const titleOf = (p: (typeof featured)[number]['p']) => SHORT_TITLES[p.id] ?? p.data.statement ?? p.data.intro;
 const orgOf = (p: (typeof featured)[number]['p']) => p.data.org ?? p.data.client;
+// covers for the list's hover preview, loaded on the first hover
+const peeks = await Promise.all(more.map(async (p) => (await getImage({ src: p.data.cover, width: 720, format: 'webp' })).src));
+const TILTS = ['-2.5deg', '1.8deg', '-1.2deg', '2.4deg', '-2deg', '1.4deg'];
+const intro = "I'm Zakaria El Khachia, a product designer and builder. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.";
+const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : [];
 ---
-<Next base={base} variant="a" logo work="#work" title={title} description="Product designer and creative builder. Most recently, safety tools for humanitarian workers at INSO.">
+<Next base={base} variant="a" logo work="#work" title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
   <section class="a-hero a-wrap">
-    {highlight ? (
-      <h1 class="a-statement">I'm Zakaria, a product <span class="a-mark">designer</span> and creative <span class="a-mark">builder</span>. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
-    ) : (
-      <h1 class="a-statement">I'm Zakaria, a product designer and creative builder. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
-    )}
+    <h1 class="a-statement" aria-label={intro}>I'm Zakaria El Khachi<span class="a-say-a">a<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span>, a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span>. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
   </section>
 
   <section class="a-work" id="work" aria-labelledby="work-title">
-    <div class="n-band n-band--light a-sheet">
-      <div class="n-cut n-cut--top" style={cutMask(7)} aria-hidden="true"></div>
-      <h2 class="sr-only" id="work-title">Selected work</h2>
-      <div class="a-wrap a-featured">
-        {featured.map(({ p, video, poster, posterSrc }, i) => screen ? (
-          <article class="a-screen">
-            <a class="a-screen__link" href={caseHref(base, p.id)}>
-              <div class:list={['a-screen__head', layout === 'screen-3' && 'a-screen__head--meta']}>
-                <h3 class="a-screen__title">{titleOf(p)}</h3>
-                {layout === 'screen-3' && (
-                  <dl class="a-meta">
-                    {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
-                    <div><dt>For</dt><dd>{orgOf(p)}</dd></div>
-                  </dl>
-                )}
-              </div>
-              <div class="a-screen__visual">
-                {layout === 'screen-2' && <span class="n-tag a-screen__client" style={`--tab:${tabCut(5 + i * 4)}`}>{orgOf(p)}</span>}
-                <FramedMedia frame={false} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} eager={i === 0} />
-              </div>
-            </a>
-          </article>
-        ) : (
-          <article class="a-feat">
-            <a class="a-feat__link" href={caseHref(base, p.id)}>
-              {layout === 'client' && <p class="a-feat__client">{orgOf(p)}</p>}
-              <h3 class="a-feat__title">{titleOf(p)}</h3>
-              <dl class="a-meta a-feat__meta">
-                {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
-                {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
-              </dl>
-              <div class="a-feat__visual">
-                <FramedMedia frame={false} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} sizes="(min-width: 900px) 54vw, 92vw" eager={i === 0} />
-              </div>
-            </a>
-          </article>
-        ))}
-
-        <div class="a-more">
-          {more.map((p) => (
-            <article class="a-card">
-              <a class="a-project__link" href={caseHref(base, p.id)}>
-                <Image class="a-card__img" src={p.data.cover} alt={`${p.data.client}: ${p.data.title}`} widths={[480, 720, 1000]} sizes="(min-width: 900px) 45vw, 92vw" />
-                <p class="a-project__org">{p.data.client} <span>· {p.data.year}</span></p>
-                <h3 class="a-card__title">{p.data.intro}</h3>
+    <h2 class="sr-only" id="work-title">Featured work</h2>
+    {featured.map(({ p, video, poster, posterSrc }, i) => (
+      <div class="n-band n-band--light a-band">
+        <div class="n-cut n-cut--top" style={cutMask(7 + i * 13)} aria-hidden="true"></div>
+        <div class="a-wrap">
+          {screen ? (
+            <article class="a-screen">
+              <a class="a-screen__link" href={caseHref(base, p.id)}>
+                <div class:list={['a-screen__head', layout === 'screen-3' && 'a-screen__head--meta']}>
+                  <h3 class="a-screen__title">{titleOf(p)}</h3>
+                  {layout === 'screen-3' && (
+                    <dl class="a-meta">
+                      {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
+                      <div><dt>For</dt><dd>{orgOf(p)}</dd></div>
+                    </dl>
+                  )}
+                </div>
+                <div class="a-screen__visual">
+                  {layout === 'screen-2' && <span class="n-tag a-screen__client" style={`--tab:${tabCut(5 + i * 4)}`}>{orgOf(p)}</span>}
+                  <FramedMedia frame={false} cut={unevenRect(31 + i * 7, 0.6)} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} eager={i === 0} />
+                </div>
               </a>
             </article>
-          ))}
+          ) : (
+            <article class="a-feat">
+              <a class="a-feat__link" href={caseHref(base, p.id)}>
+                {layout === 'client' && <p class="a-feat__client">{orgOf(p)}</p>}
+                <h3 class="a-feat__title">{titleOf(p)}</h3>
+                <dl class="a-meta a-feat__meta">
+                  {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
+                  {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
+                </dl>
+                <div class="a-feat__visual">
+                  <FramedMedia frame={false} cut={unevenRect(31 + i * 7, 0.8)} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} sizes="(min-width: 900px) 54vw, 92vw" eager={i === 0} />
+                </div>
+              </a>
+            </article>
+          )}
         </div>
       </div>
-      <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
-    </div>
+    ))}
   </section>
+
+  <div class="n-band a-band--gray">
+    <div class="n-cut n-cut--top" style={cutMask(53)} aria-hidden="true"></div>
+    <section class="n-list n-wrap a-selected" aria-labelledby="more-label" data-peek-list>
+      <h2 class="n-label" id="more-label"><span class="n-tag" style={`--tab:${tabCut(19)}`}>Selected Work</span></h2>
+      <ul>
+        {more.map((p, i) => (
+          <li>
+            <a href={caseHref(base, p.id)} data-peek={i}>
+              <span class="n-list__name">{p.data.client}</span>
+              <span class="n-list__desc">{p.data.intro}</span>
+              <span class="n-list__year">{p.data.year}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+    <div class="n-cut n-cut--bottom" style={cutMask(61)} aria-hidden="true"></div>
+  </div>
 
   <section class="a-about a-wrap" aria-label="About">
     <div>
@@ -103,9 +114,17 @@ const orgOf = (p: (typeof featured)[number]['p']) => p.data.org ?? p.data.client
   </section>
 
   <ContactA />
+
+  <!-- the list's hover preview: outside the paper bands, whose filters would trap a fixed position -->
+  <div class="a-peek" aria-hidden="true">
+    <div class="a-peek__card" style={`--cut:${unevenRect(77, 0.8)}`}>
+      {peeks.map((src, i) => <img data-src={src} data-tilt={TILTS[i % TILTS.length]} alt="" width="720" height="432" decoding="async" />)}
+    </div>
+  </div>
 </Next>
 
 <script>
+  import '../../../scripts/list-peek';
   // highlight: the marker is drawn shortly after the page appears ("builder" follows "designer")
   window.setTimeout(() => document.querySelectorAll('.a-mark').forEach((m) => m.classList.add('is-drawn')), 500);
 </script>

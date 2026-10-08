@@ -97,10 +97,9 @@ img, video { display: block; max-width: 100%; height: auto; }
   padding: var(--s-3) var(--pad);
 }
 .n-brand { display: flex; align-items: center; gap: 2px; }
-/* version A: the round Z / ز logo in front of the name */
-.n-brand--logo { gap: 4px; }
-.n-brand__logo { display: block; margin-right: clamp(8px, 1.2vw, 16px); line-height: 0; }
-.n-brand__logo .n-logo { width: clamp(64px, calc(64px + 44 * (100vw - 390px) / 1050), 108px); height: auto; }
+/* version A: the round Z / ز logo alone, 90px high on large screens */
+.n-brand__logo { display: block; line-height: 0; border-radius: 50%; }
+.n-brand__logo .n-logo { width: clamp(60px, calc(60px + 30 * (100vw - 390px) / 1050), 90px); height: auto; }
 
 /* Name: one line, in the sans with the nav's settings. Once, shortly after the page opens, it slowly
    turns into its Arabic form and back; after that the Arabic shows on hover. A soft-edged sweep
@@ -166,6 +165,8 @@ img, video { display: block; max-width: 100%; height: auto; }
 .n-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .n-icon .wave { opacity: 0.35; transition: opacity 0.2s ease; }
 .n-icon.is-playing .wave { opacity: 1; }
+/* the sun and moon drawn at the nav text's weight (Hanken 430: a 1.85px stem at 21px) */
+.n-theme svg { stroke-width: 2.2; }
 .n-theme .moon { display: none; }
 :root[data-theme='dark'] .n-theme .sun { display: none; }
 :root[data-theme='dark'] .n-theme .moon { display: block; }

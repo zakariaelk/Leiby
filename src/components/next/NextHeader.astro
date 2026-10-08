@@ -1,27 +1,33 @@
 ---
 // Header: the name (morphs into its Arabic form every few seconds; the round Z / ز logo is the
-// favicon), "say my name" speaker, nav, light/dark switch.
+// favicon), "say my name" speaker, nav, light/dark switch. With logo (version A) the header shows
+// the round Z / ز alone; the name and the speaker move into the page's intro.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
 import NextLogo from './NextLogo.astro';
 
-// logo: the round Z / ز in front of the name (version A); work / contact: where those links point
+// logo: the round Z / ز instead of the name and speaker (version A); work / contact: where those links point
 interface Props { base?: string; contact?: string; work?: string; logo?: boolean }
 const { base = '/next/', contact = `${base}#contact`, work = `${base}#work`, logo = false } = Astro.props;
 ---
 <header class="n-head">
   <div class:list={['n-brand', logo && 'n-brand--logo']}>
-    {logo && <a href={base} class="n-brand__logo" aria-hidden="true" tabindex="-1"><NextLogo variant="blue" seed={23} size={108} decorative /></a>}
-    <a href={base} class="n-name">
-      <span class="n-name__latin">Zakaria El Khachia</span>
-      <ArabicNameAmiri />
-    </a>
-    <button type="button" class="n-icon n-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 9.5h3l4.5-4v13L7 14.5H4z" />
-        <path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" />
-        <path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" />
-      </svg>
-    </button>
+    {logo ? (
+      <a href={base} class="n-brand__logo" aria-label="Zakaria El Khachia, home"><NextLogo variant="blue" seed={23} size={90} decorative /></a>
+    ) : (
+      <>
+        <a href={base} class="n-name">
+          <span class="n-name__latin">Zakaria El Khachia</span>
+          <ArabicNameAmiri />
+        </a>
+        <button type="button" class="n-icon n-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 9.5h3l4.5-4v13L7 14.5H4z" />
+            <path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" />
+            <path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" />
+          </svg>
+        </button>
+      </>
+    )}
   </div>
   <!-- Phones: a brown paper square with two white bars opens the menu full screen (like ensemblelapalatine.com) -->
   <button type="button" class="n-burger" aria-label="Menu" aria-expanded="false" aria-controls="n-menu">
@@ -44,16 +50,15 @@ const { base = '/next/', contact = `${base}#contact`, work = `${base}#work`, log
 </header>
 
 <script>
-  // Say my name
-  const say = document.querySelector<HTMLButtonElement>('.n-say');
+  // Say my name (the speaker in the header, or in the intro in version A)
   let audio: HTMLAudioElement | null = null;
-  say?.addEventListener('click', () => {
+  document.querySelectorAll<HTMLButtonElement>('.n-say').forEach((say) => say.addEventListener('click', () => {
     audio ??= new Audio(say.dataset.audio);
     audio.currentTime = 0;
     say.classList.add('is-playing');
     audio.onended = () => say.classList.remove('is-playing');
     audio.play().catch(() => say.classList.remove('is-playing'));
-  });
+  }));
 
   // Phone menu: full-screen panel; closes on Escape, on a link, or on the button again
   const burger = document.querySelector<HTMLButtonElement>('.n-burger');
