@@ -1,0 +1,36 @@
+---
+// /tests: design variations of version A (the chosen direction), each a full home page so it can be
+// judged in context. Not indexed, not linked from the site.
+import Next from '../../layouts/Next.astro';
+import '../../styles/next-a.css';
+
+const TESTS = [
+  { href: '/tests/highlight/', name: 'Highlighted intro', note: '"designer" and "builder" get the hand-drawn marker of zakariaelk.com, drawn in after the page appears.' },
+  { href: '/tests/client-above/', name: 'Client above the title', note: 'The featured row with the client name over the title and only the role below it.' },
+  { href: '/tests/title-visual-1/', name: 'Draft 1 · Title and visual on one screen', note: 'A big title over a full-width visual sized to fit what\'s left of the screen, so both are seen together.' },
+  { href: '/tests/title-visual-2/', name: 'Draft 2 · With the client as a tab', note: 'Draft 1, with the client name on a paper tab on the visual: nothing added above the title.' },
+  { href: '/tests/title-visual-3/', name: 'Draft 3 · Role and For beside the title', note: 'Draft 1, with Role and For (the client) stacked next to the title.' },
+];
+---
+<Next base="/next/a/" variant="a" logo title="Tests · Zakaria El Khachia" description="Design variations of the portfolio.">
+  <section class="a-hero a-wrap">
+    <h1 class="a-statement">Tests</h1>
+    <p class="a-based">Variations of the home page (version A), each on its own page. The chosen version lives at <a href="/next/a/">/next/a/</a>.</p>
+  </section>
+  <div class="a-wrap a-tests">
+    <ol>
+      {TESTS.map((t) => <li><a href={t.href}><span class="a-tests__name">{t.name}</span><span class="a-tests__note">{t.note}</span></a></li>)}
+    </ol>
+  </div>
+</Next>
+
+<style>
+  .a-tests { padding-bottom: 160px; }
+  .a-tests ol { margin: 0; padding: 0; list-style: none; }
+  .a-tests li { border-top: 1px solid var(--line); }
+  .a-tests li:last-child { border-bottom: 1px solid var(--line); }
+  .a-tests a { display: grid; gap: 6px; padding: 28px 0; color: inherit; text-decoration: none; }
+  .a-tests__name { font-family: var(--serif); font-weight: 500; font-size: var(--t-body); line-height: 1.3; }
+  .a-tests__note { font-family: var(--sans); font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .a-tests a:hover .a-tests__name { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+</style>

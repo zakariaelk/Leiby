@@ -37,7 +37,7 @@ const glance = [
 ].filter((g) => g.text);
 const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
 ---
-<Next base={base} variant="a" title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
+<Next base={base} variant="a" logo title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
   <header class="a-case a-wrap">
     <a class="a-back" href={`${base}#work`}>All work</a>
     <p class="a-case__org">{d.org ?? d.client}{d.projectName && <span> · {d.projectName}</span>}</p>

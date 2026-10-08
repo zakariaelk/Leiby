@@ -8,8 +8,8 @@ import NextHeader from '../components/next/NextHeader.astro';
 
 // base: where the header links point (versions /next/a/ and /next/b/ keep visitors inside them);
 // variant: a class on <html> for that version's own styles.
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant } = Astro.props;
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-palette={palette} class={variant ? `v-${variant}` : undefined}>
@@ -31,7 +31,7 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
     </script>
   </head>
   <body>
-    <NextHeader base={base} contact={variant ? '#contact' : undefined} />
+    <NextHeader base={base} contact={variant ? '#contact' : undefined} work={work} logo={logo} />
     <main id="main"><slot /></main>
   </body>
 </html>

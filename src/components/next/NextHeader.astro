@@ -2,12 +2,15 @@
 // Header: the name (morphs into its Arabic form every few seconds; the round Z / ز logo is the
 // favicon), "say my name" speaker, nav, light/dark switch.
 import ArabicNameAmiri from './ArabicNameAmiri.astro';
+import NextLogo from './NextLogo.astro';
 
-interface Props { base?: string; contact?: string }
-const { base = '/next/', contact = `${base}#contact` } = Astro.props;
+// logo: the round Z / ز in front of the name (version A); work / contact: where those links point
+interface Props { base?: string; contact?: string; work?: string; logo?: boolean }
+const { base = '/next/', contact = `${base}#contact`, work = `${base}#work`, logo = false } = Astro.props;
 ---
 <header class="n-head">
-  <div class="n-brand">
+  <div class:list={['n-brand', logo && 'n-brand--logo']}>
+    {logo && <a href={base} class="n-brand__logo" aria-hidden="true" tabindex="-1"><NextLogo variant="blue" seed={23} size={108} decorative /></a>}
     <a href={base} class="n-name">
       <span class="n-name__latin">Zakaria El Khachia</span>
       <ArabicNameAmiri />
@@ -25,7 +28,7 @@ const { base = '/next/', contact = `${base}#contact` } = Astro.props;
     <span class="n-burger__bar"></span><span class="n-burger__bar"></span>
   </button>
   <nav class="n-nav" id="n-menu" aria-label="Main">
-    <a href={`${base}#work`}>Work</a>
+    <a href={work}>Work</a>
     <a href={`${base}about/`}>About</a>
     <a href={contact}>Contact</a>
     <button type="button" class="n-icon n-theme" aria-label="Switch to dark mode">

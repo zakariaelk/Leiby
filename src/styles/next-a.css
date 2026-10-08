@@ -2,6 +2,7 @@
    reading sizes from the reference (28/24/20px body, 60/48/32px titles, 24/20/16px labels), big
    gaps between blocks so each one is read on its own, and nothing competing with the work. */
 
+:root[data-palette][data-theme].v-a { --bg: var(--surface); } /* one white paper, grain kept */
 .v-a {
   --a-gap: clamp(120px, calc(120px + 120 * (100vw - 390px) / 1050), 240px); /* between blocks */
   --a-gap-s: clamp(64px, calc(64px + 56 * (100vw - 390px) / 1050), 120px); /* inside a block */
@@ -17,11 +18,12 @@
 /* ---------- Home ---------- */
 .a-hero { padding-top: clamp(72px, calc(72px + 96 * (100vw - 390px) / 1050), 168px); padding-bottom: var(--a-gap); }
 .a-statement {
-  max-width: 21em;
+  max-width: 1330px;
   margin: 0;
   font-family: var(--serif);
   font-weight: 470;
-  font-size: var(--t-title);
+  /* 28px on phones, 44px at 1260px wide, 50px from 1920px */
+  font-size: clamp(28px, min(calc(28px + 16 * (100vw - 390px) / 870), calc(44px + 6 * (100vw - 1260px) / 660)), 50px); /* min: the second slope is gentler */
   line-height: 1.2;
   letter-spacing: -0.01em;
   text-wrap: pretty;
@@ -48,6 +50,71 @@
 .a-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 28px; padding-bottom: 40px; font-family: var(--sans); font-size: 16px; color: var(--muted); }
 .a-foot p { margin: 0; display: flex; gap: 24px; }
 .a-foot a { color: inherit; }
+
+/* Featured work, the chosen layout: a short title with the facts stacked below it on the left, a
+   big visual on the right; the whole row is the link */
+.a-featured { padding-top: var(--a-gap-s); }
+.a-feat + .a-feat, .a-screen + .a-screen { margin-top: var(--a-gap); }
+.a-feat__link {
+  display: grid;
+  grid-template-columns: minmax(0, 44fr) minmax(0, 54fr);
+  grid-template-rows: auto auto 1fr;
+  column-gap: clamp(32px, 3.5vw, 56px);
+  color: inherit;
+  text-decoration: none;
+}
+.a-feat__client { grid-column: 1; margin: 0 0 16px; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
+.a-feat__title { grid-column: 1; margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 6 * (100vw - 1024px) / 416)), 42px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; }
+.a-feat__meta { grid-column: 1; grid-row: 3; align-self: end; margin: 40px 0 0; }
+.a-feat__visual { grid-column: 2; grid-row: 1 / -1; }
+.a-feat .v-frame img, .a-feat .v-frame video, .a-screen .v-frame img, .a-screen .v-frame video { border-radius: 0; }
+.a-feat__link:hover .a-feat__title, .a-screen__link:hover .a-screen__title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
+.a-meta { display: grid; gap: 28px; }
+.a-meta dt { font-family: var(--serif); font-weight: 500; font-size: var(--t-meta); line-height: 1.4; }
+.a-meta dd { margin: 4px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
+
+/* Drafts (/tests): one screen per project. A big title, then the visual at full width but no
+   taller than what's left of the screen, so title and visual are seen together */
+.a-screen__link { display: block; color: inherit; text-decoration: none; }
+.a-screen__head { margin-bottom: clamp(20px, 2.5vw, 36px); }
+.a-screen__head--meta { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 24px clamp(32px, 4vw, 64px); align-items: end; }
+.a-screen__head--meta .a-meta { gap: 16px; }
+.a-screen__title { max-width: 22em; margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--t-title); line-height: 1.12; letter-spacing: -0.015em; text-wrap: balance; }
+.a-screen__visual { position: relative; }
+.a-screen .v-frame img, .a-screen .v-frame video { aspect-ratio: auto; height: min(56.25vw, calc(100svh - 280px)); min-height: 220px; object-fit: cover; }
+.a-screen__client { position: absolute; z-index: 2; top: 0; left: 24px; padding-bottom: 9px; }
+
+/* Highlight test: "designer" and "builder" get zakariaelk.com's hand-drawn marker, drawn left to
+   right (the shape is a mask, so the colour lives here), then the words go a touch bolder */
+.v-a { --marker: #ffdeb9; }
+:root[data-theme='dark'].v-a { --marker: #5a4632; }
+.a-mark { position: relative; display: inline-block; isolation: isolate; transition: font-weight 0.35s ease; }
+.a-mark::after {
+  content: '';
+  position: absolute;
+  inset: 0.16em -0.14em 0.04em; /* reaches a little past the word, like a marker stroke */
+  z-index: -1;
+  background-color: var(--marker);
+  -webkit-mask-image: linear-gradient(90deg, #000 47%, transparent 53%), url('/img/svg/marker-highlight.svg');
+  mask-image: linear-gradient(90deg, #000 47%, transparent 53%), url('/img/svg/marker-highlight.svg');
+  -webkit-mask-size: 220% 100%, 100% 100%;
+  mask-size: 220% 100%, 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0, 0 0;
+  mask-position: 100% 0, 0 0;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.a-mark.is-drawn { font-weight: 500; transition-delay: 0.6s; }
+.a-mark.is-drawn::after { animation: a-marker 0.75s cubic-bezier(0.45, 0.05, 0.3, 1) forwards; }
+.a-mark + .a-mark.is-drawn, .a-mark ~ .a-mark.is-drawn { transition-delay: 0.9s; }
+.a-mark ~ .a-mark.is-drawn::after { animation-delay: 0.3s; }
+@keyframes a-marker { to { -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .a-mark, .a-mark.is-drawn { transition: none; }
+  .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
+}
 
 /* ---------- Case study ---------- */
 .a-case { padding-top: clamp(40px, calc(40px + 56 * (100vw - 390px) / 1050), 96px); }
@@ -117,6 +184,12 @@
 /* ---------- Tablets and phones: one column, still one thing at a time ---------- */
 @media (max-width: 899px) {
   .a-more, .a-about, .a-glance__grid, .a-stats, .a-intro, .a-cols { grid-template-columns: minmax(0, 1fr); }
+  .a-feat__link { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .a-feat__client, .a-feat__title, .a-feat__visual, .a-feat__meta { grid-column: 1; grid-row: auto; }
+  .a-feat__visual { order: 2; margin-top: 24px; }
+  .a-feat__meta { order: 3; margin-top: 28px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+  .a-screen__head--meta { grid-template-columns: minmax(0, 1fr); }
+  .a-screen__head--meta .a-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .a-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .a-intro__photo { max-width: 420px; }
   .a-timeline li { grid-template-columns: minmax(0, 1fr); }

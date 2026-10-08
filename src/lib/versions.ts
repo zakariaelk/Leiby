@@ -10,6 +10,14 @@ export { settings };
 export const CASE = 'mitigating-risk-with-location-based-alerts'; // the case built in both versions
 export const FEATURED = [CASE, 'ngosafety-website-redesign', '3e-international'];
 
+/** Short card titles for the featured work in version A (approved 2026-10-08); the CMS statement
+ *  stays as it is for /next/ and version B. */
+export const SHORT_TITLES: Record<string, string> = {
+  [CASE]: 'Helping humanitarian workers stay informed on the move through safety alerts.',
+  'ngosafety-website-redesign': 'Redesigning and building ngosafety.org, from brief to tested website.',
+  '3e-international': "Bringing learning through play to a bilingual school's website.",
+};
+
 /** Where a project's case study lives from inside a version: the INSO case has its own page in
  *  each version, the others use the shared /next/work/ template. */
 export const caseHref = (base: string, id: string) => (id === CASE ? `${base}work/${id}/` : `/next/work/${id}/`);

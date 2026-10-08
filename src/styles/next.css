@@ -97,6 +97,10 @@ img, video { display: block; max-width: 100%; height: auto; }
   padding: var(--s-3) var(--pad);
 }
 .n-brand { display: flex; align-items: center; gap: 2px; }
+/* version A: the round Z / ز logo in front of the name */
+.n-brand--logo { gap: 4px; }
+.n-brand__logo { display: block; margin-right: clamp(8px, 1.2vw, 16px); line-height: 0; }
+.n-brand__logo .n-logo { width: clamp(64px, calc(64px + 44 * (100vw - 390px) / 1050), 108px); height: auto; }
 
 /* Name: one line, in the sans with the nav's settings. Once, shortly after the page opens, it slowly
    turns into its Arabic form and back; after that the Arabic shows on hover. A soft-edged sweep
