@@ -13,13 +13,15 @@ import { getImage } from 'astro:assets';
 import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
 import ContactA from './ContactA.astro';
+import IntroA from './IntroA.astro';
 import { cutMask, tabCut, unevenRect } from '../../../lib/papercut';
 import { workList, caseHref, EXPERTISE, SHORT_TITLES } from '../../../lib/versions';
 import '../../../styles/next-a.css';
 
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
-interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string }
-const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder' } = Astro.props;
+// intro: the opening animation (the home page only, not the tests)
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean }
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false } = Astro.props;
 
 const base = '/next/a/';
 const { featured, more } = await workList();
@@ -28,13 +30,12 @@ const titleOf = (p: (typeof featured)[number]['p']) => SHORT_TITLES[p.id] ?? p.d
 const orgOf = (p: (typeof featured)[number]['p']) => p.data.org ?? p.data.client;
 // covers for the list's hover preview, loaded on the first hover
 const peeks = await Promise.all(more.map(async (p) => (await getImage({ src: p.data.cover, width: 720, format: 'webp' })).src));
-const TILTS = ['-2.5deg', '1.8deg', '-1.2deg', '2.4deg', '-2deg', '1.4deg'];
-const intro = "I'm Zakaria El Khachia, a product designer and builder. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.";
+const sentence = "I'm Zakaria El Khachia, a product designer and builder. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.";
 const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : [];
 ---
-<Next base={base} variant="a" logo work="#work" title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
+<Next base={base} variant="a" logo work="#work" intro={intro} title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
   <section class="a-hero a-wrap">
-    <h1 class="a-statement" aria-label={intro}>I'm Zakaria El Khachi<span class="a-say-a">a<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span>, a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span>. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
+    <h1 class="a-statement" aria-label={sentence}>I'm Zakaria El Khachi<span class="a-say-a">a<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span>, a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span>. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
   </section>
 
   <section class="a-work" id="work" aria-labelledby="work-title">
@@ -115,16 +116,21 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
 
   <ContactA />
 
+  {intro && <IntroA />}
+
   <!-- the list's hover preview: outside the paper bands, whose filters would trap a fixed position -->
   <div class="a-peek" aria-hidden="true">
-    <div class="a-peek__card" style={`--cut:${unevenRect(77, 0.8)}`}>
-      {peeks.map((src, i) => <img data-src={src} data-tilt={TILTS[i % TILTS.length]} alt="" width="720" height="432" decoding="async" />)}
+    <div class="a-peek__card" style={`--cut:${unevenRect(77, 0.6)}`}>
+      {peeks.map((src) => <img data-src={src} alt="" width="720" height="432" decoding="async" />)}
     </div>
   </div>
 </Next>
 
 <script>
   import '../../../scripts/list-peek';
-  // highlight: the marker is drawn shortly after the page appears ("builder" follows "designer")
-  window.setTimeout(() => document.querySelectorAll('.a-mark').forEach((m) => m.classList.add('is-drawn')), 500);
+  // highlight: the marker is drawn shortly after the page appears ("builder" follows "designer"),
+  // after the intro when there is one
+  const draw = () => window.setTimeout(() => document.querySelectorAll('.a-mark').forEach((m) => m.classList.add('is-drawn')), 300);
+  if (document.documentElement.classList.contains('is-intro')) document.addEventListener('ze:intro-done', draw, { once: true });
+  else window.setTimeout(draw, 200);
 </script>

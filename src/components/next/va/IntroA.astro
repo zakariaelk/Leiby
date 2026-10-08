@@ -1,0 +1,36 @@
+---
+// Version A intro (home page, once per visit): "Zakaria" and زكرياء are written letter by letter, at
+// the same time, in the middle of the screen; the rest of each word folds away, leaving Z and ز in
+// their logo places; the two paper circles pop in behind them (the Z turns light), spin for a moment
+// in stop-motion steps, then the logo flies to its spot in the header while the page appears.
+// The drawing uses the logo's own coordinates (NextLogo.astro: 200 × 200, circles from seed 23), so
+// its last frame is the header logo. Timeline in scripts/intro-a.ts; styles in next-a.css.
+// Whether it plays is decided before the first paint (the inline script in layouts/Next.astro).
+import { blob } from '../../../lib/papercut';
+import { AR_GLYPHS, AR_WORD } from '../../../lib/intro-glyphs';
+
+const LATIN = 'Zakaria';
+// زكرياء under "Zakaria", centred on the logo's middle (x 100)
+const S = 0.12; // font units → drawing units
+const AR_X = 100 - ((AR_WORD.minX + AR_WORD.maxX) / 2) * S;
+const AR_Y = 205; // Arabic baseline
+const LAT_Y = 55; // Latin baseline
+const [zain, ...rest] = AR_GLYPHS;
+const zainFrom = `translate(${(AR_X + zain.x * S).toFixed(2)}px, ${AR_Y}px) scale(${S})`;
+---
+<div class="a-intro" aria-hidden="true" data-intro>
+  <svg class="a-intro__svg" viewBox="-260 -170 720 540">
+    <path class="i-blob i-blob--big" d={blob(23, 88, 88, 78)} />
+    <text class="i-word" x="100" y={LAT_Y} text-anchor="middle">{[...LATIN].map((c, i) => <tspan class:list={['i-l', i === 0 && 'i-l--z']} style={`--i:${i}`}>{c}</tspan>)}</text>
+    <text class="i-z" x="86" y="124" text-anchor="middle">Z</text>
+    <g class="i-ar" transform={`translate(${AR_X.toFixed(2)} ${AR_Y}) scale(${S})`}>
+      {rest.map((g, k) => <path class="i-g" style={`--i:${k + 1}`} d={g.d} transform={`translate(${g.x} 0)`} />)}
+    </g>
+    <path class="i-blob i-blob--small" d={blob(28, 152, 150, 38)} />
+    <g class="i-zain" style={`--from:${zainFrom}`}><path d={zain.d} /></g>
+  </svg>
+</div>
+
+<script>
+  import '../../../scripts/intro-a';
+</script>

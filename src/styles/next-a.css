@@ -8,6 +8,8 @@
   --a-gap-s: clamp(64px, calc(64px + 56 * (100vw - 390px) / 1050), 120px); /* inside a block */
   --a-meta: clamp(16px, max(calc(16px + 2 * (100vw - 390px) / 634), calc(18px + 2 * (100vw - 1024px) / 416)), 20px); /* 16 / 18 / 20 */
   --a-gray: #f3f3f3; /* the gray paper under the work list */
+  --a-pad-top: calc(var(--a-gap-s) * 0.5); /* every section, after its torn edge: 60px at 1440, 32px on phones */
+  --a-pad-bottom: calc(var(--a-gap) * 0.35); /* 84px at 1440, 42px on phones */
   --a-sub: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 8 * (100vw - 1024px) / 416)), 44px); /* 28 / 36 / 44 */
 }
 .a-wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--pad); }
@@ -34,10 +36,10 @@
 .a-based { margin: 28px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
 .a-sheet > .a-wrap:first-of-type, .a-sheet > .a-glance { padding-top: var(--a-gap-s); }
 
-.a-about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); padding-top: var(--a-gap); padding-bottom: var(--a-gap); }
+.a-about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
 .a-about p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 
-.a-contact { padding-top: var(--a-gap-s); padding-bottom: var(--a-gap); }
+.a-contact { padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
 .a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, max(calc(36px + 8 * (100vw - 390px) / 634), calc(44px + 8 * (100vw - 1024px) / 416)), 52px); line-height: 1.15; }
 .a-contact__text { max-width: 30em; margin: 24px 0 0; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; color: var(--muted); }
 .a-contact__text a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
@@ -49,7 +51,7 @@
    big visual on the right; the whole row is the link */
 /* each featured project on its own sheet: the faint torn line between them, a short way down to the
    work, more room below it */
-.a-band { padding-top: calc(var(--a-gap-s) * 0.5); padding-bottom: calc(var(--a-gap) * 0.35); }
+.a-band { padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
 :root[data-theme='dark'].v-a .a-band, :root[data-theme='dark'].v-a .a-band--gray, :root[data-theme='dark'].v-a .a-band--contact {
   filter: drop-shadow(0 -1px 0 rgb(255 255 255 / 0.08)) drop-shadow(0 -3px 6px rgb(0 0 0 / 0.55));
 }
@@ -141,11 +143,12 @@
 .a-say:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 50%; }
 
 /* The rest of the work: the /next/ list on gray paper, the white tab on its top line */
-.a-band--gray { --band: var(--a-gray); padding-bottom: var(--a-gap-s); }
+.a-band--gray { --band: var(--a-gray); padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
 :root[data-theme='dark'].v-a { --a-gray: #1b1b1b; }
-.a-selected { padding-top: var(--a-gap-s); padding-bottom: 0; }
+.a-selected { padding-top: 0; padding-bottom: 0; }
 .a-selected .n-label { margin: 0; font-size: var(--nav); }
-/* hovering a row: its cover follows the pointer as a small cut-out of paper (scripts/list-peek.ts) */
+/* hovering a row: its cover appears just above the row as a small cut-out of paper, straight
+   (scripts/list-peek.ts) */
 .a-peek {
   position: fixed;
   top: 0;
@@ -164,14 +167,69 @@
   clip-path: var(--cut);
   background: var(--surface);
   opacity: 0;
-  transform: scale(0.82) rotate(calc(var(--tilt, 0deg) - 6deg));
-  transition: opacity 0.22s ease, transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.15);
+  transform: translateY(10px) scale(0.94);
+  transform-origin: 50% 100%;
+  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.a-peek.is-shown .a-peek__card { opacity: 1; transform: scale(1) rotate(var(--tilt, 0deg)); }
+.a-peek.is-shown .a-peek__card { opacity: 1; transform: none; }
 .a-peek img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.2s ease; }
 .a-peek img.is-on { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .a-peek__card, .a-peek img { transition: none; } }
 @media (hover: none), (pointer: coarse) { .a-peek { display: none; } }
+
+/* ---------- Intro (home, once per visit; components/next/va/IntroA.astro, scripts/intro-a.ts) ---------- */
+html.is-intro { overflow: hidden; }
+html.is-intro .n-brand__logo { visibility: hidden; }
+html.is-intro :is(.n-nav, .n-burger, .a-hero, .a-work) { opacity: 0; transform: translateY(16px); }
+html.is-intro.is-intro-reveal :is(.n-nav, .n-burger, .a-hero, .a-work) { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+html.is-intro.is-intro-reveal .n-nav, html.is-intro.is-intro-reveal .n-burger { transition-delay: 0.15s; }
+html.is-intro.is-intro-reveal .a-hero { transition-delay: 0.3s; }
+html.is-intro.is-intro-reveal .a-work { transition-delay: 0.45s; }
+.a-intro { display: none; }
+html.is-intro .a-intro { position: fixed; inset: 0; z-index: 100; display: block; pointer-events: none; }
+.a-intro::before { content: ''; position: absolute; inset: 0; background-color: var(--bg); background-image: var(--paper); transition: opacity 0.55s ease 0.1s; }
+.a-intro.is-fly::before, .a-intro.is-skip::before { opacity: 0; }
+.a-intro.is-skip { opacity: 0; transition: opacity 0.3s ease; }
+.a-intro__svg {
+  --w: min(88vw, 720px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--w);
+  height: calc(var(--w) * 0.75); /* viewBox 720 × 540 */
+  margin: calc(var(--w) * -0.375) 0 0 calc(var(--w) * -0.5);
+  overflow: visible;
+  transform-origin: 0 0;
+  visibility: hidden;
+}
+.a-intro.is-ready .a-intro__svg { visibility: visible; }
+.a-intro.is-fly .a-intro__svg { transition: transform 0.7s cubic-bezier(0.65, 0, 0.25, 1); }
+/* writing: each letter appears whole, one after the other; both names at the same time */
+.i-word, .i-z { font-family: var(--serif); font-weight: 600; font-size: 104px; }
+.i-l { fill: var(--ink); fill-opacity: 0; }
+.i-l--z { visibility: hidden; } /* the Z is drawn by .i-z, which can travel */
+.i-g { fill: var(--ink); opacity: 0; }
+.i-z { fill: var(--ink); opacity: 0; transform: var(--from, none); }
+.i-zain { fill: var(--ink); opacity: 0; transform: var(--from); transform-origin: 0 0; transform-box: view-box; }
+.is-write :is(.i-z, .i-zain) { opacity: 1; }
+.is-write .i-l { fill-opacity: 1; transition: fill-opacity 0.05s linear calc(var(--i) * 0.1s); }
+.is-write .i-g { opacity: 1; transition: opacity 0.05s linear calc(var(--i) * 0.12s); }
+/* fold: the rest of each word goes, last letter first; Z and ز glide into their logo places */
+.is-fold .i-l, .is-fold .i-g { fill-opacity: 0; opacity: 0; transition: fill-opacity 0.12s linear calc((6 - var(--i)) * 0.035s), opacity 0.12s linear calc((6 - var(--i)) * 0.035s); }
+.is-fold .i-z { transform: none; transition: transform 0.45s cubic-bezier(0.6, 0, 0.25, 1) 0.1s; }
+.is-fold .i-zain { transform: translate(144.6px, 159.2px) scale(0.052); transition: transform 0.45s cubic-bezier(0.6, 0, 0.25, 1) 0.1s; }
+/* the paper circles pop in behind them in three jumps; the Z turns light as the dark one lands */
+.i-blob { transform-box: fill-box; transform-origin: center; transform: scale(0); }
+.i-blob--big { fill: var(--brown); }
+.i-blob--small { fill: var(--blue); }
+.is-pop .i-blob { transform: scale(1); transition: transform 0.3s steps(3, end); }
+.is-pop .i-blob--small { transition-delay: 0.08s; }
+.is-pop .i-z { fill: var(--on-brown); transition: fill 0s linear 0.2s; }
+.is-pop .i-zain { fill: #1d1b19; transition: fill 0s linear 0.28s; }
+/* then they spin like the header logo on hover (Z's counter-clockwise), and stop on one frame for the flight */
+.is-spin .i-blob { animation: n-spin 6s steps(24, end) infinite; }
+.is-spin .i-blob--big { animation-direction: reverse; }
+.is-fly .i-blob { animation-play-state: paused; }
 
 /* ---------- Case study ---------- */
 .a-case { padding-top: clamp(40px, calc(40px + 56 * (100vw - 390px) / 1050), 96px); }

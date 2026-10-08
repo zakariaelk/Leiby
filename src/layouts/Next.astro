@@ -8,8 +8,9 @@ import NextHeader from '../components/next/NextHeader.astro';
 
 // base: where the header links point (versions /next/a/ and /next/b/ keep visitors inside them);
 // variant: a class on <html> for that version's own styles.
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work } = Astro.props;
+// intro: the home page's opening animation (version A) may play; decided here, before the first paint
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-palette={palette} class={variant ? `v-${variant}` : undefined}>
@@ -29,6 +30,23 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       })();
     </script>
+    {intro && (
+      <script is:inline>
+        // Intro: once per visit (?intro replays it), never with reduced motion; released after 6s whatever happens
+        (function () {
+          try {
+            var force = /[?&]intro\b/.test(location.search);
+            if (!force && sessionStorage.getItem('ze-intro')) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            sessionStorage.setItem('ze-intro', '1');
+            if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+            var html = document.documentElement;
+            html.classList.add('is-intro');
+            setTimeout(function () { html.classList.remove('is-intro', 'is-intro-reveal'); }, 6000);
+          } catch (e) {}
+        })();
+      </script>
+    )}
   </head>
   <body>
     <NextHeader base={base} contact={variant ? '#contact' : undefined} work={work} logo={logo} />
