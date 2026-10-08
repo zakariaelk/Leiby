@@ -7,7 +7,7 @@
 //   'client'       the same, with the client above the title and only the role below it
 //   'screen-1..3'  one screen per project: a big title over a visual sized to fit the screen;
 //                  2 adds the client as a paper tab on the visual, 3 puts Role / For beside the title
-// button: a round paper button with an arrow under each featured project's facts (black, blue, black)
+// button: a round paper button with an arrow beside each featured project's facts (on by default)
 // highlight: "designer" and "builder" get the hand-drawn marker of zakariaelk.com, in the logo blue
 //   (or 'peach', the colour on zakariaelk.com)
 import { getImage } from 'astro:assets';
@@ -22,7 +22,7 @@ import '../../../styles/next-a.css';
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
 interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean }
-const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = false } = Astro.props;
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true } = Astro.props;
 
 const base = '/next/a/';
 const { featured, more } = await workList();
@@ -74,7 +74,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
                     {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
                   </dl>
                   {button && (
-                    <span class:list={['a-go', i % 2 ? 'a-go--blue' : 'a-go--black']} aria-hidden="true">
+                    <span class="a-go" aria-hidden="true">
                       <svg viewBox="0 0 100 100"><path class="a-go__shape" d={blob(41 + i * 6, 50, 50, 46)} /><path class="a-go__arrow" d="M30 50h40M56 36l14 14-14 14" /></svg>
                     </span>
                   )}
@@ -136,6 +136,16 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
 
 <script>
   import '../../../scripts/list-peek';
+  // the round button turns (15° every quarter second, clockwise) for 2.25s when its case is hovered
+  // or focused, then stops where it is
+  document.querySelectorAll<HTMLElement>('.a-feat__link').forEach((link) => {
+    const go = link.querySelector<HTMLElement>('.a-go');
+    if (!go) return;
+    let timer = 0;
+    const spin = () => { go.classList.add('is-spinning'); clearTimeout(timer); timer = window.setTimeout(() => go.classList.remove('is-spinning'), 2250); };
+    link.addEventListener('pointerenter', spin);
+    link.addEventListener('focus', spin);
+  });
   // highlight: the marker is drawn shortly after the page appears ("builder" follows "designer"),
   // after the intro when there is one
   const draw = () => window.setTimeout(() => document.querySelectorAll('.a-mark').forEach((m) => m.classList.add('is-drawn')), 300);

@@ -4,9 +4,9 @@
 const root = document.documentElement;
 const intro = document.querySelector<HTMLElement>('[data-intro]');
 
-// ms from the start: the circles pop in, spin 2s in the middle, fly (0.75s) to the header while
+// ms from the start: the circles pop in, spin 1.5s in the middle, fly (0.75s) to the header while
 // spinning, and stop 1.75s after the flight began
-const T = { spin: 300, fly: 2300, land: 3050, stop: 4050 };
+const T = { spin: 300, fly: 1800, land: 2550, stop: 3550 };
 
 if (intro && root.classList.contains('is-intro')) {
   const logo = intro.querySelector<SVGSVGElement>('svg')!;
