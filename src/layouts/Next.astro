@@ -10,7 +10,7 @@ import NextHeader from '../components/next/NextHeader.astro';
 // variant: a class on <html> for that version's own styles.
 // intro: the home page's opening animation (version A) may play; decided here, before the first paint
 // look: a colour or type variation of version A (data-look on <html>); 'dmsans' also loads DM Sans
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean | 'typed'; look?: 'orange' | 'dmsans' }
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; look?: 'orange' | 'dmsans' }
 const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false, look } = Astro.props;
 ---
 <!doctype html>
@@ -34,21 +34,18 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
       })();
     </script>
     {intro && (
-      <script is:inline data-typed={intro === 'typed' ? '1' : undefined}>
-        // Intro: once per visit (?intro replays it; the typed test plays every time), never with reduced
-        // motion; released after 6s (14s when the intro types the hero text) whatever happens
+      <script is:inline>
+        // Intro: once per visit (?intro replays it), never with reduced motion; released after 6s whatever happens
         (function () {
           try {
-            var typed = !!document.currentScript.dataset.typed;
-            var force = typed || /[?&]intro\b/.test(location.search);
+            var force = /[?&]intro\b/.test(location.search);
             if (!force && sessionStorage.getItem('ze-intro')) return;
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             sessionStorage.setItem('ze-intro', '1');
             if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             var html = document.documentElement;
             html.classList.add('is-intro');
-            if (typed) html.classList.add('is-typed');
-            setTimeout(function () { html.classList.remove('is-intro', 'is-intro-reveal', 'is-typed', 'is-nav-in'); }, typed ? 14000 : 6000);
+            setTimeout(function () { html.classList.remove('is-intro', 'is-intro-reveal'); }, 6000);
           } catch (e) {}
         })();
       </script>

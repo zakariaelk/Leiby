@@ -360,30 +360,3 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 @keyframes a-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .a-status__dot { animation: none; } }
 
-/* ---------- Typed intro (/tests/typed-intro/): after the logo lands, the nav fades in and the hero
-   sentence types out; letters wait invisibly in place, so nothing moves (scripts/intro-a.ts) ---------- */
-html.is-intro.is-nav-in .n-brand__logo { visibility: visible; }
-html.is-intro.is-nav-in :is(.n-nav, .n-burger, .a-hero) { opacity: 1; transform: none; transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
-html.is-intro.is-nav-in .a-hero { transition: none; }
-.t-ch:not(.is-on) { visibility: hidden; }
-.t-caret { display: inline-block; width: 0.06em; height: 0.82em; margin: 0 0.02em -0.08em; background: var(--ink); animation: t-caret 0.9s steps(2, start) infinite; }
-@keyframes t-caret { to { visibility: hidden; } }
-.t-showall {
-  position: fixed;
-  left: 50%;
-  bottom: 28px;
-  z-index: 60;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border: 0;
-  background: none;
-  font-family: var(--sans);
-  font-size: 15px;
-  color: var(--muted);
-  cursor: pointer;
-  transform: translateX(-50%);
-}
-.t-showall:hover, .t-showall:focus-visible { color: var(--ink); }
-.t-showall svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }

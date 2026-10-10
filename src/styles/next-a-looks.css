@@ -1,17 +1,21 @@
 /* Variations of version A, set by data-look on <html> (layouts/Next.astro), shown under /tests/.
    orange: the peach of zakariaelk.com for the logo's small circle, the intro highlight and the
-           buttons (with black arrows and text). Now version A's own colour (.v-a), so every
-           version A page has it; data-look='orange' is kept for /tests/orange-theme/.
+           buttons (with black arrows and text), on /tests/orange-theme/. Version A itself keeps
+           blue and black, with only the intro's highlighted words in orange.
    dmsans: the type of cathrine.co (measured on her home, case and about pages): DM Sans 500/600,
            her sizes, line heights and letter spacing per role, stepping at 640px and 768px as hers do. */
 
-/* ---------- orange (version A's colour) ---------- */
-:root.v-a { --blue: #ffdeb9; } /* the logo's small circle */
-:root.v-a.v-a { --marker: #ffdeb9; }
-:root[data-theme='dark'].v-a.v-a { --marker: #a5713f; } /* near-white words on it, ~4:1 */
-:root.v-a .a-go .a-go__shape { fill: #ffdeb9; }
-:root.v-a .a-go .a-go__arrow { stroke: #1d1b19; }
-:root.v-a .n-btn { --brown: #ffdeb9; --on-brown: #1d1b19; } /* "Visit …" on the case page */
+/* ---------- version A: the intro's highlighted words in orange (they read best on it) ---------- */
+.v-a .a-hero .a-mark { --marker: #ffdeb9; }
+:root[data-theme='dark'] .a-hero .a-mark { --marker: #a5713f; } /* near-white words on it, ~4:1 */
+
+/* ---------- orange (/tests/orange-theme/) ---------- */
+:root[data-look='orange'] { --blue: #ffdeb9; } /* the logo's small circle */
+:root[data-look='orange'].v-a { --marker: #ffdeb9; }
+:root[data-look='orange'][data-theme='dark'].v-a { --marker: #a5713f; }
+:root[data-look='orange'] .a-go .a-go__shape { fill: #ffdeb9; }
+:root[data-look='orange'] .a-go .a-go__arrow { stroke: #1d1b19; }
+:root[data-look='orange'] .n-btn { --brown: #ffdeb9; --on-brown: #1d1b19; } /* "Visit …" on the case page */
 
 /* ---------- dmsans: Cathrine's type ---------- */
 :root[data-look='dmsans'] {

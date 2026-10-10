@@ -23,7 +23,7 @@ import '../../../styles/next-a-looks.css';
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
 // base: where the links stay; look: a colour or type variation (/tests/orange-theme/, /tests/serif-option/)
-interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean | 'typed'; button?: boolean; base?: string; look?: 'orange' | 'dmsans' }
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean; base?: string; look?: 'orange' | 'dmsans' }
 const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true, base = '/next/a/', look } = Astro.props;
 
 const { featured, more } = await workList();
