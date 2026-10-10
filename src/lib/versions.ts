@@ -18,6 +18,17 @@ export const SHORT_TITLES: Record<string, string> = {
   '3e-international': "Bringing learning through play to a bilingual school's website.",
 };
 
+/** Output-focused one-liners for the Selected Work list in version A (proposed 2026-10-10, facts
+ *  from each case only); the CMS intros stay as they are for the other pages. */
+export const LIST_LINES: Record<string, string> = {
+  'conflict-and-humanitarian-data-centre': 'Improving how humanitarians analyse conflict data, across 22 countries.',
+  'daga-architects': "A website that carries an architecture firm's bold identity into its international expansion.",
+  triotech: 'A lighter, faster website bringing an immersive-attractions company to Chinese audiences.',
+  canlife: 'A modern, mobile-ready website helping a winter sports agency reach clients across China.',
+  'alwin-capital': "A corporate website that makes a life-science investor's portfolio easy to explore by sector.",
+  grace: "An experimental portfolio where web animation becomes part of an artist's storytelling.",
+};
+
 /** Where a project's case study lives from inside a version: the INSO case has its own page in
  *  each version, the others use the shared /next/work/ template. */
 export const caseHref = (base: string, id: string) => (id === CASE ? `${base}work/${id}/` : `/next/work/${id}/`);

@@ -9,7 +9,10 @@ const year = new Date().getFullYear();
   <div class="n-cut n-cut--top" style={cutMask(83)} aria-hidden="true"></div>
   <section class="a-contact a-wrap" id="contact" aria-labelledby="contact-title">
     <h2 class="a-contact__title" id="contact-title">Want to work together?</h2>
-    <p class="a-contact__text">{settings.availability}. Say hello at <a href={`mailto:${settings.email}`}>{settings.email}</a> or find me on <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>.</p>
+    <div class="a-contact__row">
+      <p class="a-contact__text">Say hello at <a href={`mailto:${settings.email}`}>{settings.email}</a> or find me on <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>.</p>
+      <p class="a-status"><span class="a-status__dot" aria-hidden="true"></span>Open to perm roles &amp; new projects</p>
+    </div>
   </section>
   <footer class="a-foot a-wrap">
     <p>© {year} {settings.name}</p>
