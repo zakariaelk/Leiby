@@ -184,13 +184,7 @@
 .a-band--gray { --band: var(--a-gray); padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
 :root[data-theme='dark'].v-a { --a-gray: #121212; }
 .a-selected { padding-top: 0; padding-bottom: 0; }
-.a-selected .n-label { margin: 0 0 clamp(20px, 2.2vw, 32px); }
-.a-selected .n-tag { padding: 0; background: none; clip-path: none; font-family: var(--sans); font-size: var(--nav); font-weight: 430; letter-spacing: -0.3px; color: #0c0c0c; }
-:root[data-theme='dark'] .a-selected .n-tag { color: var(--muted); }
-.a-selected .n-tag { color: var(--muted); }
-.a-selected .a-mark { --marker: #ffdeb9; }
-:root[data-theme='dark'] .a-selected .a-mark { --marker: #8a5a2b; color: #fcfcfc; }
-.v-a .n-list .n-label { filter: none; }
+.a-selected .n-label { margin: 0; } /* the white tab stands on the list's top rule */
 /* hovering a row: its cover appears just above the row as a small cut-out of paper, straight
    (scripts/list-peek.ts) */
 .a-peek {
@@ -380,8 +374,8 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 
 /* ---------- Contact: the invitation on the left, availability on the right ---------- */
 .a-contact__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; }
-.a-status { display: inline-flex; align-items: center; gap: 12px; margin: 0; font-family: var(--sans); font-size: var(--a-meta); line-height: 1.3; color: var(--ink); white-space: nowrap; }
-.a-status__dot { flex: none; width: 16px; height: 16px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 0 5px rgb(47 191 113 / 0.18); animation: a-blink 1.2s ease-in-out infinite; }
+.a-status { display: inline-flex; align-items: center; gap: 9px; margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.3; color: var(--muted); white-space: nowrap; }
+.a-status__dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 0 4px rgb(47 191 113 / 0.18); animation: a-blink 1.2s ease-in-out infinite; }
 @keyframes a-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .a-status__dot { animation: none; } }
 
@@ -394,22 +388,42 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
    type, larger; LinkedIn and the CV at the bottom ---------- */
 .n-nav__foot { display: none; }
 @media (max-width: 700px) {
-  .v-a .n-brand__logo { position: relative; z-index: 60; }
-  .v-a.is-menu-open .n-brand__logo { --brown: #e6e6e6; --on-brown: #141414; }
-  /* the panel stays dark in both themes, so the light logo and white links always read */
-  .v-a .n-nav { --menu-fg: #f4f4f4; font-family: var(--serif); font-variant-caps: normal; font-size: 40px; gap: 22px; background-color: #262626; color: var(--menu-fg); }
-  :root[data-theme='dark'].v-a .n-nav { background-color: #2b2b2b; }
-  :root.v-a .n-nav a, :root.v-a .n-nav .n-theme { font-weight: 400; letter-spacing: -0.4px; color: var(--menu-fg); }
-  .v-a.is-menu-open .n-burger__bar { background: #f4f4f4; }
+  /* the panel fills the screen from the bottom up, then the links appear; it takes the opposite
+     of the page's theme (dark panel on the light page, light panel on the dark page), and the
+     logo, close bars and theme switch stay on top in the matching colours */
+  .v-a { --menu-bg: #262626; --menu-fg: #f4f4f4; }
+  :root[data-theme='dark'].v-a { --menu-bg: #ededed; --menu-fg: #161616; }
+  .v-a .n-nav {
+    display: flex;
+    visibility: hidden;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 0.45s cubic-bezier(0.65, 0, 0.25, 1), visibility 0s linear 0.45s;
+    font-family: var(--serif);
+    font-variant-caps: normal;
+    font-size: 40px;
+    gap: 22px;
+    background-color: var(--menu-bg);
+    color: var(--menu-fg);
+  }
+  .v-a.is-menu-open .n-nav { visibility: visible; clip-path: inset(0 0 0 0); transition: clip-path 0.45s cubic-bezier(0.65, 0, 0.25, 1); }
+  .v-a .n-nav > * { opacity: 0; transform: translateY(12px); transition: opacity 0.2s ease, transform 0.2s ease; }
+  .v-a.is-menu-open .n-nav > * { opacity: 1; transform: none; transition: opacity 0.35s ease 0.35s, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s; }
+  :root.v-a .n-nav a { font-family: var(--serif); font-weight: 400; letter-spacing: -0.4px; color: var(--menu-fg); }
   .v-a .n-nav a::after { display: none; }
-  .v-a .n-nav > a[href$='.pdf'] { display: none; } /* the CV sits at the bottom here */
-  .v-a .n-nav__foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 36px; display: flex; justify-content: space-between; }
-  :root.v-a .n-nav__foot a { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; }
-  .v-a .n-nav__foot svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .v-a .n-nav > a[href$='.pdf'], .v-a .n-nav > .n-theme { display: none; } /* CV at the bottom, theme beside the menu button */
+  .v-a .n-brand__logo { position: relative; z-index: 60; }
+  .v-a.is-menu-open .n-brand__logo { --brown: #e6e6e6; --on-brown: #141414; transition: none; }
+  :root[data-theme='dark'].v-a.is-menu-open .n-brand__logo { --brown: #262626; --on-brown: #fff; }
+  .v-a.is-menu-open .n-burger__bar { background: var(--menu-fg); }
+  .v-a .n-theme--bar { display: inline-grid; position: relative; z-index: 60; width: 44px; height: 44px; margin-left: auto; margin-right: 4px; }
+  .v-a .n-theme--bar svg { width: 26px; height: 26px; stroke-width: 1.8; }
+  .v-a.is-menu-open .n-theme--bar { color: var(--menu-fg); }
+  .v-a .n-nav__foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
+  :root.v-a .n-nav__foot a { display: inline-flex; align-items: center; gap: 12px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; }
+  .v-a .n-nav__foot svg { width: 56px; height: 56px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 }
-
-/* ---------- Nav links in the serif, regular weight ---------- */
-:root.v-a .n-nav > a { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
+.n-theme--bar { display: none; }
+@media (prefers-reduced-motion: reduce) { .v-a .n-nav, .v-a .n-nav > * { transition: none !important; } }
 
 /* ---------- Contact on tablets and phones: title, sentence, then availability ---------- */
 @media (max-width: 1023px) {
@@ -417,5 +431,6 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
   .a-contact__head { display: contents; }
   .a-contact__title { order: 1; }
   .a-contact__text { order: 2; }
-  .a-status { order: 3; margin-top: 24px; white-space: normal; }
+  .a-contact { padding-bottom: 12px; }
+  .a-status { order: 3; margin-top: clamp(72px, 14vw, 120px); white-space: normal; }
 }
