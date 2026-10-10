@@ -10,7 +10,7 @@ import NextHeader from '../components/next/NextHeader.astro';
 // variant: a class on <html> for that version's own styles.
 // intro: the home page's opening animation (version A) may play; decided here, before the first paint
 // look: a colour or type variation of version A (data-look on <html>); 'dmsans' also loads DM Sans
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; look?: 'orange' | 'dmsans' }
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
 const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false, look } = Astro.props;
 ---
 <!doctype html>

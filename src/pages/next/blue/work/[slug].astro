@@ -1,0 +1,9 @@
+---
+// /next/blue/work/…: version A's case study with the blue colours
+import CaseA from '../../../../components/next/va/CaseA.astro';
+import { caseStaticPaths } from '../../../../lib/versions';
+
+export const getStaticPaths = caseStaticPaths;
+const { project, next } = Astro.props;
+---
+<CaseA project={project} next={next} base="/next/blue/" look="blue" />

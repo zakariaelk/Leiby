@@ -16,7 +16,7 @@ import { RESULTS, caseHref } from '../../../lib/versions';
 import '../../../styles/next-a.css';
 import '../../../styles/next-a-looks.css';
 
-interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' }
+interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
 const { project, next, base = '/next/a/', look } = Astro.props;
 const d = project.data;
 const { Content } = await render(project);

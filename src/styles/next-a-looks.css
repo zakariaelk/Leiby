@@ -17,6 +17,27 @@
 :root[data-look='orange'] .a-go .a-go__arrow { stroke: #1d1b19; }
 :root[data-look='orange'] .n-btn { --brown: #ffdeb9; --on-brown: #1d1b19; } /* "Visit …" on the case page */
 
+/* ---------- blue and brown (/next/blue/, /next/brown/): one colour for every highlight and link
+   marker (nav, intro, Other work, contact and footer links, text selection), a stronger one for
+   the logo's small circle ---------- */
+:root[data-look='blue'] { --look-hi: #c8e2ff; --blue: #accff6; }
+:root[data-look='brown'] { --look-hi: #f3dcc3; --blue: #e8ceb2; }
+:root[data-look='blue'][data-theme='dark'] { --look-hi: #4f7299; }
+:root[data-look='brown'][data-theme='dark'] { --look-hi: #8a5a2b; }
+:root:is([data-look='blue'], [data-look='brown']).v-a { --marker: var(--look-hi); }
+:root:is([data-look='blue'], [data-look='brown']) .a-hero .a-mark { --marker: var(--look-hi); }
+:root:is([data-look='blue'], [data-look='brown']) ::selection { background: var(--look-hi); color: var(--ink); }
+/* contact and footer links get the nav's marker on hover / focus */
+:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a { position: relative; isolation: isolate; text-decoration: none; }
+:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a::after {
+  content: ''; position: absolute; left: -0.15em; right: -0.15em; top: 46%; bottom: -0.04em; z-index: -1;
+  background-color: var(--look-hi);
+  -webkit-mask: url('/img/svg/marker-highlight.svg') 0 0 / 100% 100% no-repeat; mask: url('/img/svg/marker-highlight.svg') 0 0 / 100% 100% no-repeat;
+  transform: scaleX(0); transform-origin: left center; transition: transform 0.25s cubic-bezier(0.45, 0.05, 0.3, 1);
+}
+:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+:root:is([data-look='blue'], [data-look='brown']) .a-contact__text a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+
 /* ---------- dmsans: Cathrine's type ---------- */
 :root[data-look='dmsans'] {
   --serif: 'DM Sans', system-ui, sans-serif;
