@@ -18,13 +18,14 @@ import IntroA from './IntroA.astro';
 import { blob, cutMask, tabCut, unevenRect } from '../../../lib/papercut';
 import { workList, caseHref, EXPERTISE, SHORT_TITLES } from '../../../lib/versions';
 import '../../../styles/next-a.css';
+import '../../../styles/next-a-looks.css';
 
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
-interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean }
-const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true } = Astro.props;
+// base: where the links stay; look: a colour or type variation (/tests/orange-theme/, /tests/serif-option/)
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean; base?: string; look?: 'orange' | 'dmsans' }
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true, base = '/next/a/', look } = Astro.props;
 
-const base = '/next/a/';
 const { featured, more } = await workList();
 const screen = layout.startsWith('screen');
 const titleOf = (p: (typeof featured)[number]['p']) => SHORT_TITLES[p.id] ?? p.data.statement ?? p.data.intro;
@@ -34,7 +35,7 @@ const peeks = await Promise.all(more.map(async (p) => (await getImage({ src: p.d
 const sentence = "I'm Zakaria El Khachia, a product designer and builder. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.";
 const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : [];
 ---
-<Next base={base} variant="a" logo work="#work" intro={intro} title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
+<Next base={base} variant="a" logo work="#work" intro={intro} look={look} title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
   <section class="a-hero a-wrap">
     <h1 class="a-statement" aria-label={sentence}>I'm Zakaria El Khachi<span class="a-say-a">a<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span>, a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span>. I spent the last five years at INSO making safety information clearer for humanitarian workers in conflict zones.</h1>
   </section>

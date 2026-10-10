@@ -1,0 +1,60 @@
+/* Variations of version A, set by data-look on <html> (layouts/Next.astro), shown under /tests/.
+   orange: the peach of zakariaelk.com for the logo's small circle, the intro highlight and the
+           buttons (with black arrows and text).
+   dmsans: the type of cathrine.co (measured on her home, case and about pages): DM Sans 500/600,
+           her sizes, line heights and letter spacing per role, stepping at 640px and 768px as hers do. */
+
+/* ---------- orange ---------- */
+:root[data-look='orange'] { --blue: #ffdeb9; } /* the logo's small circle */
+:root[data-look='orange'].v-a { --marker: #ffdeb9; }
+:root[data-look='orange'][data-theme='dark'].v-a { --marker: #a5713f; } /* near-white words on it, ~4:1 */
+:root[data-look='orange'] .a-go .a-go__shape { fill: #ffdeb9; }
+:root[data-look='orange'] .a-go .a-go__arrow { stroke: #1d1b19; }
+:root[data-look='orange'] .n-btn { --brown: #ffdeb9; --on-brown: #1d1b19; } /* "Visit …" on the case page */
+
+/* ---------- dmsans: Cathrine's type ---------- */
+:root[data-look='dmsans'] {
+  --serif: 'DM Sans', system-ui, sans-serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  /* her roles, phone values first */
+  --c-h1: 36px; --c-h1-lh: 46.8px;         /* home H1: 36 → 40 (640px) → 60/78 (768px) */
+  --c-h1a: 42px; --c-h1a-lh: 50.4px;       /* about H1: 42 → 80/96 */
+  --c-lead: 20px; --c-lead-lh: 35px;       /* lead text: 20/35 → 24/42 */
+  --c-h2: 30px; --c-h2-lh: 36px;           /* H2: 30/36 → 32/38.4 */
+  --c-list: 18px;                          /* lists: 18/28 → 20/28 (640px) */
+}
+@media (min-width: 640px) { :root[data-look='dmsans'] { --c-h1: 40px; --c-h1-lh: 52px; --c-list: 20px; } }
+@media (min-width: 768px) {
+  :root[data-look='dmsans'] { --c-h1: 60px; --c-h1-lh: 78px; --c-h1a: 80px; --c-h1a-lh: 96px; --c-lead: 24px; --c-lead-lh: 42px; --c-h2: 32px; --c-h2-lh: 38.4px; }
+}
+:root[data-look='dmsans']:not([data-theme='dark']) { --ink: #262626; --muted: #525252; }
+:root[data-look='dmsans'] body { font-weight: 500; }
+
+/* the roles */
+[data-look='dmsans'] :is(.a-statement) { font-size: var(--c-h1); line-height: var(--c-h1-lh); font-weight: 600; letter-spacing: -0.02em; }
+[data-look='dmsans'] .a-statement--about { font-size: var(--c-h1a); line-height: var(--c-h1a-lh); letter-spacing: -0.025em; }
+[data-look='dmsans'] :is(.a-feat__title, .a-case__title, .a-contact__title, .a-next__title, h2.a-label, .a-story .is-lead, .a-story h2 + .is-lead, .a-screen__title) {
+  font-size: var(--c-h2); line-height: var(--c-h2-lh); font-weight: 600; letter-spacing: -0.025em; color: var(--ink);
+}
+[data-look='dmsans'] :is(h3.a-label, .n-list__name, .a-story h2) { font-size: 24px; line-height: 28.8px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
+[data-look='dmsans'] :is(.a-based) { font-size: var(--c-lead); line-height: var(--c-lead-lh); font-weight: 500; letter-spacing: -0.015em; color: var(--muted); }
+[data-look='dmsans'] :is(.a-about p, .a-contact__text, .a-case__org, .a-case__summary, .a-glance__grid p, .a-story, .a-next__org, .a-intro__text p, .a-timeline__note, .a-away p, .n-list__desc, .n-list__year, .a-feat__client) {
+  font-size: 18px; line-height: 32.4px; font-weight: 500; letter-spacing: normal; color: var(--muted);
+}
+[data-look='dmsans'] :is(.a-list, .a-timeline__role) { font-size: var(--c-list); line-height: 28px; font-weight: 500; letter-spacing: normal; color: var(--ink); }
+[data-look='dmsans'] .a-timeline__role { font-weight: 600; }
+[data-look='dmsans'] .a-list li + li { margin-top: 12px; }
+[data-look='dmsans'] :is(.a-meta dt, .a-facts dt) { font-size: 18px; line-height: 28px; font-weight: 600; letter-spacing: normal; color: var(--ink); }
+[data-look='dmsans'] :is(.a-meta dd, .a-facts dd, .a-stats span, .a-timeline__years, .a-timeline__place) { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: normal; }
+[data-look='dmsans'] .a-stats strong { font-size: var(--c-h1); line-height: var(--c-h1-lh); font-weight: 600; letter-spacing: -0.02em; }
+[data-look='dmsans'] :is(.a-stats small, .a-story .is-caption, .a-story figcaption) { font-size: 16px; line-height: 28px; font-weight: 500; }
+[data-look='dmsans'] .a-story blockquote { font-size: var(--c-lead); line-height: var(--c-lead-lh); font-weight: 500; letter-spacing: -0.015em; color: var(--ink); }
+[data-look='dmsans'] .a-story strong { font-weight: 600; }
+/* links and labels in the nav's role: 20/28, 500 */
+[data-look='dmsans'] .n-nav { font-size: 20px; line-height: 28px; }
+[data-look='dmsans'] .n-nav a, [data-look='dmsans'] .a-selected .n-tag { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: normal; color: var(--ink); }
+[data-look='dmsans'] .a-foot { font-size: 20px; line-height: 28px; font-weight: 500; }
+[data-look='dmsans'] :is(.a-back, .n-tag) { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: normal; }
+[data-look='dmsans'] .n-btn { font-size: 18px; line-height: 28px; font-weight: 500; }
+/* the highlight keeps the heading's weight */
+[data-look='dmsans'] .a-mark.is-drawn { font-weight: inherit; }

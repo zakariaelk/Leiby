@@ -22,6 +22,14 @@ export const SHORT_TITLES: Record<string, string> = {
  *  each version, the others use the shared /next/work/ template. */
 export const caseHref = (base: string, id: string) => (id === CASE ? `${base}work/${id}/` : `/next/work/${id}/`);
 
+/** The case study pages of a version: the INSO case, with NGOSafety as the next project. */
+export async function caseStaticPaths() {
+  const projects = await getProjects();
+  const project = projects.find((p) => p.id === CASE)!;
+  const next = projects.find((p) => p.id === 'ngosafety-website-redesign')!;
+  return [{ params: { slug: CASE }, props: { project, next } }];
+}
+
 export async function workList() {
   const projects = await getProjects();
   const featured = await Promise.all(FEATURED.map(async (id) => {

@@ -1,9 +1,9 @@
 ---
-// Version A case study: see components/next/va/CaseA.astro
+// /tests/orange-theme/work/…: version A's case study with the orange look
 import CaseA from '../../../../components/next/va/CaseA.astro';
 import { caseStaticPaths } from '../../../../lib/versions';
 
 export const getStaticPaths = caseStaticPaths;
 const { project, next } = Astro.props;
 ---
-<CaseA project={project} next={next} />
+<CaseA project={project} next={next} base="/tests/orange-theme/" look="orange" />

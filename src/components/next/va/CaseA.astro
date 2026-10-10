@@ -1,0 +1,81 @@
+---
+// Version A case study (after hansonwu.com/article-redesign), ordered for a quick read by a design
+// lead or recruiter: what it is and the title, the facts in one row, the cover, then "at a glance"
+// (problem, what I did, outcome) with the three headline results, and only then the full story.
+// The story's wording is unchanged; case-enhance.ts gives its parts their place in the hierarchy.
+// Used by /next/a/work/… and the /tests variations: base = where the links stay, look = their
+// colour or type variation.
+import { render } from 'astro:content';
+import Next from '../../../layouts/Next.astro';
+import FramedMedia from '../FramedMedia.astro';
+import NextButton from '../NextButton.astro';
+import ContactA from './ContactA.astro';
+import { cutMask, tabCut } from '../../../lib/papercut';
+import type { CollectionEntry } from 'astro:content';
+import { RESULTS, caseHref } from '../../../lib/versions';
+import '../../../styles/next-a.css';
+import '../../../styles/next-a-looks.css';
+
+interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' }
+const { project, next, base = '/next/a/', look } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const facts = [
+  { label: 'Role', value: d.role },
+  { label: 'Team', value: d.team },
+  { label: 'Timeline', value: d.duration },
+  { label: 'Project type', value: d.projectType },
+].filter((f) => f.value);
+const glance = [
+  { label: 'The problem', text: d.problem },
+  { label: 'What I did', text: d.did },
+  { label: 'The outcome', text: d.result },
+].filter((g) => g.text);
+const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+---
+<Next base={base} variant="a" logo look={look} title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
+  <header class="a-case a-wrap">
+    <a class="a-back" href={`${base}#work`}>All work</a>
+    <p class="a-case__org">{d.org ?? d.client}{d.projectName && <span> · {d.projectName}</span>}</p>
+    <h1 class="a-case__title">{d.headline}</h1>
+    {d.summary && <p class="a-case__summary">{d.summary}</p>}
+    <dl class="a-facts">
+      {facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+    </dl>
+    {d.link && <div class="a-case__link"><NextButton href={d.link} label={`Visit ${linkLabel}`} external /></div>}
+  </header>
+
+  <div class="a-wrap a-case__cover">
+    <FramedMedia image={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} seed={11} eager />
+  </div>
+
+  <div class="n-band n-band--light a-sheet">
+    <div class="n-cut n-cut--top" style={cutMask(29)} aria-hidden="true"></div>
+    <section class="a-glance a-wrap" aria-labelledby="glance-title">
+      <h2 class="n-label n-featured__label n-wrap" id="glance-title"><span class="n-tag" style={`--tab:${tabCut(5)}`}>At a Glance</span></h2>
+      <div class="a-glance__grid">
+        {glance.map((g) => <div><h3 class="a-label">{g.label}</h3><p>{g.text}</p></div>)}
+      </div>
+      <ul class="a-stats" aria-label="Headline results">
+        {RESULTS.map((r) => <li><strong>{r.value}</strong><span>{r.label}</span><small>{r.note}</small></li>)}
+      </ul>
+    </section>
+
+    <div class="a-story a-wrap" data-story><Content /></div>
+
+    <nav class="a-next a-wrap" aria-label="Next project">
+      <p class="a-label">Next project</p>
+      <a href={caseHref(base, next.id)}>
+        <span class="a-next__org">{next.data.org ?? next.data.client}</span>
+        <span class="a-next__title">{next.data.statement ?? next.data.intro}</span>
+      </a>
+    </nav>
+    <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
+  </div>
+
+  <ContactA />
+</Next>
+
+<script>
+  import '../../../scripts/case-enhance';
+</script>

@@ -1,0 +1,76 @@
+---
+// Version A About page (after hansonwu.com): a statement, a photo spot next to a short story,
+// then experience, education and what I bring, each with room to breathe. Used by /next/a/about/
+// and the /tests variations: base = where the links stay, look = their colour or type variation.
+import Next from '../../../layouts/Next.astro';
+import PhotoSlot from '../PhotoSlot.astro';
+import ContactA from './ContactA.astro';
+import { cutMask, tabCut } from '../../../lib/papercut';
+import { EXPERIENCE, EDUCATION, EXPERTISE, LANGUAGES, TOOLS, settings } from '../../../lib/versions';
+import '../../../styles/next-a.css';
+import '../../../styles/next-a-looks.css';
+
+interface Props { base?: string; look?: 'orange' | 'dmsans' }
+const { base = '/next/a/', look } = Astro.props;
+
+---
+<Next base={base} variant="a" logo look={look} title="About · Zakaria El Khachia" description="Product designer and creative builder: twelve years across Casablanca, Beijing and The Hague.">
+  <section class="a-hero a-wrap">
+    <h1 class="a-statement a-statement--about">Hi, I'm Zakaria. I design and build web and mobile products, and I like them calm, clear and useful, especially when the stakes are high.</h1>
+    <p class="a-based">Based near Rotterdam, the Netherlands · {settings.availability}</p>
+  </section>
+
+  <div class="n-band n-band--light a-sheet">
+    <div class="n-cut n-cut--top" style={cutMask(17)} aria-hidden="true"></div>
+    <h2 class="n-label n-featured__label n-wrap" id="story-title"><span class="n-tag" style={`--tab:${tabCut(9)}`}>About Me</span></h2>
+
+    <section class="a-intro a-wrap" aria-labelledby="story-title">
+      <PhotoSlot class="a-intro__photo" />
+      <div class="a-intro__text">
+        <p>My path runs through three cities. I studied computer science in Casablanca, then moved to China to learn Mandarin at Nankai University and stayed in Beijing for eight years, where I grew from web designer and developer into leading a web team. Since 2021 I've lived in the Netherlands, where I spent five years at INSO designing tools that help humanitarian workers stay safe.</p>
+        <p>Because I started out writing code, I still build a lot of what I design. That means fewer surprises between the mockup and the live product, and decisions made with real constraints in mind.</p>
+        <p>The work I'm proudest of happened when I stopped acting like a supplier and became part of the team, starting with users and data rather than opinions, keeping the loops short and shipping early so we could learn.</p>
+      </div>
+    </section>
+
+    <section class="a-block a-wrap" aria-labelledby="exp-title">
+      <h2 class="a-label" id="exp-title">Experience</h2>
+      <ol class="a-timeline">
+        {EXPERIENCE.map((e) => (
+          <li>
+            <span class="a-timeline__years">{e.years}</span>
+            <div><p class="a-timeline__role">{e.role}, {e.org}</p>{e.note && <p class="a-timeline__note">{e.note}</p>}</div>
+            <span class="a-timeline__place">{e.place}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="a-block a-wrap" aria-labelledby="edu-title">
+      <h2 class="a-label" id="edu-title">Education</h2>
+      <ol class="a-timeline">
+        {EDUCATION.map((e) => (
+          <li>
+            <span class="a-timeline__years">{e.years}</span>
+            <div><p class="a-timeline__role">{e.role}, {e.org}</p></div>
+            <span class="a-timeline__place">{e.place}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="a-block a-cols a-wrap" aria-label="Expertise, languages and tools">
+      <div><h2 class="a-label">Expertise</h2><ul class="a-list">{EXPERTISE.map((e) => <li>{e}</li>)}</ul></div>
+      <div><h2 class="a-label">Languages</h2><ul class="a-list">{LANGUAGES.map((e) => <li>{e}</li>)}</ul></div>
+      <div><h2 class="a-label">Tools</h2><ul class="a-list">{TOOLS.map((e) => <li>{e}</li>)}</ul></div>
+    </section>
+
+    <section class="a-block a-wrap a-away" aria-labelledby="away-title">
+      <h2 class="a-label" id="away-title">Away from the screen</h2>
+      <p>Music is never far away. It's what's playing while I sketch, and often what I'm listening to when an idea finally clicks.</p>
+    </section>
+    <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
+  </div>
+
+  <ContactA />
+</Next>

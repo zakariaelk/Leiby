@@ -9,11 +9,12 @@ import NextHeader from '../components/next/NextHeader.astro';
 // base: where the header links point (versions /next/a/ and /next/b/ keep visitors inside them);
 // variant: a class on <html> for that version's own styles.
 // intro: the home page's opening animation (version A) may play; decided here, before the first paint
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false } = Astro.props;
+// look: a colour or type variation of version A (data-look on <html>); 'dmsans' also loads DM Sans
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; look?: 'orange' | 'dmsans' }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false, look } = Astro.props;
 ---
 <!doctype html>
-<html lang="en" data-palette={palette} class={variant ? `v-${variant}` : undefined}>
+<html lang="en" data-palette={palette} data-look={look} class={variant ? `v-${variant}` : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +22,8 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/img/favicon/z-logo.png" />
+    {look === 'dmsans' && <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />}
+    {look === 'dmsans' && <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500..600&display=swap" />}
     <!-- Theme before first paint: saved choice, else the system setting -->
     <script is:inline>
       (function () {
