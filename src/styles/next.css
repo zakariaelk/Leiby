@@ -180,9 +180,10 @@ img, video { display: block; max-width: 100%; height: auto; }
 }
 /* the sun and moon drawn at the nav text's weight (Hanken 430: a 1.85px stem at 21px) */
 .n-theme svg { stroke-width: 2.2; }
-.n-theme .moon { display: none; }
-:root[data-theme='dark'] .n-theme .sun { display: none; }
-:root[data-theme='dark'] .n-theme .moon { display: block; }
+/* the icon shows the mode you switch to: a moon on the light page, a sun on the dark one */
+.n-theme .sun { display: none; }
+:root[data-theme='dark'] .n-theme .moon { display: none; }
+:root[data-theme='dark'] .n-theme .sun { display: block; }
 
 .n-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 36px); font-family: var(--sans); font-size: var(--nav); } /* the name's size, in the sans */
 .n-burger { display: none; }
