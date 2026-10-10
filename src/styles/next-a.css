@@ -381,7 +381,7 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 /* ---------- Contact: the invitation on the left, availability on the right ---------- */
 .a-contact__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; }
 .a-status { display: inline-flex; align-items: center; gap: 12px; margin: 0; font-family: var(--sans); font-size: var(--a-meta); line-height: 1.3; color: var(--ink); white-space: nowrap; }
-.a-status__dot { flex: none; width: 16px; height: 16px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 0 5px rgb(47 191 113 / 0.18); animation: a-blink 1.6s ease-in-out infinite; }
+.a-status__dot { flex: none; width: 16px; height: 16px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 0 5px rgb(47 191 113 / 0.18); animation: a-blink 1.2s ease-in-out infinite; }
 @keyframes a-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .a-status__dot { animation: none; } }
 
@@ -396,10 +396,26 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 @media (max-width: 700px) {
   .v-a .n-brand__logo { position: relative; z-index: 60; }
   .v-a.is-menu-open .n-brand__logo { --brown: #e6e6e6; --on-brown: #141414; }
-  .v-a .n-nav { font-family: var(--sans); font-variant-caps: normal; font-size: 40px; gap: 22px; }
-  .v-a .n-nav a { font-weight: 430; letter-spacing: -0.6px; color: var(--on-brown); }
+  /* the panel stays dark in both themes, so the light logo and white links always read */
+  .v-a .n-nav { --menu-fg: #f4f4f4; font-family: var(--serif); font-variant-caps: normal; font-size: 40px; gap: 22px; background-color: #262626; color: var(--menu-fg); }
+  :root[data-theme='dark'].v-a .n-nav { background-color: #2b2b2b; }
+  :root.v-a .n-nav a, :root.v-a .n-nav .n-theme { font-weight: 400; letter-spacing: -0.4px; color: var(--menu-fg); }
+  .v-a.is-menu-open .n-burger__bar { background: #f4f4f4; }
   .v-a .n-nav a::after { display: none; }
   .v-a .n-nav > a[href$='.pdf'] { display: none; } /* the CV sits at the bottom here */
   .v-a .n-nav__foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 36px; display: flex; justify-content: space-between; }
-  .v-a .n-nav__foot a { font-size: 18px; letter-spacing: -0.2px; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+  :root.v-a .n-nav__foot a { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; }
+  .v-a .n-nav__foot svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+}
+
+/* ---------- Nav links in the serif, regular weight ---------- */
+:root.v-a .n-nav > a { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
+
+/* ---------- Contact on tablets and phones: title, sentence, then availability ---------- */
+@media (max-width: 1023px) {
+  .a-contact { display: flex; flex-direction: column; }
+  .a-contact__head { display: contents; }
+  .a-contact__title { order: 1; }
+  .a-contact__text { order: 2; }
+  .a-status { order: 3; margin-top: 24px; white-space: normal; }
 }
