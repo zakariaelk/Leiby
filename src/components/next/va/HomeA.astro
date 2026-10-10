@@ -22,9 +22,10 @@ import '../../../styles/next-a-looks.css';
 
 type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
-// base: where the links stay; look: a colour or type variation (/tests/orange-theme/, /tests/serif-option/)
-interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
-const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true, base = '/next/a/', look } = Astro.props;
+// base: where the links stay; caseBase: where the INSO case lives (defaults to base); look: a colour or type variation (/tests/orange-theme/, /tests/serif-option/)
+interface Props { featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean; base?: string; caseBase?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
+const { featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true, base = '/next/a/', caseBase, look } = Astro.props;
+const caseRoot = caseBase ?? base;
 
 const { featured, more } = await workList();
 const screen = layout.startsWith('screen');
@@ -48,7 +49,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
         <div class="a-wrap">
           {screen ? (
             <article class="a-screen">
-              <a class="a-screen__link" href={caseHref(base, p.id)}>
+              <a class="a-screen__link" href={caseHref(caseRoot, p.id)}>
                 <div class:list={['a-screen__head', layout === 'screen-3' && 'a-screen__head--meta']}>
                   <h3 class="a-screen__title">{titleOf(p)}</h3>
                   {layout === 'screen-3' && (
@@ -66,7 +67,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
             </article>
           ) : (
             <article class:list={['a-feat', i === 0 && 'a-feat--lead']}>
-              <a class="a-feat__link" href={caseHref(base, p.id)}>
+              <a class="a-feat__link" href={caseHref(caseRoot, p.id)}>
                 {layout === 'client' && <p class="a-feat__client">{orgOf(p)}</p>}
                 <h3 class="a-feat__title">{titleOf(p)}</h3>
                 <div class="a-feat__meta">
@@ -98,7 +99,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
       <ul>
         {more.map((p, i) => (
           <li>
-            <a href={caseHref(base, p.id)} data-peek={i}>
+            <a href={caseHref(caseRoot, p.id)} data-peek={i}>
               <span class="n-list__name">{p.data.client}</span>
               <span class="n-list__desc">{LIST_LINES[p.id] ?? p.data.intro}</span>
               <span class="n-list__year">{p.data.year}</span>

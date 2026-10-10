@@ -13,7 +13,6 @@ export default defineConfig({
   adapter: netlify({ imageCDN: false, devFeatures: { images: false, edgeFunctions: false, environmentVariables: false } }),
   // Pages from the earlier agency version.
   redirects: {
-    '/about': '/yellow/about/',
     '/projects': '/',
     '/services': '/',
     '/blog': '/',

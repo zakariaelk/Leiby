@@ -1,5 +1,6 @@
 ---
-// zakariaelk.com home: same hero as the WordPress site, plus a language link
-import ClassicHome from '../components/classic/ClassicHome.astro';
+// Site home: version A in the blue colours (also at /next/blue/). The INSO case lives at
+// /next/blue/work/… because /work/ still serves the older case pages; the WordPress-port home is at /classic/.
+import HomeA from '../components/next/va/HomeA.astro';
 ---
-<ClassicHome hero="classic" />
+<HomeA base="/" caseBase="/next/blue/" look="blue" intro />
