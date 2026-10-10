@@ -7,6 +7,9 @@ import { posterFor } from './media';
 
 export { settings };
 
+/** The CV (PDF to be added by Zakaria at public/cv/Zakaria-El-Khachia-CV.pdf). */
+export const CV = '/cv/Zakaria-El-Khachia-CV.pdf';
+
 export const CASE = 'mitigating-risk-with-location-based-alerts'; // the case built in both versions
 export const FEATURED = [CASE, 'ngosafety-website-redesign', '3e-international'];
 

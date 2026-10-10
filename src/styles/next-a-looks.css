@@ -7,7 +7,7 @@
 
 /* ---------- version A: the intro's highlighted words in orange (they read best on it) ---------- */
 .v-a .a-hero .a-mark { --marker: #ffdeb9; }
-:root[data-theme='dark'] .a-hero .a-mark { --marker: #a5713f; } /* near-white words on it, ~4:1 */
+:root[data-theme='dark'] .a-hero .a-mark { --marker: #8a5a2b; color: #fcfcfc; } /* the peach's hue, darker: near-white words on it ~5.5:1 */
 
 /* ---------- orange (/tests/orange-theme/) ---------- */
 :root[data-look='orange'] { --blue: #ffdeb9; } /* the logo's small circle */
