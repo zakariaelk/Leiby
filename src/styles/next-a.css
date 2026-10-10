@@ -428,3 +428,38 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 .a-contact__row { display: flex; align-items: center; justify-content: space-between; gap: 16px 40px; margin-top: 24px; }
 .a-contact__row .a-contact__text { margin: 0; }
 @media (max-width: 1023px) { .a-status { display: none; } }
+
+/* ---------- Case study top (design lead's reading order): title + subtitle, wide hero, one compact
+   meta row, then At a glance (problem / what I did / outcome, three numbers, constraints) ---------- */
+.a-case__hero { margin-top: clamp(40px, 5vw, 72px); }
+.a-case__hero .v-frame { max-width: min(100%, 1200px, calc(66svh * 1.707)); } /* the whole visual, never taller than ~2/3 of the screen */
+.a-case__hero .v-frame img, .a-case__hero .v-frame video { aspect-ratio: auto; border-radius: 3px; }
+.a-meta-row { display: grid; grid-template-columns: 1fr 1.6fr 1.4fr 1fr; gap: 20px clamp(24px, 3vw, 48px); margin-top: clamp(32px, 4vw, 48px); margin-bottom: clamp(56px, 6vw, 88px); }
+.a-meta-row dt { font-family: var(--sans); font-size: 15px; line-height: 1.4; color: var(--muted); }
+.a-meta-row dd { margin: 4px 0 0; font-family: var(--sans); font-size: 17px; line-height: 1.45; }
+.a-meta-row a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+.a-glance2 { padding-top: var(--a-pad-top); }
+.a-glance2__panel { max-width: 1040px; padding: clamp(24px, 4vw, 56px); border-radius: 4px; background-color: var(--a-gray); background-image: var(--paper); }
+.a-glance2__title { margin: 0 0 28px; font-family: var(--sans); font-weight: 500; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.a-glance2__rows { display: grid; gap: 18px; margin: 0; }
+.a-glance2__rows > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 4px 24px; }
+.a-glance2__rows dt, .a-glance2__dt { margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--a-meta); line-height: 1.5; }
+.a-glance2__rows dd { margin: 0; font-family: var(--serif); font-weight: 470; font-size: var(--a-meta); line-height: 1.5; }
+.a-glance2__numbers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 36px 0; padding: 0; list-style: none; }
+.a-glance2__numbers li { display: grid; gap: 6px; align-content: start; padding: 20px 22px; border-radius: 3px; background: var(--surface); }
+.a-glance2__numbers strong { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, calc(36px + 16 * (100vw - 390px) / 1050), 52px); line-height: 1; letter-spacing: -0.02em; }
+.a-glance2__numbers span { font-family: var(--sans); font-size: 16px; line-height: 1.35; }
+.a-glance2__numbers small { font-family: var(--sans); font-size: 14px; line-height: 1.35; color: var(--muted); }
+.a-glance2__constraints ul { margin: 0; padding-left: 1.1em; font-family: var(--serif); font-weight: 470; font-size: var(--a-meta); line-height: 1.5; }
+.a-glance2__constraints li + li { margin-top: 6px; }
+.a-scope { max-width: 1440px; padding-top: clamp(48px, 5vw, 72px); }
+.a-scope__title { margin: 0 0 16px; font-family: var(--sans); font-weight: 500; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.a-scope ul { max-width: 860px; margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--a-meta); line-height: 1.55; }
+.a-scope li + li { margin-top: 6px; }
+.a-scope strong { font-weight: 500; }
+.a-sheet .a-story { padding-top: clamp(48px, 5vw, 72px); }
+@media (max-width: 899px) {
+  .a-meta-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .a-glance2__rows > div { grid-template-columns: minmax(0, 1fr); }
+  .a-glance2__numbers { grid-template-columns: minmax(0, 1fr); }
+}

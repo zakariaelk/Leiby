@@ -8,57 +8,61 @@
 import { render } from 'astro:content';
 import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
-import NextButton from '../NextButton.astro';
 import ContactA from './ContactA.astro';
-import { cutMask, tabCut } from '../../../lib/papercut';
+import { cutMask } from '../../../lib/papercut';
 import type { CollectionEntry } from 'astro:content';
-import { RESULTS, caseHref } from '../../../lib/versions';
+import { caseHref } from '../../../lib/versions';
+import { caseTop, type CaseContent } from '../../../lib/case-inso';
 import '../../../styles/next-a.css';
 import '../../../styles/next-a-looks.css';
 
-interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
-const { project, next, base = '/next/a/', look } = Astro.props;
+// content: which text the top section uses (lib/case-inso.ts): 'mix' (the page's current text, v3 for gaps) or 'v3'
+interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; content?: CaseContent; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
+const { project, next, base = '/next/a/', content = 'mix', look } = Astro.props;
 const d = project.data;
 const { Content } = await render(project);
-const facts = [
-  { label: 'Role', value: d.role },
-  { label: 'Team', value: d.team },
-  { label: 'Timeline', value: d.duration },
-  { label: 'Project type', value: d.projectType },
-].filter((f) => f.value);
-const glance = [
-  { label: 'The problem', text: d.problem },
-  { label: 'What I did', text: d.did },
-  { label: 'The outcome', text: d.result },
-].filter((g) => g.text);
+const top = caseTop(content, d);
 const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
 ---
 <Next base={base} variant="a" logo look={look} title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
+  <!-- Top, in a design lead's reading order: what it is, the hero, the facts, then the whole story in
+       twenty seconds (At a glance: problem, what I did, outcome, key numbers, constraints) -->
   <header class="a-case a-wrap">
     <a class="a-back" href={`${base}#work`}>All work</a>
     <p class="a-case__org">{d.org ?? d.client}{d.projectName && <span> · {d.projectName}</span>}</p>
-    <h1 class="a-case__title">{d.headline}</h1>
-    {d.summary && <p class="a-case__summary">{d.summary}</p>}
-    <dl class="a-facts">
-      {facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
-    </dl>
-    {d.link && <div class="a-case__link"><NextButton href={d.link} label={`Visit ${linkLabel}`} external /></div>}
+    <h1 class="a-case__title">{top.title}</h1>
+    {top.subtitle && <p class="a-case__summary">{top.subtitle}</p>}
   </header>
 
-  <div class="a-wrap a-case__cover">
-    <FramedMedia image={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} seed={11} eager />
+  <div class="a-wrap a-case__hero">
+    <FramedMedia frame={false} image={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} eager />
   </div>
+
+  <dl class="a-wrap a-meta-row">
+    {top.meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
+    {d.link && <div><dt>Take a look</dt><dd><a href={d.link} target="_blank" rel="noopener">{linkLabel}<span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span></a></dd></div>}
+  </dl>
 
   <div class="n-band n-band--light a-sheet">
     <div class="n-cut n-cut--top" style={cutMask(29)} aria-hidden="true"></div>
-    <section class="a-glance a-wrap" aria-labelledby="glance-title">
-      <h2 class="n-label n-featured__label n-wrap" id="glance-title"><span class="n-tag" style={`--tab:${tabCut(5)}`}>At a Glance</span></h2>
-      <div class="a-glance__grid">
-        {glance.map((g) => <div><h3 class="a-label">{g.label}</h3><p>{g.text}</p></div>)}
+    <section class="a-wrap a-glance2" aria-labelledby="glance-title">
+      <div class="a-glance2__panel">
+        <h2 class="a-glance2__title" id="glance-title">At a glance</h2>
+        <dl class="a-glance2__rows">
+          {top.glance.map((g) => <div><dt>{g.label}</dt><dd>{g.text}</dd></div>)}
+        </dl>
+        <ul class="a-glance2__numbers" aria-label="Key numbers">
+          {top.numbers.map((n) => <li><strong>{n.value}</strong><span>{n.label}</span><small>{n.note}</small></li>)}
+        </ul>
+        <div class="a-glance2__rows a-glance2__constraints">
+          <div><p class="a-glance2__dt">Constraints</p><ul>{top.constraints.map((c) => <li>{c}</li>)}</ul></div>
+        </div>
       </div>
-      <ul class="a-stats" aria-label="Headline results">
-        {RESULTS.map((r) => <li><strong>{r.value}</strong><span>{r.label}</span><small>{r.note}</small></li>)}
-      </ul>
+    </section>
+
+    <section class="a-wrap a-scope" aria-labelledby="scope-title">
+      <h2 class="a-scope__title" id="scope-title">My role and scope</h2>
+      <ul>{top.role.map((r) => <li><strong>{r.label}:</strong> {r.text}</li>)}</ul>
     </section>
 
     <div class="a-story a-wrap" data-story><Content /></div>

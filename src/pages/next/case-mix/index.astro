@@ -1,0 +1,8 @@
+---
+// /next/case-mix/: the INSO case with the mix top section, for comparison (lib/case-inso.ts)
+import CaseA from '../../../components/next/va/CaseA.astro';
+import { caseStaticPaths } from '../../../lib/versions';
+
+const [{ props }] = await caseStaticPaths();
+---
+<CaseA project={props.project} next={props.next} base="/" look="blue" content="mix" />
