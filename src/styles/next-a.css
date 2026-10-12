@@ -57,6 +57,7 @@
    studies' body size on large screens, never below the phone's 28px */
 .a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
 .a-more { margin: 1.25em 0 0; font-family: var(--serif); font-weight: 500; font-size: max(28px, var(--t-body)); line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
+.a-hero > :is(.a-lead, .a-more) { max-width: 1120px; }
 .a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
 .a-hero > .a-more { animation-delay: 0.35s; }
 @keyframes a-rise { from { opacity: 0; transform: translateY(14px); } }
