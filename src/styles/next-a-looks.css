@@ -27,16 +27,15 @@
 :root:is([data-look='blue'], [data-look='brown']).v-a { --marker: var(--look-hi); }
 :root:is([data-look='blue'], [data-look='brown']) .a-hero .a-mark { --marker: var(--look-hi); }
 :root:is([data-look='blue'], [data-look='brown']) ::selection { background: var(--look-hi); color: var(--ink); }
-/* contact and footer links get the nav's marker on hover / focus */
-:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a { position: relative; isolation: isolate; text-decoration: none; }
-:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a::after {
+/* contact links get the nav's marker on hover / focus */
+:root:is([data-look='blue'], [data-look='brown']) .a-contact a { position: relative; isolation: isolate; }
+:root:is([data-look='blue'], [data-look='brown']) .a-contact a::after {
   content: ''; position: absolute; left: -0.15em; right: -0.15em; top: 46%; bottom: -0.04em; z-index: -1;
   background-color: var(--look-hi);
   -webkit-mask: url('/img/svg/marker-highlight.svg') 0 0 / 100% 100% no-repeat; mask: url('/img/svg/marker-highlight.svg') 0 0 / 100% 100% no-repeat;
   transform: scaleX(0); transform-origin: left center; transition: transform 0.25s cubic-bezier(0.45, 0.05, 0.3, 1);
 }
-:root:is([data-look='blue'], [data-look='brown']) :is(.a-contact__text, .a-foot) a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
-:root:is([data-look='blue'], [data-look='brown']) .a-contact__text a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+:root:is([data-look='blue'], [data-look='brown']) .a-contact a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
 
 /* ---------- dmsans: Cathrine's type ---------- */
 :root[data-look='dmsans'] {
@@ -64,7 +63,7 @@
 }
 [data-look='dmsans'] :is(h3.a-label, .n-list__name, .a-story h2) { font-size: 24px; line-height: 28.8px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
 [data-look='dmsans'] :is(.a-based) { font-size: var(--c-lead); line-height: var(--c-lead-lh); font-weight: 500; letter-spacing: -0.015em; color: var(--muted); }
-[data-look='dmsans'] :is(.a-about p, .a-contact__text, .a-case__org, .a-case__summary, .a-glance__grid p, .a-story, .a-next__org, .a-intro__text p, .a-timeline__note, .a-away p, .n-list__desc, .n-list__year, .a-feat__client) {
+[data-look='dmsans'] :is(.a-about p, .a-contact__links, .a-case__org, .a-case__summary, .a-glance__grid p, .a-story, .a-next__org, .a-intro__text p, .a-timeline__note, .a-away p, .n-list__desc, .n-list__year, .a-feat__client) {
   font-size: 18px; line-height: 32.4px; font-weight: 500; letter-spacing: normal; color: var(--muted);
 }
 [data-look='dmsans'] :is(.a-list, .a-timeline__role) { font-size: var(--c-list); line-height: 28px; font-weight: 500; letter-spacing: normal; color: var(--ink); }
@@ -79,7 +78,7 @@
 /* links and labels in the nav's role: 20/28, 500 */
 [data-look='dmsans'] .n-nav { font-size: 20px; line-height: 28px; }
 [data-look='dmsans'] .n-nav a, [data-look='dmsans'] .a-selected .n-tag { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: normal; color: var(--ink); }
-[data-look='dmsans'] .a-foot { font-size: 20px; line-height: 28px; font-weight: 500; }
+[data-look='dmsans'] .a-foot p { font-size: 20px; line-height: 28px; font-weight: 500; }
 [data-look='dmsans'] :is(.a-back, .n-tag) { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: normal; }
 [data-look='dmsans'] .n-btn { font-size: 18px; line-height: 28px; font-weight: 500; }
 /* the highlight keeps the heading's weight */

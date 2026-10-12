@@ -12,6 +12,7 @@
   --a-pad-top: calc(var(--a-gap-s) * 0.5); /* every section, after its torn edge: 60px at 1440, 32px on phones */
   --a-pad-bottom: calc(var(--a-gap) * 0.35); /* 84px at 1440, 42px on phones */
   --a-pad-top-l: clamp(56px, calc(56px + 44 * (100vw - 390px) / 1050), 100px); /* About and Contact: 100px at 1440 */
+  --a-title: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 6 * (100vw - 1024px) / 416)), 42px); /* featured titles: 28 / 36 / 42 */
   --a-sub: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 8 * (100vw - 1024px) / 416)), 44px); /* 28 / 36 / 44 */
 }
 .a-wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--pad); }
@@ -23,10 +24,10 @@
 
 /* ---------- Home ---------- */
 /* The intro fills ~84% of the screen with the header (a glimpse of the first case below it), its
-   text centred in that space. Desktop (1024px+): always three lines, the font sized so the longest
-   line ("accessible … zones.", 29.2em) fits the content width. Tablets and phones: the second
-   sentence starts after an empty line and wraps freely. */
+   text centred in that space: a big first sentence, then a second one in the featured titles' type,
+   after about an empty line. Both fade in, the second a moment later. */
 .v-a { --head-h: 138px; } /* header: 90px logo + 2 × 24px */
+@media (max-width: 700px) { .v-a { --head-h: 130px; } } /* phones: 16px above the logo */
 @media (min-width: 701px) and (max-width: 1023px) { .v-a { --head-h: 148px; } }
 .a-hero {
   display: flex;
@@ -46,16 +47,18 @@
   letter-spacing: -0.01em;
   text-wrap: pretty;
 }
-.a-s2 { display: block; margin-top: 1.2em; } /* an empty line between the two parts */
-.a-br-d { display: none; }
-.a-statement a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
+.a-statement a, .a-more a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
 @media (min-width: 600px) { .a-statement { font-size: clamp(36px, calc(36px + 8 * (100vw - 600px) / 168), 44px); } } /* tablets: 36 → 44px */
-@media (min-width: 1024px) {
-  .a-statement { font-size: min(50px, calc((min(100vw, 1440px) - 2 * var(--pad)) / 29.9)); }
-  .a-s1, .a-s2 { white-space: nowrap; }
-  .a-s2 { margin-top: 0; }
-  .a-br-d { display: inline; }
-}
+@media (min-width: 1024px) { .a-statement { font-size: min(50px, calc((min(100vw, 1440px) - 2 * var(--pad)) / 29.9)); } }
+/* home: the first sentence ~1.28× the featured titles (36 / 46 / 54px); the second at the case
+   studies' body size on large screens, never below the phone's 28px */
+.a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
+.a-more { max-width: 24em; margin: 1.25em 0 0; font-family: var(--serif); font-weight: 500; font-size: max(28px, var(--t-body)); line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
+.a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
+.a-hero > .a-more { animation-delay: 0.35s; }
+@keyframes a-rise { from { opacity: 0; transform: translateY(14px); } }
+html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; } /* the fade waits for the intro's logo to fly */
+@media (prefers-reduced-motion: reduce) { .a-hero > :is(.a-lead, .a-more) { animation: none; } }
 .a-sheet { padding-bottom: var(--a-gap); }
 .a-based { margin: 28px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
 .a-sheet > .a-wrap:first-of-type, .a-sheet > .a-glance { padding-top: var(--a-gap-s); }
@@ -63,13 +66,15 @@
 .a-about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--a-gap-s) clamp(48px, 8vw, 128px); padding-top: var(--a-pad-top-l); padding-bottom: var(--a-pad-bottom); }
 .a-about p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 
-.a-contact { padding-top: var(--a-pad-top-l); padding-bottom: var(--a-pad-bottom); }
-.a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, max(calc(36px + 8 * (100vw - 390px) / 634), calc(44px + 8 * (100vw - 1024px) / 416)), 52px); line-height: 1.15; }
-.a-contact__text { max-width: 30em; margin: 24px 0 0; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; color: var(--muted); }
-.a-contact__text a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
-.a-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 28px; padding-bottom: 40px; font-family: var(--sans); font-size: 16px; color: var(--muted); }
-.a-foot p { margin: 0; display: flex; gap: 24px; }
-.a-foot a { color: inherit; }
+.a-contact { padding-top: var(--a-pad-top-l); padding-bottom: calc(var(--a-pad-bottom) + 20px); }
+.a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(32px, max(calc(32px + 12 * (100vw - 390px) / 634), calc(44px + 8 * (100vw - 1024px) / 416)), 52px); line-height: 1.15; } /* 32 / 44 / 52 */
+.a-contact a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.a-contact__links { margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
+.a-contact__links li + li { margin-top: 0.8em; }
+.v-a { --a-rule: #e8e8e8; }
+:root[data-theme='dark'].v-a { --a-rule: #333; }
+.a-foot { border-top: 1px solid var(--a-rule); }
+.a-foot p { margin: 0; padding-top: 22px; padding-bottom: 24px; font-family: var(--sans); font-size: 19px; line-height: 1.3; color: var(--ink); }
 
 /* Featured work, the chosen layout: a short title with the facts stacked below it on the left, a
    big visual on the right; the whole row is the link */
@@ -90,7 +95,7 @@
   text-decoration: none;
 }
 .a-feat__client { grid-column: 1; margin: 0 0 16px; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
-.a-feat__title { grid-column: 1; margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 6 * (100vw - 1024px) / 416)), 42px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; }
+.a-feat__title { grid-column: 1; margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--a-title); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; }
 .a-feat__meta { grid-column: 1; grid-row: 3; align-self: end; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin: 40px 0 0; }
 /* the round button: the logo's paper circle with an arrow, at the end of the facts; hovering the case
    turns it clockwise for a moment (script in HomeA) and brings it to full strength */
@@ -148,31 +153,33 @@
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
-.a-mark.is-drawn { font-weight: 500; transition-delay: 0.6s; }
-.a-mark.is-drawn::after { animation: a-marker 0.75s cubic-bezier(0.45, 0.05, 0.3, 1) forwards; }
-.a-mark + .a-mark.is-drawn, .a-mark ~ .a-mark.is-drawn { transition-delay: 0.9s; }
-.a-mark ~ .a-mark.is-drawn::after { animation-delay: 0.3s; }
+/* like a hand with a marker: one unhurried stroke (1.1s), a short pause (0.75s), the next word */
+.a-mark.is-drawn { font-weight: 500; transition-delay: 0.8s; }
+.a-mark.is-drawn::after { animation: a-marker 1.1s cubic-bezier(0.5, 0.1, 0.4, 1) forwards; }
+.a-mark ~ .a-mark.is-drawn { transition-delay: 2.65s; }
+.a-mark ~ .a-mark.is-drawn::after { animation-delay: 1.85s; }
 @keyframes a-marker { to { -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; } }
 @media (prefers-reduced-motion: reduce) {
   .a-mark, .a-mark.is-drawn { transition: none; }
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
 
-/* The speaker sits on the last "a" of my name like an accent, tilted up; it plays how to say it */
-.a-say-a { position: relative; }
+/* The speaker sits just right of the last "a" of my name, upright and centred on the lowercase
+   letters; it plays how to say it */
+.a-say-a { white-space: nowrap; } /* the speaker never wraps away from the name */
 .a-say {
-  position: absolute;
-  left: 50%;
-  bottom: 0.9em; /* clear of the "a": its x-height top is 0.75em above the bottom of this box */
-  width: 0.54em;
-  height: 0.54em;
+  position: relative;
+  display: inline-block;
+  width: 0.58em;
+  height: 0.58em;
+  margin-left: 0.03em; /* the speaker's body sits a little in from the left of its box */
   padding: 0;
   border: 0;
   background: none;
   font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
   color: inherit;
+  vertical-align: -0.06em; /* its middle level with the middle of the x-height */
   cursor: pointer;
-  transform: translateX(-18%) rotate(-45deg); /* the speaker's body sits left in its box: nudge it right */
 }
 .a-say::before { content: ''; position: absolute; inset: -0.3em; } /* a comfortable tap area */
 .a-say svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
@@ -218,10 +225,9 @@
 /* ---------- Intro (home, once per visit; components/next/va/IntroA.astro, scripts/intro-a.ts) ---------- */
 html.is-intro { overflow: hidden; }
 html.is-intro .n-brand__logo { visibility: hidden; }
-html.is-intro :is(.n-nav, .n-burger, .a-hero, .a-work) { opacity: 0; transform: translateY(16px); }
-html.is-intro.is-intro-reveal :is(.n-nav, .n-burger, .a-hero, .a-work) { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+html.is-intro :is(.n-nav, .n-burger, .a-work) { opacity: 0; transform: translateY(16px); }
+html.is-intro.is-intro-reveal :is(.n-nav, .n-burger, .a-work) { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
 html.is-intro.is-intro-reveal .n-nav, html.is-intro.is-intro-reveal .n-burger { transition-delay: 0.15s; }
-html.is-intro.is-intro-reveal .a-hero { transition-delay: 0.3s; }
 html.is-intro.is-intro-reveal .a-work { transition-delay: 0.45s; }
 .a-intro { display: none; }
 html.is-intro .a-intro { position: fixed; inset: 0; z-index: 100; display: block; pointer-events: none; }
@@ -410,23 +416,24 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
   :root.v-a .n-nav a { font-family: var(--serif); font-weight: 400; letter-spacing: -0.4px; color: var(--menu-fg); }
   .v-a .n-nav a::after { display: none; }
   .v-a .n-nav > a[href$='.pdf'], .v-a .n-nav > .n-theme { display: none; } /* CV at the bottom, theme beside the menu button */
+  .v-a .n-head { padding-top: 16px; }
   .v-a .n-brand__logo { position: relative; z-index: 60; }
   .v-a.is-menu-open .n-brand__logo { --brown: #e6e6e6; --on-brown: #141414; transition: none; }
   :root[data-theme='dark'].v-a.is-menu-open .n-brand__logo { --brown: #262626; --on-brown: #fff; }
   .v-a.is-menu-open .n-burger__bar { background: var(--menu-fg); }
-  .v-a .n-theme--bar { display: inline-grid; position: relative; z-index: 60; width: 44px; height: 44px; margin-left: auto; margin-right: 4px; }
+  .v-a .n-theme--bar { display: inline-grid; position: relative; z-index: 60; width: 44px; height: 44px; margin-left: auto; margin-right: -12px; }
   .v-a .n-theme--bar svg { width: 26px; height: 26px; stroke-width: 1.8; }
   .v-a.is-menu-open .n-theme--bar { color: var(--menu-fg); }
   .v-a .n-nav__foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
   :root.v-a .n-nav__foot a { display: inline-flex; align-items: center; gap: 12px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; }
-  .v-a .n-nav__foot svg { width: 56px; height: 56px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+  .v-a .n-nav__foot svg { width: 44px; height: 44px; fill: currentColor; } /* LinkedIn's own mark, and a download square to match */
+  .v-a .n-nav__cut { fill: none; stroke: var(--menu-bg); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 }
 .n-theme--bar { display: none; }
 @media (prefers-reduced-motion: reduce) { .v-a .n-nav, .v-a .n-nav > * { transition: none !important; } }
 
-/* ---------- Contact: the availability beside the "Say hello" line on desktop, hidden below ---------- */
-.a-contact__row { display: flex; align-items: center; justify-content: space-between; gap: 16px 40px; margin-top: 24px; }
-.a-contact__row .a-contact__text { margin: 0; }
+/* ---------- Contact: the availability level with LinkedIn on desktop, hidden below ---------- */
+.a-contact__row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px 40px; margin-top: 50px; }
 @media (max-width: 1023px) { .a-status { display: none; } }
 
 /* ---------- Case study top (design lead's reading order): title + subtitle, wide hero, one compact
