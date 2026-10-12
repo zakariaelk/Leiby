@@ -50,6 +50,7 @@
 /* Need: the user's pain point, one lead sentence, a touch heavier */
 .a-story .cs-need { margin-bottom: 1em; font-weight: 560; }
 .a-story .cs-need__label { font-weight: 560; }
+.a-story .cs-need > p { display: inline; margin: 0; } /* "Need:" runs into its sentence */
 /* Friction: a constraint or setback, a light-brown rule on the left */
 .a-story .cs-callout { margin-top: 2em; margin-bottom: 2em; }
 .a-story .cs-callout > :last-child { margin-bottom: 0; }
@@ -119,6 +120,7 @@
   .a-case__hero { padding-inline: 0; }
   .a-story :is(.is-media, .media-video, .cs-figure--wide, .cs-pair) { margin-inline: calc(-1 * var(--pad)); }
   .a-story :is(.cs-figure--wide, .media-video, .cs-pair) figcaption { padding-inline: var(--pad); }
+  .a-story :is(.cs-figure--wide, .cs-pair) :is(.cs-frame__label, .cs-frame__labels) { margin-inline: var(--pad); }
 }
 @media (max-width: 700px) {
   .a-story .cs-pair__grid, .a-story .cs-stats--strip { grid-template-columns: minmax(0, 1fr); }
