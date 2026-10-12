@@ -1,0 +1,154 @@
+---
+// Wireframe (draft, not linked): the case study page after layout sketch v2 and content v3, with
+// grey boxes for visuals and blue notes for decisions. Real header, fonts and widths; nothing here
+// is wired to the content collection.
+import Next from '../../layouts/Next.astro';
+import ContactA from '../../components/next/va/ContactA.astro';
+import '../../styles/next-a.css';
+import '../../styles/next-a-looks.css';
+
+const sections = ['Product', 'Context', 'Users', 'Login', 'Alerts', 'Alert detail', 'Maps', 'After the first release', 'Outcome', 'Reflection'];
+const id = (s: string) => s.toLowerCase().replace(/\s+/g, '-');
+---
+<Next base="/" variant="a" logo look="blue" title="Wireframe · Case study">
+  <!-- Section rail: strokes at the far left, the names on hover; the current section's stroke is longer -->
+  <nav class="wf-rail" aria-label="Sections">
+    <ol>{sections.map((s, i) => <li><a href={`#${id(s)}`} aria-current={i === 3 ? 'true' : undefined}><span class="wf-rail__tick"></span><span class="wf-rail__label">{s}</span></a></li>)}</ol>
+  </nav>
+
+  <article class="wf">
+    <!-- ===== Top ===== -->
+    <header class="wf-top a-wrap">
+      <p class="wf-label">INSO · Mobile app</p>
+      <h1 class="wf-h1">Keeping humanitarian workers informed on the move</h1>
+      <p class="wf-note">No back link, no subtitle. Small gap under the nav: the hero starts within the first screen.</p>
+    </header>
+    <div class="a-wrap"><div class="wf-box wf-hero">Hero visual · 100% of the content width (cover / product video)</div></div>
+    <div class="a-wrap wf-col">
+      <p class="wf-p">INSO shares real-time safety alerts with NGOs working in high-risk areas, traditionally by SMS and email.</p>
+      <p class="wf-p">A mobile app was meant to replace those channels, but it had been built engineering-first and felt technical to people reading alerts under pressure. As the sole designer, I redesigned onboarding, the alert list, alert details and three map modes, testing with colleagues along the way. After launch, 79% of surveyed partners rated it easy to use.</p>
+    </div>
+    <div class="a-wrap">
+      <dl class="wf-meta">
+        <div><dt>Role</dt><dd>Sole product designer</dd></div>
+        <div><dt>Team</dt><dd>2 engineers + department lead</dd></div>
+        <div><dt>Timeline</dt><dd>Dec 2022–Jun 2023, 2025 update</dd></div>
+        <div><dt>Deliverables</dt><dd>Research, UX/UI, testing, launch assets</dd></div>
+      </dl>
+      <p class="wf-link"><a href="https://app.ngosafety.org/" target="_blank" rel="noopener">app.ngosafety.org ↗</a></p>
+      <p class="wf-note">Meta: 4 columns at body-ish size, 2×2 on phones. The 30-second test ends here: what it is, what I did, one outcome.</p>
+    </div>
+
+    <!-- ===== Body: one section in full, the rest outlined ===== -->
+    <section class="wf-sec" id="product">
+      <div class="a-wrap wf-col"><h2 class="wf-h2">A mobile way to access real-time incident alerts</h2><p class="wf-p">INSO provides NGO workers with incident alerts in their regions… (3 short paragraphs at most)</p></div>
+      <div class="a-wrap"><div class="wf-box wf-fig">Figure · app structure overview (wider than the text)</div><p class="wf-cap">Caption, small, tight under the figure</p></div>
+    </section>
+
+    <section class="wf-sec" id="context">
+      <div class="a-wrap wf-col">
+        <h2 class="wf-h2">The app existed, but the experience did not match the users or the product's potential</h2>
+        <p class="wf-p">Opens with the curiosity story (brown and beige)… then "Where it came from".</p>
+        <aside class="wf-friction"><p class="wf-k">Friction</p><p>The solution came first and its value was named later, so there was no problem statement to design against… (≤ 3 sentences)</p></aside>
+      </div>
+      <div class="a-wrap"><div class="wf-box wf-fig wf-before">Before · what the app looked like when I joined (grey frame)</div></div>
+      <div class="a-wrap wf-col"><p class="wf-note">No result block here: nothing measured.</p></div>
+    </section>
+
+    <section class="wf-sec" id="users"><div class="a-wrap wf-col"><h2 class="wf-h2">The app serves two groups</h2><p class="wf-p">How I built the picture · What I missed (the constraints live here as body text)</p></div></section>
+
+    <section class="wf-sec" id="login">
+      <div class="a-wrap wf-col">
+        <h2 class="wf-h2">Users were asked to act before understanding what the app does</h2>
+        <p class="wf-need"><span>Need:</span> understand what the app is for before being asked for anything.</p>
+        <p class="wf-p">The app opened on a login form and asked for location access first.</p>
+        <aside class="wf-friction"><p class="wf-k">Friction</p><p>When I asked country-office colleagues whether this would be clear to partners, they felt a welcome email explaining the app would be enough. I disagreed… The explanation had to live inside the app.</p></aside>
+        <h3 class="wf-h3">So I introduced a simple onboarding before login</h3>
+        <p class="wf-p">I added two onboarding screens to explain the app's purpose and value…</p>
+      </div>
+      <div class="a-wrap wf-pair"><div class="wf-box wf-before">Before (grey)</div><div class="wf-box wf-after">After (blue), annotated</div></div>
+      <div class="a-wrap"><p class="wf-cap">Login screen before and after. Smart validation was one of the main updates.</p></div>
+      <div class="a-wrap wf-col">
+        <div class="wf-result"><p class="wf-num">24 of 31</p><p class="wf-rl">partners rated installation and onboarding 4 or 5 out of 5 (average 4.1/5)</p><p class="wf-rs">I didn't measure the old version, so this shows satisfaction after the change, not an improvement.</p></div>
+        <p class="wf-note">Pattern for every section: heading (story beat) → Need → ≤ 3 paragraphs → figure → Friction (max 1) → what I did → Result (max 1).</p>
+      </div>
+    </section>
+
+    <section class="wf-sec" id="alerts"><div class="a-wrap wf-col"><h2 class="wf-h2">The main screen had all the information, but it was hard to read and scan</h2><p class="wf-note">Need · figure · Friction (13 testers, 66/100) · Result (10 of 10 in 22s · 13 of 13 in 19s)</p></div></section>
+    <section class="wf-sec" id="alert-detail"><div class="a-wrap wf-col"><h2 class="wf-h2">I am in an alert. What information will help me the most?</h2><p class="wf-p">Research with INSO colleagues showed… <mark class="wf-confirm">[CONFIRM: "INSO colleagues" is right, unless this research really included partners or NGO workers.]</mark></p><p class="wf-note">Friction · What I did · no result block</p></div></section>
+    <section class="wf-sec" id="maps">
+      <div class="a-wrap wf-col"><h2 class="wf-h2">Seeing incidents on a map changes everything</h2>
+        <ol class="wf-ways"><li><strong>Way of working 1</strong> · Explore · Need · Friction · Result (8 of 8, 33s)</li><li><strong>Way of working 2</strong> · Proximity · Need · Friction <mark class="wf-confirm">[CONFIRM: radius]</mark> · What I did · Result (6 of 6)</li><li><strong>Way of working 3</strong> · Geofence · Need · Friction · What I did · Result (no retest, 9 of 30)</li></ol>
+      </div>
+    </section>
+    <section class="wf-sec" id="after-the-first-release"><div class="a-wrap wf-col"><h2 class="wf-h2">After the first release</h2><p class="wf-note">Six short bold-led lines (accessibility and language, notification control, clearer updates, geofence guide, one place for the radius, alert composer).</p></div></section>
+
+    <!-- ===== End ===== -->
+    <section class="wf-sec" id="outcome">
+      <div class="a-wrap wf-col"><h2 class="wf-h2">Outcome and takeaways</h2></div>
+      <div class="a-wrap"><ul class="wf-strip"><li><p class="wf-num">79%</p><p class="wf-rl">rated ease of use 4 or 5 out of 5 · 23 of 29</p></li><li><p class="wf-num">24 of 31</p><p class="wf-rl">rated installation and onboarding 4 or 5 · avg 4.1/5</p></li><li><p class="wf-num">93%</p><p class="wf-rl">named alert notifications the most important feature · 28 of 30</p></li></ul></div>
+      <div class="a-wrap wf-col"><p class="wf-p">Outcome paragraph (68% helped reach their goal, my weakest score)… then three takeaways.</p></div>
+    </section>
+    <section class="wf-sec" id="reflection"><div class="a-wrap wf-col"><h2 class="wf-h2">Reflection</h2><p class="wf-p">What I'd do differently (3) · Still unsolved (4)</p></div></section>
+    <div class="a-wrap wf-sec"><p class="wf-label">Next case</p><p class="wf-h2">Redesigning and building ngosafety.org, from brief to tested website</p></div>
+  </article>
+  <ContactA />
+</Next>
+
+<style>
+  /* wireframe only */
+  .wf { --wf-blue: #2f6fd6; --wf-grey: #e9e9e9; --wf-tint: #eef5ff; --col: 680px; }
+  :root[data-theme='dark'] .wf { --wf-grey: #2a2a2a; --wf-tint: #1d2633; --wf-blue: #8fb6f5; }
+  .wf-note { margin: 12px 0 0; font: 400 13px/1.45 ui-monospace, Menlo, monospace; color: var(--wf-blue); }
+  .wf-top { padding-top: clamp(24px, 3vw, 48px); }
+  .wf-label { margin: 0; font-family: var(--sans); font-size: var(--a-meta); color: var(--muted); }
+  .wf-h1 { max-width: 18em; margin: 12px 0 0; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 4.4vw, 64px); line-height: 1.08; letter-spacing: -0.015em; }
+  .wf-box { display: grid; place-items: center; padding: 16px; border-radius: 4px; background: var(--wf-grey); color: var(--muted); font: 400 14px/1.4 ui-monospace, Menlo, monospace; text-align: center; }
+  .wf-hero { margin-top: clamp(28px, 3vw, 48px); aspect-ratio: 16 / 8; }
+  .wf-col > * { max-width: var(--col); }
+  .wf-col { margin-top: clamp(32px, 3vw, 48px); }
+  .wf-p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.55; }
+  .wf-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px clamp(32px, 4vw, 64px); max-width: 1100px; margin: clamp(32px, 3vw, 48px) 0 0; }
+  .wf-meta dt { font-family: var(--sans); font-size: 15px; color: var(--muted); }
+  .wf-meta dd { margin: 6px 0 0; font-family: var(--sans); font-size: 18px; line-height: 1.4; }
+  .wf-link { margin: 24px 0 0; font-family: var(--sans); font-size: 16px; }
+  .wf-link a { color: inherit; text-underline-offset: 0.2em; }
+  .wf-sec { padding-top: clamp(80px, 9vw, 128px); }
+  .wf-h2 { margin: 0 0 20px; font-family: var(--serif); font-weight: 470; font-size: clamp(28px, 3vw, 42px); line-height: 1.15; letter-spacing: -0.01em; }
+  .wf-h3 { margin: 32px 0 12px; font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
+  .wf-need { margin: 0 0 1em; font-family: var(--serif); font-weight: 560; font-size: var(--t-body); line-height: 1.5; }
+  .wf-fig { margin-top: 48px; aspect-ratio: 16 / 7; }
+  .wf-cap { max-width: var(--col); margin: 10px 0 0; font-family: var(--sans); font-size: 15px; color: var(--muted); }
+  .wf-friction { margin: 28px 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--wf-blue); }
+  .wf-friction p { margin: 0; font-family: var(--serif); font-size: var(--t-body); line-height: 1.5; }
+  .wf-k { margin-bottom: 6px !important; font-family: var(--sans) !important; font-size: 15px !important; color: var(--wf-blue); }
+  .wf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+  .wf-pair .wf-box { aspect-ratio: 4 / 3; }
+  .wf-before { background: #d9d9d9; }
+  .wf-after { background: #cfe0fb; color: #23406f; }
+  :root[data-theme='dark'] .wf-before { background: #333; }
+  :root[data-theme='dark'] .wf-after { background: #22344f; color: #cfe0fb; }
+  .wf-result { margin-top: 40px; padding: 24px 28px; border-radius: 4px; background: var(--wf-tint); }
+  .wf-num { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4vw, 56px); line-height: 1; }
+  .wf-rl { margin: 10px 0 0; font-family: var(--sans); font-size: 16px; line-height: 1.4; }
+  .wf-rs { margin: 10px 0 0; font-family: var(--sans); font-size: 14px; line-height: 1.4; color: var(--muted); }
+  .wf-confirm { padding: 0 4px; border-radius: 3px; background: #fff1a8; color: #3a3000; font-family: var(--sans); font-size: 0.75em; }
+  .wf-ways { margin: 0; padding-left: 1.2em; font-family: var(--sans); font-size: 17px; line-height: 1.6; }
+  .wf-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 32px 0 0; padding: 0; list-style: none; }
+  .wf-strip li { padding: 24px; border-radius: 4px; background: var(--wf-tint); }
+  .wf-rail { position: fixed; left: 0; top: 50%; z-index: 20; transform: translateY(-50%); width: 40px; padding: 16px 16px 16px 14px; overflow: hidden; border-radius: 0 12px 12px 0; font-family: var(--sans); transition: width 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease; }
+  .wf-rail:hover, .wf-rail:focus-within { width: 260px; background: var(--bg); box-shadow: 0 16px 48px -20px rgb(0 0 0 / 0.35), 0 0 0 1px var(--line); }
+  .wf-rail ol { margin: 0; padding: 0; list-style: none; }
+  .wf-rail a { display: flex; align-items: center; gap: 14px; padding: 5px 0; color: var(--muted); font-size: 15px; text-decoration: none; white-space: nowrap; }
+  .wf-rail__tick { flex: none; width: 12px; height: 2px; border-radius: 1px; background: currentColor; opacity: 0.45; }
+  .wf-rail a[aria-current] { color: var(--ink); }
+  .wf-rail a[aria-current] .wf-rail__tick { width: 20px; opacity: 1; background: var(--ink); }
+  .wf-rail__label { opacity: 0; transition: opacity 0.15s ease; }
+  .wf-rail:hover .wf-rail__label, .wf-rail:focus-within .wf-rail__label { opacity: 1; }
+  @media (max-width: 1100px) { .wf-rail { display: none; } }
+  @media (max-width: 700px) {
+    .wf-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .wf-pair, .wf-strip { grid-template-columns: minmax(0, 1fr); }
+    .wf-hero { aspect-ratio: 4 / 3; }
+  }
+</style>
