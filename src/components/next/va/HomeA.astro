@@ -73,8 +73,8 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
                 <h3 class="a-feat__title">{titleOf(p)}</h3>
                 <div class="a-feat__meta">
                   <dl class="a-meta">
-                    {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
                     {p.data.role && <div><dt>Role</dt><dd>{p.data.role}</dd></div>}
+                    {layout === 'split' && p.data.sector && <div><dt>Industry</dt><dd>{p.data.sector}</dd></div>}
                   </dl>
                   {button && (
                     <span class="a-go" aria-hidden="true">

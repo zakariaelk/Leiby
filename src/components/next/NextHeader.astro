@@ -54,14 +54,15 @@ const { base = '/next/', contact = `${base}#contact`, work = `${base}#work`, log
     </button>
     {logo && (
       <div class="n-nav__foot">
-        <a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-        <a href={CV} target="_blank" rel="noopener">Download CV</a>
+        <a href={settings.linkedin} target="_blank" rel="noopener"><span class="n-nav__paper" data-paper data-seed="7" aria-hidden="true"></span>LinkedIn</a>
+        <a href={CV} target="_blank" rel="noopener"><span class="n-nav__paper" data-paper data-seed="23" data-anchor="right" aria-hidden="true"></span>Download CV</a>
       </div>
     )}
   </nav>
 </header>
 
 <script>
+  import '../../scripts/paper'; // the phone menu's LinkedIn / CV cut-outs
   // Say my name (the speaker in the header, or in the intro in version A)
   let audio: HTMLAudioElement | null = null;
   let stopAt = 0;

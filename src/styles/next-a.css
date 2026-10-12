@@ -371,6 +371,8 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
   .a-timeline li { grid-template-columns: minmax(0, 1fr); }
   .a-timeline__place { display: none; }
 }
+/* phones: Role above Industry, each value on one line, the round button still bottom right */
+@media (max-width: 700px) { .a-feat__meta .a-meta { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
 @media (max-width: 599px) {
   .a-facts { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .a-glance__grid { gap: 32px; }
@@ -458,10 +460,10 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
   .v-a .n-theme--bar svg { width: 26px; height: 26px; stroke-width: 1.8; }
   .v-a.is-menu-open .n-theme--bar { color: var(--menu-fg); }
   .v-a .n-nav__foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
-  :root.v-a .n-nav__foot a { position: relative; isolation: isolate; display: inline-block; padding: 14px 20px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; color: var(--menu-bg); }
-  /* paper buttons like the menu button, in the panel's text colour (light on the dark panel, dark on the light one) */
-  .v-a .n-nav__foot a::before { content: ''; position: absolute; inset: 0; z-index: -1; background-color: var(--menu-fg); background-image: var(--paper); clip-path: polygon(2% 6%, 98% 0%, 100% 94%, 0% 100%); transform: rotate(-1.5deg); }
-  .v-a .n-nav__foot a + a::before { clip-path: polygon(0% 0%, 97% 5%, 100% 100%, 3% 95%); transform: rotate(1.5deg); }
+  :root.v-a .n-nav__foot a { position: relative; isolation: isolate; display: inline-block; padding: 15px 26px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; text-decoration: none; color: var(--menu-bg); }
+  /* paper cut-outs like the logo's shapes (scripts/paper.ts cuts them), in the panel's text colour:
+     light on the dark panel, dark on the light one */
+  .v-a .n-nav__paper { position: absolute; inset: 0; z-index: -1; background-color: var(--menu-fg); }
 }
 .n-theme--bar { display: none; }
 @media (prefers-reduced-motion: reduce) { .v-a .n-nav, .v-a .n-nav > * { transition: none !important; } }
