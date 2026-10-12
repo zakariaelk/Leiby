@@ -71,10 +71,10 @@
 @media (min-width: 1024px) { .a-hero > .a-more { max-width: 33em; } }
 .a-more__short { display: none; }
 @media (max-width: 700px) { .a-more__long { display: none; } .a-more__short { display: inline; } }
-/* phones: both sentences at the featured titles' size */
+/* phones: both sentences at the featured titles' size, a touch smaller on narrower phones so each
+   stays within three lines (tested 360–440px, iPhone mini to Pro Max, with ~4% to spare) */
 @media (max-width: 700px) {
-  .a-statement.a-lead { font-size: var(--a-title); }
-  .a-more { font-size: var(--a-title); }
+  .a-statement.a-lead, .a-more { font-size: min(var(--a-title), calc((100vw - 2 * var(--pad)) / 13.5)); }
 }
 .a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
 .a-hero > .a-more { animation-delay: 0.35s; }
