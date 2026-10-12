@@ -83,6 +83,22 @@
 @keyframes a-rise { from { opacity: 0; transform: translateY(14px); } }
 html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; } /* the fade waits for the intro's logo to fly */
 @media (prefers-reduced-motion: reduce) { .a-hero > :is(.a-lead, .a-more) { animation: none; } }
+/* /v1/: the earlier intro, one sentence in two parts at one size; three lines on desktop, the font
+   sized so the longest line ("accessible … zones.", 29.2em) fits the content width */
+.a-hero--v1 .a-s2 { display: block; margin-top: 1.2em; } /* an empty line between the two parts */
+.a-hero--v1 .a-br-d { display: none; }
+@media (min-width: 1024px) {
+  .a-hero--v1 .a-s1, .a-hero--v1 .a-s2 { white-space: nowrap; }
+  .a-hero--v1 .a-s2 { margin-top: 0; }
+  .a-hero--v1 .a-br-d { display: inline; }
+}
+.a-hero--v1 > .a-statement { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
+@media (prefers-reduced-motion: reduce) { .a-hero--v1 > .a-statement { animation: none; } }
+/* its speaker sits on the last "a" of my name like an accent, tilted up */
+.a-hero--v1 .a-say-a { position: relative; white-space: normal; }
+.a-hero--v1 .a-say { position: absolute; left: 50%; bottom: 0.9em; display: block; width: 0.54em; height: 0.54em; margin: 0; vertical-align: baseline; transform: translateX(-18%) rotate(-45deg); }
+.a-hero--v1 .a-say::before { inset: -0.3em; }
+.a-hero--v1 .a-say__icon { display: block; width: 100%; height: 100%; translate: none; }
 .a-sheet { padding-bottom: var(--a-gap); }
 .a-based { margin: 28px 0 0; font-family: var(--sans); font-size: var(--t-meta); line-height: 1.3; color: var(--muted); }
 .a-sheet > .a-wrap:first-of-type, .a-sheet > .a-glance { padding-top: var(--a-gap-s); }
