@@ -56,6 +56,12 @@
 /* home: the first sentence ~1.28× the featured titles (36 / 46 / 54px); the second at the case
    studies' body size on large screens, never below the phone's 28px */
 .a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
+/* laptops and up: the featured titles 32px at 1024, 36px at ~1260, 40px at most; the first sentence
+   42px on small laptops, rejoining its previous scale at 1260 (50px, 54px max) */
+@media (min-width: 1024px) {
+  .v-a { --a-title: clamp(32px, calc(32px + 4 * (100vw - 1024px) / 236), 40px); }
+  .a-statement.a-lead { font-size: min(calc((36px + 6 * (100vw - 1024px) / 416) * 1.28), calc(42px + 8.4 * (100vw - 1024px) / 236), 53.76px); }
+}
 .a-more { margin: 1.25em 0 0; font-family: var(--serif); font-weight: 500; font-size: max(28px, var(--t-body)); line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
 .a-hero > :is(.a-lead, .a-more) { max-width: 1120px; }
 .a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
