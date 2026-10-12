@@ -1,6 +1,6 @@
 ---
 // Version A home (the chosen direction), also behind every /tests page. A one-sentence intro with
-// my name (its speaker sits over the full stop), then each featured project on its own sheet, the rest
+// my name (its speaker follows, on a paper cut-out like the logo's), then each featured project on its own sheet, the rest
 // of the work as a list on gray paper (hovering a row shows its cover), a short About and contact.
 // featured: how each featured project is shown
 //   'split'        short title + Industry / Role on the left, a big visual on the right (default)
@@ -38,7 +38,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
 ---
 <Next base={base} variant="a" logo work="#work" intro={intro} look={look} title={title} description="Product designer and builder. Most recently, safety tools for humanitarian workers at INSO.">
   <section class="a-hero a-wrap">
-    <h1 class="a-statement a-lead" aria-label={sentence}>I'm a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span> whose name happens to be Zakaria El <span class="a-say-a">Khachia<span class="a-say-dot">.<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span></span></h1>
+    <h1 class="a-statement a-lead" aria-label={sentence}>I'm a product <span class:list={mark}>designer</span> and <span class:list={mark}>builder</span> whose name happens to be Zakaria El <span class="a-say-a">Khachia.<button type="button" class="n-say a-say" aria-label="Hear how to say Zakaria El Khachia" data-audio="/audio/zakaria-el-khachia.m4a"><svg class="a-say__bg" viewBox="0 0 100 100" aria-hidden="true"><path d={blob(61, 50, 50, 47)} /></svg><svg class="a-say__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3l4.5-4v13L7 14.5H4z" /><path class="wave" d="M15 9.2a4 4 0 0 1 0 5.6" /><path class="wave" d="M17.8 6.6a7.6 7.6 0 0 1 0 10.8" /></svg></button></span></h1>
     <p class="a-more"><span class="a-more__long">I started as a web designer in 2013, moved into frontend development and project management, and spent the last five years at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a> designing tools that keep NGO workers informed on the latest developments in conflict zones.</span><span class="a-more__short">Most recently at <a href="https://ngosafety.org" target="_blank" rel="noopener">INSO</a>, making safety information clearer for humanitarian workers.</span></p>
   </section>
 

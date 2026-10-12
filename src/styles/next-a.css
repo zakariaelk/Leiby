@@ -196,28 +196,30 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
 
-/* The speaker hovers over my name's full stop: its back in line with the stop's left edge, its
-   middle level with the top of the "a" before it (the x-height, 0.75em above the box's bottom) */
+/* The speaker follows my name after a small space, light on a dark paper cut-out like the logo's
+   Z (the colours swap with the logo's in dark mode); the icon keeps its size */
 .a-say-a { white-space: nowrap; } /* the speaker never wraps away from the name */
-.a-say-dot { position: relative; }
 .a-say {
-  position: absolute;
-  left: -0.025em; /* the speaker's back (drawn a little into its box) on the stop's left edge */
-  bottom: 0.46em; /* 0.75em − half its height */
-  width: 0.58em;
-  height: 0.58em;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1.05em;
+  height: 1.05em;
+  margin-left: 0.2em;
   padding: 0;
   border: 0;
   background: none;
   font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
-  color: inherit;
+  color: var(--on-brown);
+  vertical-align: -0.12em; /* its middle a touch above the middle of the capitals */
   cursor: pointer;
 }
-.a-say::before { content: ''; position: absolute; inset: -0.3em; } /* a comfortable tap area */
-.a-say svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.a-say::before { content: ''; position: absolute; inset: -0.15em; } /* a comfortable tap area */
+.a-say__bg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--brown); }
+.a-say__icon { position: relative; width: 0.58em; height: 0.58em; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; translate: 0.03em 0; }
 .a-say .wave { opacity: 0.5; transition: opacity 0.2s ease; }
 .a-say:hover .wave, .a-say:focus-visible .wave { opacity: 1; }
-.a-say:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 50%; }
+.a-say:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 50%; }
 
 /* The rest of the work: the /next/ list on gray paper, the white tab on its top line */
 .a-band--gray { --band: var(--a-gray); padding-top: var(--a-pad-top); padding-bottom: var(--a-pad-bottom); }
