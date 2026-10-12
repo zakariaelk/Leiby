@@ -51,9 +51,19 @@
 .a-statement a, .a-more a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
 @media (min-width: 600px) { .a-statement { font-size: clamp(36px, calc(36px + 8 * (100vw - 600px) / 168), 44px); } } /* tablets: 36 → 44px */
 @media (min-width: 1024px) { .a-statement { font-size: min(50px, calc((min(100vw, 1440px) - 2 * var(--pad)) / 29.9)); } }
-/* home, desktop: the intro section is 650px high (less on short screens, so a strip of the first case
-   still shows), the text a touch above its middle, as an optical centre */
-@media (min-width: 1024px) { .a-hero:has(.a-more) { min-height: min(650px, calc(100svh - var(--head-h) - 60px)); padding-top: clamp(16px, 1.6vw, 24px); padding-bottom: 96px; } } /* top: 20px at 1260 */
+/* home, desktops: the intro section, its text and its spacing all scale with the content width
+   (650px high at 1440 and up), and it shortens on short screens so a strip of the first case still
+   shows; the text a touch above its middle, as an optical centre. Tablets: 54vw, never taller
+   than the screen allows */
+@media (min-width: 1024px) {
+  .a-hero:has(.a-more) {
+    --cw: calc(min(100vw, 1440px) - 2 * var(--pad)); /* the content width the text is sized from */
+    min-height: min(650px, calc(var(--cw) * 0.482), calc(100svh - var(--head-h) - 60px)); /* 650px at 1440 */
+    padding-top: clamp(16px, 1.6vw, 24px); /* 20px at 1260 */
+    padding-bottom: calc(var(--cw) * 0.0712); /* 96px at 1440 */
+  }
+}
+@media (min-width: 701px) and (max-width: 1023px) { .a-hero:has(.a-more) { min-height: min(54.17vw, calc(84svh - var(--head-h))); } }
 /* home: the first sentence ~1.28× the featured titles (36 / 46 / 54px); the second at the case
    studies' body size on large screens, never below the phone's 28px */
 .a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
