@@ -50,9 +50,9 @@
 .a-statement a, .a-more a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
 @media (min-width: 600px) { .a-statement { font-size: clamp(36px, calc(36px + 8 * (100vw - 600px) / 168), 44px); } } /* tablets: 36 → 44px */
 @media (min-width: 1024px) { .a-statement { font-size: min(50px, calc((min(100vw, 1440px) - 2 * var(--pad)) / 29.9)); } }
-/* home, desktop: the intro ends ~655px down the page (the first case's torn edge), the text a touch
-   above the middle of that space, as an optical centre */
-@media (min-width: 1024px) { .a-hero:has(.a-more) { min-height: calc(655px - var(--head-h)); padding-bottom: 96px; } }
+/* home, desktop: the intro section is 650px high (less on short screens, so a strip of the first case
+   still shows), the text a touch above its middle, as an optical centre */
+@media (min-width: 1024px) { .a-hero:has(.a-more) { min-height: min(650px, calc(100svh - var(--head-h) - 60px)); padding-bottom: 96px; } }
 /* home: the first sentence ~1.28× the featured titles (36 / 46 / 54px); the second at the case
    studies' body size on large screens, never below the phone's 28px */
 .a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
