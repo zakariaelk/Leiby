@@ -75,7 +75,15 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
 .v-a { --a-rule: #e8e8e8; }
 :root[data-theme='dark'].v-a { --a-rule: #333; }
 .a-foot { border-top: 1px solid var(--a-rule); }
-.a-foot p { margin: 0; padding-top: 22px; padding-bottom: 24px; font-family: var(--sans); font-size: 19px; line-height: 1.3; color: var(--ink); }
+.a-foot__row { display: flex; justify-content: space-between; gap: 12px 32px; padding-top: 22px; padding-bottom: 24px; font-family: var(--sans); font-size: 19px; line-height: 1.3; color: var(--ink); }
+.a-foot p { margin: 0; }
+.a-foot__links { display: none; margin: 0; padding: 0; list-style: none; gap: 32px; }
+.a-foot a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+/* desktop: LinkedIn and the CV move to the right of the copyright; the availability takes their place */
+@media (min-width: 1024px) {
+  .a-foot__links { display: flex; }
+  .a-contact__links { display: none; }
+}
 
 /* Featured work, the chosen layout: a short title with the facts stacked below it on the left, a
    big visual on the right; the whole row is the link */
