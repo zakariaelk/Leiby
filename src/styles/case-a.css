@@ -1,0 +1,126 @@
+/* Case study (components/next/va/CaseA.astro), after hansonwu.com/game-breakdowns: a label, a large
+   headline, the hero at the full content width, then an 860px reading column centred on the page,
+   visuals as wide as the content. Sizes run fluidly from tablets (768) to laptops (1280).
+   Accents: tints of the logo blue for results and "after", the light brown for friction and
+   flags, grey for "before". The words (Friction, Result, Before, After) always carry the
+   meaning, so colour is never the only signal. */
+.v-a {
+  --c-blue: #accff6;          /* the logo's small circle */
+  --c-blue-tint: #edf5fe;
+  --c-blue-ink: #234a78;
+  --c-brown: #e8ceb2;
+  --c-brown-tint: #faf0e4;
+  --c-brown-ink: #7a4f25;
+  --c-grey-tint: #f0f0f0;
+}
+:root[data-theme='dark'].v-a {
+  --c-blue: #4f7299;
+  --c-blue-tint: #1c2734;
+  --c-blue-ink: #cfe2fa;
+  --c-brown: #8a5a2b;
+  --c-brown-tint: #2a2119;
+  --c-brown-ink: #f0d6ba;
+  --c-grey-tint: #262626;
+}
+.a-col { max-width: 860px; margin-inline: auto; }
+
+/* ---------- Top ---------- */
+.a-case { padding-top: clamp(24px, calc(24px + 40 * (100vw - 768px) / 512), 64px); }
+.a-case__label { display: block; margin: 0; font-family: var(--sans); font-size: clamp(16px, calc(16px + 8 * (100vw - 768px) / 512), 24px); line-height: 1.15; color: var(--muted); }
+.a-case__title { max-width: 20em; margin: clamp(12px, calc(12px + 12 * (100vw - 768px) / 512), 24px) 0 0; font-family: var(--serif); font-weight: 470; font-size: clamp(32px, calc(32px + 28 * (100vw - 768px) / 512), 60px); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
+.a-case__hero { margin-top: clamp(32px, calc(32px + 64 * (100vw - 768px) / 512), 96px); }
+.a-case__hero .v-frame img, .a-case__hero .v-frame video { aspect-ratio: auto; }
+.a-case__intro { margin-top: clamp(48px, calc(48px + 80 * (100vw - 768px) / 512), 128px); }
+.a-case__lede { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
+.a-case__meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, calc(24px + 24 * (100vw - 768px) / 512), 48px) 32px; margin: clamp(40px, calc(40px + 40 * (100vw - 768px) / 512), 80px) 0 0; }
+.a-case__meta dt { font-family: var(--serif); font-weight: 470; font-size: clamp(16px, calc(16px + 8 * (100vw - 768px) / 512), 24px); line-height: 1.5; }
+.a-case__meta dd { margin: 8px 0 0; font-family: var(--sans); font-size: clamp(16px, calc(16px + 8 * (100vw - 768px) / 512), 24px); line-height: 1.25; color: var(--muted); }
+.a-case__link { margin: clamp(24px, calc(24px + 16 * (100vw - 768px) / 512), 40px) 0 0; font-family: var(--sans); font-size: clamp(16px, calc(16px + 4 * (100vw - 768px) / 512), 20px); }
+.a-case__link a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+
+/* ---------- Story ---------- */
+.a-story h2 { font-size: clamp(16px, calc(16px + 8 * (100vw - 768px) / 512), 24px); scroll-margin-top: 32px; }
+.a-story h2 + .is-lead { font-weight: 470; font-size: clamp(26px, calc(26px + 14 * (100vw - 768px) / 512), 40px); line-height: 1.2; }
+.a-story h2 + .is-lead strong { font-weight: 470; }
+.a-story .is-lead { font-size: clamp(22px, calc(22px + 6 * (100vw - 768px) / 512), 28px); line-height: 1.3; }
+/* visuals as wide as the content (full-bleed on tablets and phones) */
+.a-story :is(.is-media, .media-video, .cs-figure--wide, .cs-pair, .cs-stats--strip) { max-width: none; }
+.a-story .is-media img, .a-story video { border-radius: 0; }
+
+/* Need: the user's pain point, one lead sentence, a touch heavier */
+.a-story .cs-need { margin-bottom: 1em; font-weight: 560; }
+.a-story .cs-need__label { font-weight: 560; }
+/* Friction: a constraint or setback, a light-brown rule on the left */
+.a-story .cs-callout { margin-top: 2em; margin-bottom: 2em; }
+.a-story .cs-callout > :last-child { margin-bottom: 0; }
+.a-story .cs-callout__label { margin: 0 0 8px; font-family: var(--sans); font-weight: 500; font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); line-height: 1.3; }
+.a-story .cs-friction { padding: 4px 0 4px clamp(18px, 2vw, 24px); border-left: 3px solid var(--c-brown); }
+.a-story .cs-friction .cs-callout__label { color: var(--c-brown-ink); }
+/* Result: a measured outcome on a light-blue tint, the number large with its sample size */
+.a-story .cs-result { padding: clamp(20px, 3vw, 32px); background: var(--c-blue-tint); }
+.a-story .cs-result .cs-callout__label { color: var(--c-blue-ink); }
+.a-story .cs-result__figure { margin: 0 0 0.6em; display: grid; gap: 8px; }
+.a-story .cs-result__figure .cs-stat__value, .a-story .cs-stat__value { font-family: var(--serif); font-weight: 470; font-size: clamp(40px, calc(40px + 24 * (100vw - 768px) / 512), 64px); line-height: 1; letter-spacing: -0.01em; }
+.a-story .cs-result__figure .cs-stat__label, .a-story .cs-stat__label { font-family: var(--sans); font-size: clamp(16px, calc(16px + 4 * (100vw - 768px) / 512), 20px); line-height: 1.35; }
+/* What I did: a small run-in label */
+.a-story .cs-move__label { margin: 1.6em 0 6px; font-family: var(--sans); font-weight: 500; font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); color: var(--muted); }
+
+/* Figures: wide by default, a column-wide option, before (grey) / after (blue) labels */
+.a-story .cs-figure { margin-top: clamp(40px, calc(40px + 24 * (100vw - 768px) / 512), 64px); margin-bottom: clamp(40px, calc(40px + 24 * (100vw - 768px) / 512), 64px); }
+.a-story .cs-figure img, .a-story .cs-figure video { display: block; width: 100%; height: auto; }
+.a-story .cs-figure figcaption, .a-story .cs-pair > figcaption { max-width: 860px; margin: 12px auto 0; font-family: var(--sans); font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); line-height: 1.5; color: var(--muted); }
+.a-story .cs-frame__label, .a-story .cs-frame__labels span { display: inline-block; margin: 0 0 10px; padding: 3px 10px; font-family: var(--sans); font-size: 14px; line-height: 1.4; }
+.a-story .cs-frame--before .cs-frame__label, .a-story .cs-frame__labels span:first-child { background: var(--c-grey-tint); color: var(--ink); }
+.a-story .cs-frame--after .cs-frame__label, .a-story .cs-frame__labels span:last-child { background: var(--c-blue-tint); color: var(--c-blue-ink); }
+.a-story .cs-frame__labels { display: flex; justify-content: space-between; margin: 0; }
+.a-story .cs-notes { max-width: 860px; margin: 12px auto 0; padding-left: 1.2em; font-family: var(--sans); font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); line-height: 1.5; }
+.a-story .cs-pair { margin-top: clamp(40px, calc(40px + 24 * (100vw - 768px) / 512), 64px); margin-bottom: clamp(40px, calc(40px + 24 * (100vw - 768px) / 512), 64px); }
+.a-story .cs-pair__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, calc(16px + 48 * (100vw - 768px) / 512), 64px); align-items: start; }
+.a-story .cs-pair .cs-figure { margin: 0; }
+/* the closing strip of key numbers */
+.a-story .cs-stats--strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 32px); margin-top: clamp(40px, 5vw, 64px); margin-bottom: clamp(40px, 5vw, 64px); padding: 0; list-style: none; }
+.a-story .cs-stats--strip .cs-stat { display: grid; gap: 10px; align-content: start; padding: clamp(20px, 3vw, 32px); background: var(--c-blue-tint); }
+/* flags for what the author still has to confirm, and missing images */
+.a-story .cs-confirm { padding: 1px 6px; background: var(--c-brown-tint); color: var(--c-brown-ink); font-family: var(--sans); font-size: 0.72em; line-height: 1.5; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.a-story .cs-missing { padding: 16px 20px; border: 1px dashed var(--c-brown); background: var(--c-brown-tint); color: var(--c-brown-ink); font-family: var(--sans); font-size: 16px; }
+
+/* ---------- Next project ---------- */
+.a-next { padding-top: clamp(96px, calc(96px + 104 * (100vw - 768px) / 512), 200px); }
+.a-next__link { display: grid; grid-template-columns: minmax(0, 1fr) min(350px, 40%); gap: 32px; align-items: center; color: inherit; text-decoration: none; }
+.a-next__title { display: block; margin-top: 12px; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; text-wrap: balance; }
+.a-next__link:hover .a-next__title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.a-next__thumb { display: block; width: 100%; height: auto; aspect-ratio: 350 / 240; object-fit: cover; }
+
+/* ---------- Rail: strokes at the far left, the section names on hover or keyboard focus ---------- */
+.a-rail { display: none; }
+@media (min-width: 1100px) {
+  .a-rail {
+    display: block; position: fixed; left: 0; top: 50%; z-index: 20; transform: translateY(-50%);
+    width: 40px; padding: 16px 16px 16px 14px; overflow: hidden; border-radius: 0 12px 12px 0;
+    font-family: var(--sans);
+    transition: width 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .a-rail:hover, .a-rail:focus-within { width: 270px; background: var(--bg); box-shadow: 0 16px 48px -20px rgb(0 0 0 / 0.35), 0 0 0 1px var(--line); }
+  .a-rail ol { margin: 0; padding: 0; list-style: none; }
+  .a-rail a { display: flex; align-items: center; gap: 14px; padding: 5px 0; color: var(--muted); font-size: 15px; line-height: 1.3; text-decoration: none; white-space: nowrap; }
+  .a-rail a:hover, .a-rail a:focus-visible { color: var(--ink); }
+  .a-rail__tick { flex: none; width: 12px; height: 2px; border-radius: 1px; background: currentColor; opacity: 0.45; transition: width 0.2s ease, opacity 0.2s ease; }
+  .a-rail a[aria-current] { color: var(--ink); }
+  .a-rail a[aria-current] .a-rail__tick { width: 20px; opacity: 1; }
+  .a-rail__label { opacity: 0; transition: opacity 0.15s ease; }
+  .a-rail:hover .a-rail__label, .a-rail:focus-within .a-rail__label { opacity: 1; }
+  .a-rail__top { margin-top: 12px; }
+  .a-rail__top .a-rail__tick { width: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .a-rail, .a-rail__tick, .a-rail__label { transition: none; } }
+
+/* ---------- Tablets and phones: the hero and visuals run edge to edge, pairs and numbers stack ---------- */
+@media (max-width: 900px) {
+  .a-case__hero { padding-inline: 0; }
+  .a-story :is(.is-media, .media-video, .cs-figure--wide, .cs-pair) { margin-inline: calc(-1 * var(--pad)); }
+  .a-story :is(.cs-figure--wide, .media-video, .cs-pair) figcaption { padding-inline: var(--pad); }
+}
+@media (max-width: 700px) {
+  .a-story .cs-pair__grid, .a-story .cs-stats--strip { grid-template-columns: minmax(0, 1fr); }
+  .a-next__link { grid-template-columns: minmax(0, 1fr); }
+}

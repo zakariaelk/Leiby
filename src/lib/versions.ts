@@ -34,7 +34,8 @@ export const LIST_LINES: Record<string, string> = {
 
 /** Where a project's case study lives from inside a version: the INSO case has its own page in
  *  each version, the others use the shared /next/work/ template. */
-export const caseHref = (base: string, id: string) => (id === CASE ? `${base}work/${id}/` : `/next/work/${id}/`);
+// the site (base "/") has every case at /work/<slug>/; the versions under /next/ and /tests/ only the INSO one
+export const caseHref = (base: string, id: string) => (base === '/' || id === CASE ? `${base}work/${id}/` : `/next/work/${id}/`);
 
 /** The case study pages of a version: the INSO case, with NGOSafety as the next project. */
 export async function caseStaticPaths() {

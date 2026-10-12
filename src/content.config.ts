@@ -7,6 +7,10 @@ const projectSchema = ({ image }: SchemaContext) =>
       title: z.string(),
       client: z.string(),
       headline: z.string(),
+      // Case page top (layout sketch v2): small label above the headline, the intro under the hero
+      label: z.string().optional(),
+      lede: z.array(z.string()).default([]),
+      deliverables: z.string().optional(),
       summary: z.string(),
       intro: z.string(),
       // Show the intro under the title on the case study page (it still feeds the home card)

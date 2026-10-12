@@ -1,85 +1,97 @@
 ---
-// Version A case study (after hansonwu.com/article-redesign), ordered for a quick read by a design
-// lead or recruiter: what it is and the title, the facts in one row, the cover, then "at a glance"
-// (problem, what I did, outcome) with the three headline results, and only then the full story.
-// The story's wording is unchanged; case-enhance.ts gives its parts their place in the hierarchy.
-// Used by /next/a/work/… and the /tests variations: base = where the links stay, look = their
-// colour or type variation.
+// Version A case study, after hansonwu.com/game-breakdowns and the layout sketch v2
+// (docs/case-study-layout-sketch-for-claude-code.md): a light start, details as they come.
+//   label → headline → hero (full content width) → one or two intro paragraphs → facts (2×2) → link
+//   then the story in an 860px column, visuals wider, and the next project.
+// A slim rail of strokes at the far left lists the sections (names on hover, the current one longer).
+// Used by /work/<slug>/ and the /next/… and /tests variations: base = where the links stay,
+// look = their colour or type variation.
+import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
 import ContactA from './ContactA.astro';
-import { cutMask } from '../../../lib/papercut';
 import type { CollectionEntry } from 'astro:content';
 import { caseHref } from '../../../lib/versions';
-import { caseTop, type CaseContent } from '../../../lib/case-inso';
 import '../../../styles/next-a.css';
 import '../../../styles/next-a-looks.css';
+import '../../../styles/case-a.css';
 
-// content: which text the top section uses (lib/case-inso.ts): 'mix' (the page's current text, v3 for gaps) or 'v3'
-interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; content?: CaseContent; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
-const { project, next, base = '/next/a/', content = 'mix', look } = Astro.props;
+interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
+const { project, next, base = '/next/a/', look } = Astro.props;
 const d = project.data;
-const { Content } = await render(project);
-const top = caseTop(content, d);
+const { Content, headings } = await render(project);
+const labelOf = (p: CollectionEntry<'projects'>['data']) => p.label ?? [p.org ?? p.client, p.projectName].filter(Boolean).join(' · ');
+const meta = [
+  { label: 'Role', value: d.role },
+  { label: 'Team', value: d.team },
+  { label: 'Timeline', value: d.duration },
+  { label: 'Deliverables', value: d.deliverables },
+].filter((m) => m.value) as { label: string; value: string }[];
 const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+// rail: the body's section names (its h2s)
+const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, label: h.text }));
 ---
 <Next base={base} variant="a" logo look={look} title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
-  <!-- Top, in a design lead's reading order: what it is, the hero, the facts, then the whole story in
-       twenty seconds (At a glance: problem, what I did, outcome, key numbers, constraints) -->
-  <header class="a-case a-wrap">
-    <a class="a-back" href={`${base}#work`}>All work</a>
-    <p class="a-case__org">{d.org ?? d.client}{d.projectName && <span> · {d.projectName}</span>}</p>
-    <h1 class="a-case__title">{top.title}</h1>
-    {top.subtitle && <p class="a-case__summary">{top.subtitle}</p>}
+  {sections.length > 2 && (
+    <nav class="a-rail" aria-label="Sections">
+      <ol>
+        {sections.map((s) => <li><a href={`#${s.id}`} data-section={s.id}><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">{s.label}</span></a></li>)}
+      </ol>
+      <a class="a-rail__top" href="#top"><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">Back to top</span></a>
+    </nav>
+  )}
+
+  <header class="a-wrap a-case" id="top">
+    <p class="a-case__label">{labelOf(d)}</p>
+    <h1 class="a-case__title">{d.headline}</h1>
   </header>
 
   <div class="a-wrap a-case__hero">
-    <FramedMedia frame={false} image={d.cover} alt={`${d.org ?? d.client}: ${d.projectName ?? d.title}`} eager />
+    <FramedMedia frame={false} image={d.cover} alt={`${labelOf(d)}: ${d.projectName ?? d.title}`} sizes="(min-width: 1440px) 1340px, 100vw" eager />
   </div>
 
-  <dl class="a-wrap a-meta-row">
-    {top.meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}
-    {d.link && <div><dt>Take a look</dt><dd><a href={d.link} target="_blank" rel="noopener">{linkLabel}<span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span></a></dd></div>}
-  </dl>
-
-  <div class="n-band n-band--light a-sheet">
-    <div class="n-cut n-cut--top" style={cutMask(29)} aria-hidden="true"></div>
-    <section class="a-wrap a-glance2" aria-labelledby="glance-title">
-      <div class="a-glance2__panel">
-        <h2 class="a-glance2__title" id="glance-title">At a glance</h2>
-        <dl class="a-glance2__rows">
-          {top.glance.map((g) => <div><dt>{g.label}</dt><dd>{g.text}</dd></div>)}
-        </dl>
-        <ul class="a-glance2__numbers" aria-label="Key numbers">
-          {top.numbers.map((n) => <li><strong>{n.value}</strong><span>{n.label}</span><small>{n.note}</small></li>)}
-        </ul>
-        <div class="a-glance2__rows a-glance2__constraints">
-          <div><p class="a-glance2__dt">Constraints</p><ul>{top.constraints.map((c) => <li>{c}</li>)}</ul></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="a-wrap a-scope" aria-labelledby="scope-title">
-      <h2 class="a-scope__title" id="scope-title">My role and scope</h2>
-      <ul>{top.role.map((r) => <li><strong>{r.label}:</strong> {r.text}</li>)}</ul>
-    </section>
-
-    <div class="a-story a-wrap" data-story><Content /></div>
-
-    <nav class="a-next a-wrap" aria-label="Next project">
-      <p class="a-label">Next project</p>
-      <a href={caseHref(base, next.id)}>
-        <span class="a-next__org">{next.data.org ?? next.data.client}</span>
-        <span class="a-next__title">{next.data.statement ?? next.data.intro}</span>
-      </a>
-    </nav>
-    <div class="n-cut n-cut--bottom" style={cutMask(91)} aria-hidden="true"></div>
+  <div class="a-wrap">
+    <div class="a-col a-case__intro">
+      {d.lede.map((p) => <p class="a-case__lede">{p}</p>)}
+      {meta.length > 0 && <dl class="a-case__meta">{meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}</dl>}
+      {d.link && <p class="a-case__link"><a href={d.link} target="_blank" rel="noopener">{linkLabel}<span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>}
+    </div>
   </div>
+
+  <div class="a-story a-wrap" data-story><Content /></div>
+
+  <nav class="a-wrap a-next" aria-label="Next project">
+    <a class="a-col a-next__link" href={caseHref(base, next.id)}>
+      <span class="a-next__text">
+        <span class="a-case__label">Next project</span>
+        <span class="a-next__title">{labelOf(next.data)} — {next.data.headline}</span>
+      </span>
+      <Image class="a-next__thumb" src={next.data.cover} alt="" width={700} sizes="(min-width: 900px) 350px, 100vw" />
+    </a>
+  </nav>
 
   <ContactA />
 </Next>
 
 <script>
   import '../../../scripts/case-enhance';
+  // Rail: the current section is the last one whose heading passed the top third of the screen
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.a-rail [data-section]')];
+  const targets = links.map((a) => document.getElementById(a.dataset.section!)).filter(Boolean) as HTMLElement[];
+  if (targets.length) {
+    let active = '';
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = innerHeight * 0.33;
+      let id = '';
+      targets.forEach((t) => { if (t.getBoundingClientRect().top < line) id = t.id; });
+      if (id === active) return;
+      active = id;
+      links.forEach((a) => (a.dataset.section === id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    update();
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  }
 </script>
