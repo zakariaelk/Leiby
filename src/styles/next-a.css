@@ -164,7 +164,7 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
 
-/* The speaker sits just right of the last "a" of my name, upright and centred on the lowercase
+/* The speaker sits just after my name's full stop, upright and centred on the lowercase
    letters; it plays how to say it */
 .a-say-a { white-space: nowrap; } /* the speaker never wraps away from the name */
 .a-say {
@@ -172,7 +172,7 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   display: inline-block;
   width: 0.58em;
   height: 0.58em;
-  margin-left: 0.03em; /* the speaker's body sits a little in from the left of its box */
+  margin-left: 0.08em;
   padding: 0;
   border: 0;
   background: none;
