@@ -387,7 +387,7 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
   .a-feat--lead .a-feat__link { grid-template-rows: 1fr auto; }
   .a-feat--lead .a-feat__title { grid-row: 1; align-self: start; }
   .a-feat--lead .a-feat__meta { grid-row: 2; }
-  .a-feat--lead .a-feat__visual { grid-row: 1 / -1; position: relative; z-index: 2; margin-top: calc(-1 * (var(--a-pad-top) + 0.7 * clamp(72px, 7.5vw, 110px))); } /* rises 50–76px above the edge */
+  .a-feat--lead .a-feat__visual { grid-row: 1 / -1; position: relative; z-index: 2; margin-top: calc(-1 * (var(--a-pad-top) + 0.85 * clamp(72px, 7.5vw, 110px))); } /* rises 61–92px above the edge */
   .a-feat--lead .v-frame img, .a-feat--lead .v-frame video { aspect-ratio: 1; }
 }
 
