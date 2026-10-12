@@ -15,6 +15,7 @@
   --a-title: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 6 * (100vw - 1024px) / 416)), 42px); /* featured titles: 28 / 36 / 42 */
   --a-sub: clamp(28px, max(calc(28px + 8 * (100vw - 390px) / 634), calc(36px + 8 * (100vw - 1024px) / 416)), 44px); /* 28 / 36 / 44 */
 }
+@media (min-width: 1024px) { .v-a { --pad: calc(0.8 * clamp(16px, 4vw, 64px)); } } /* desktop: side margins 20% narrower */
 .a-wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--pad); }
 .a-label { margin: 0 0 clamp(16px, 2vw, 28px); font-family: var(--sans); font-weight: 400; font-size: var(--t-meta); line-height: 1.15; color: var(--muted); }
 .a-list { margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
@@ -411,8 +412,8 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 
 
 /* ---------- Header logo: 90px on phones and desktop, 100px on tablets ---------- */
-.v-a .n-brand__logo .n-logo { width: 90px; }
-@media (min-width: 701px) and (max-width: 1023px) { .v-a .n-brand__logo .n-logo { width: 100px; } }
+.v-a .n-brand__logo .n-logo { width: 90px; margin-left: -5.5px; } /* the blob starts ~7px into its box: its edge lines up with the text */
+@media (min-width: 701px) and (max-width: 1023px) { .v-a .n-brand__logo .n-logo { width: 100px; margin-left: -6px; } }
 
 /* ---------- Phone menu: the logo stays on top in its light colours; the links in the desktop nav's
    type, larger; LinkedIn and the CV at the bottom ---------- */
