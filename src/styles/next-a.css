@@ -50,7 +50,9 @@
 .a-statement a, .a-more a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.12em; }
 @media (min-width: 600px) { .a-statement { font-size: clamp(36px, calc(36px + 8 * (100vw - 600px) / 168), 44px); } } /* tablets: 36 → 44px */
 @media (min-width: 1024px) { .a-statement { font-size: min(50px, calc((min(100vw, 1440px) - 2 * var(--pad)) / 29.9)); } }
-@media (min-width: 1024px) { .a-hero:has(.a-more) { padding-bottom: 120px; } } /* home, desktop: room between the intro and the first case's visual */
+/* home, desktop: the intro ends ~655px down the page (the first case's torn edge), the text a touch
+   above the middle of that space, as an optical centre */
+@media (min-width: 1024px) { .a-hero:has(.a-more) { min-height: calc(655px - var(--head-h)); padding-bottom: 96px; } }
 /* home: the first sentence ~1.28× the featured titles (36 / 46 / 54px); the second at the case
    studies' body size on large screens, never below the phone's 28px */
 .a-statement.a-lead { font-size: calc(var(--a-title) * 1.28); line-height: 1.2; }
@@ -173,21 +175,21 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
 
-/* The speaker sits just after my name's full stop, upright and centred on the lowercase
-   letters; it plays how to say it */
+/* The speaker hovers over my name's full stop: its back in line with the stop's left edge, its
+   middle level with the top of the "a" before it (the x-height, 0.75em above the box's bottom) */
 .a-say-a { white-space: nowrap; } /* the speaker never wraps away from the name */
+.a-say-dot { position: relative; }
 .a-say {
-  position: relative;
-  display: inline-block;
+  position: absolute;
+  left: -0.025em; /* the speaker's back (drawn a little into its box) on the stop's left edge */
+  bottom: 0.46em; /* 0.75em − half its height */
   width: 0.58em;
   height: 0.58em;
-  margin-left: 0.08em;
   padding: 0;
   border: 0;
   background: none;
   font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
   color: inherit;
-  vertical-align: -0.06em; /* its middle level with the middle of the x-height */
   cursor: pointer;
 }
 .a-say::before { content: ''; position: absolute; inset: -0.3em; } /* a comfortable tap area */
