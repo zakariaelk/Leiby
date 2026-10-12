@@ -10,14 +10,14 @@ const year = new Date().getFullYear();
 <div class="n-band n-band--light a-band--contact">
   <div class="n-cut n-cut--top" style={cutMask(83)} aria-hidden="true"></div>
   <section class="a-contact a-wrap" id="contact" aria-labelledby="contact-title">
-    <h2 class="a-contact__title" id="contact-title">Do you have a project in mind?<br /> Let's <a href={`mailto:${settings.email}`}>connect</a>.</h2>
-    <div class="a-contact__row">
-      <ul class="a-contact__links">
-        <li><a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a href={CV} target="_blank" rel="noopener">Download CV</a></li>
-      </ul>
+    <div class="a-contact__head">
+      <h2 class="a-contact__title" id="contact-title">Do you have a project in mind?<br /> Let's <a href={`mailto:${settings.email}`}>connect</a>.</h2>
       <p class="a-status"><span class="a-status__dot" aria-hidden="true"></span>Open to perm roles &amp; new projects</p>
     </div>
+    <ul class="a-contact__links">
+      <li><a href={settings.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href={CV} target="_blank" rel="noopener">Download CV</a></li>
+    </ul>
   </section>
   <footer class="a-foot">
     <div class="a-wrap a-foot__row">

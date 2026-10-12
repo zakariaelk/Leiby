@@ -79,7 +79,7 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
 .a-contact { padding-top: var(--a-pad-top-l); padding-bottom: calc(var(--a-pad-bottom) + 20px); }
 .a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--a-title); line-height: 1.15; text-wrap: balance; } /* the featured titles' size */
 .a-contact a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
-.a-contact__links { margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
+.a-contact__links { margin: 50px 0 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 .a-contact__links li + li { margin-top: 0.8em; }
 .v-a { --a-rule: #e8e8e8; }
 :root[data-theme='dark'].v-a { --a-rule: #333; }
@@ -451,8 +451,9 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
 .n-theme--bar { display: none; }
 @media (prefers-reduced-motion: reduce) { .v-a .n-nav, .v-a .n-nav > * { transition: none !important; } }
 
-/* ---------- Contact: the availability level with LinkedIn on desktop, hidden below ---------- */
-.a-contact__row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px 40px; margin-top: 50px; }
+/* ---------- Contact: the availability at the far right, on the line of "Let's connect." (desktop),
+   hidden below ---------- */
+.a-contact__head { display: flex; align-items: last baseline; justify-content: space-between; gap: 16px 40px; }
 @media (max-width: 1023px) { .a-status { display: none; } }
 
 /* ---------- Case study top (design lead's reading order): title + subtitle, wide hero, one compact
