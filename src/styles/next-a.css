@@ -77,7 +77,7 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
 .a-about p { margin: 0 0 1em; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 
 .a-contact { padding-top: var(--a-pad-top-l); padding-bottom: calc(var(--a-pad-bottom) + 20px); }
-.a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(32px, max(calc(32px + 12 * (100vw - 390px) / 634), calc(44px + 8 * (100vw - 1024px) / 416)), 52px); line-height: 1.15; } /* 32 / 44 / 52 */
+.a-contact__title { margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--a-title); line-height: 1.15; text-wrap: balance; } /* the featured titles' size */
 .a-contact a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
 .a-contact__links { margin: 0; padding: 0; list-style: none; font-family: var(--serif); font-weight: 470; font-size: var(--t-body); line-height: 1.5; }
 .a-contact__links li + li { margin-top: 0.8em; }
