@@ -71,10 +71,12 @@
 @media (min-width: 1024px) { .a-hero > .a-more { max-width: 33em; } }
 .a-more__short { display: none; }
 @media (max-width: 700px) { .a-more__long { display: none; } .a-more__short { display: inline; } }
-/* phones: both sentences at the featured titles' size, a touch smaller on narrower phones so each
-   stays within three lines (tested 360–440px, iPhone mini to Pro Max, with ~4% to spare) */
+/* phones: both sentences in the featured titles' type (weight 500, line height 1.15, -0.01em), a
+   touch smaller on narrower phones so each stays within three lines (tested 360–440px, iPhone mini
+   to Pro Max, with ~4% to spare) */
 @media (max-width: 700px) {
-  .a-statement.a-lead, .a-more { font-size: min(var(--a-title), calc((100vw - 2 * var(--pad)) / 13.5)); }
+  .a-statement.a-lead, .a-more { font-size: min(var(--a-title), calc((100vw - 2 * var(--pad)) / 13.5)); font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; }
+  .a-more { margin-top: 0.95em; } /* the gap between them back to ~25px, as before the second grew */
 }
 .a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
 .a-hero > .a-more { animation-delay: 0.35s; }
@@ -196,8 +198,9 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   .a-mark::after, .a-mark.is-drawn::after { animation: none; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 }
 
-/* The speaker follows my name after a small space, light on a dark paper cut-out like the logo's
-   Z (the colours swap with the logo's in dark mode); the icon keeps its size */
+/* The speaker follows my name after a small space, on a paper cut-out like the logo's Z: a grey a
+   shade darker than the paper (lighter in dark mode), the icon in the text colour. The negative
+   margins keep the cut-out from making its line any taller */
 .a-say-a { white-space: nowrap; } /* the speaker never wraps away from the name */
 .a-say {
   position: relative;
@@ -210,12 +213,15 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   border: 0;
   background: none;
   font: inherit; /* buttons don't inherit the font size: the em sizes follow the intro */
-  color: var(--on-brown);
+  margin-block: -0.3em;
+  color: var(--ink);
   vertical-align: -0.12em; /* its middle a touch above the middle of the capitals */
   cursor: pointer;
 }
 .a-say::before { content: ''; position: absolute; inset: -0.15em; } /* a comfortable tap area */
-.a-say__bg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--brown); }
+.v-a { --say-bg: #e6e6e6; }
+:root[data-theme='dark'].v-a { --say-bg: #303030; }
+.a-say__bg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--say-bg); }
 .a-say__icon { position: relative; width: 0.58em; height: 0.58em; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; translate: 0.03em 0; }
 .a-say .wave { opacity: 0.5; transition: opacity 0.2s ease; }
 .a-say:hover .wave, .a-say:focus-visible .wave { opacity: 1; }
