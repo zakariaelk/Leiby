@@ -35,6 +35,11 @@ export function cutEdge(seed: number) {
   return d + ' L1000 24 Z';
 }
 
+/** The same gently uneven cut as an open line (viewBox 0 0 1000 24), for a hairline divider. */
+export function cutLine(seed: number) {
+  return cutEdge(seed).replace(/^M0 24 L/, 'M').replace(/ L1000 24 Z$/, '');
+}
+
 /** The cut edge as a CSS custom property (--cut) holding an SVG mask, for .n-cut elements: the
  *  band's own paper (colour + texture) masked by a gently uneven cut. */
 export function cutMask(seed: number) {

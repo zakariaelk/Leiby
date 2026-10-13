@@ -34,7 +34,7 @@ const storyBlocks = {
   move: wrapper({ label: 'What I did', schema: { label: fields.text({ label: 'Label', defaultValue: 'What I did' }) } }),
   result: wrapper({
     label: 'Result (max 3 sentences)',
-    schema: { value: fields.text({ label: 'Large number (optional)' }), label: fields.text({ label: 'Number label, with sample size' }) },
+    schema: { value: fields.text({ label: 'Large number (optional, older drafts)' }), label: fields.text({ label: 'Number label, with sample size' }), note: fields.text({ label: 'Small line: the numbers and sample size' }) },
   }),
   figure: block({
     label: 'Figure',
@@ -99,9 +99,10 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         client: fields.text({ label: 'Client (short name for cards)' }),
         headline: fields.text({ label: 'Headline (case study page)' }),
-        label: fields.text({ label: 'Case label above the headline, e.g. “INSO · Mobile app”' }),
         lede: fields.array(fields.text({ label: 'Paragraph', multiline: true }), { label: 'Intro under the hero (one or two short paragraphs)', itemLabel: (p) => p.value.slice(0, 60) }),
         deliverables: fields.text({ label: 'Deliverables (case study facts)' }),
+        numbers: fields.array(fields.object({ value: fields.text({ label: 'Number' }), label: fields.text({ label: 'Label, with sample size' }) }), { label: 'Key numbers (strip under the facts)', itemLabel: (p) => p.fields.value.value }),
+        numbersCaption: fields.text({ label: 'Caption under the key numbers' }),
         summary: fields.text({ label: 'Card summary', multiline: true }),
         intro: fields.text({ label: 'Intro (case study page)', multiline: true }),
         showIntro: fields.checkbox({ label: 'Show the intro under the title on the case study page', defaultValue: true }),

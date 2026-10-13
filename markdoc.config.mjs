@@ -32,7 +32,7 @@ export default defineMarkdocConfig({
     need: { render: story('Need') },
     friction: { render: story('Friction') },
     move: { render: story('Move'), attributes: { label: { type: String } } },
-    result: { render: story('Result'), attributes: { value: { type: String }, label: { type: String } } },
+    result: { render: story('Result'), attributes: { value: { type: String }, label: { type: String }, note: { type: String } } },
     figure: {
       render: story('Figure'),
       selfClosing: true,

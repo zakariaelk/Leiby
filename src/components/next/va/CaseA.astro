@@ -1,9 +1,10 @@
 ---
-// Version A case study, after hansonwu.com/game-breakdowns and the layout sketch v2
-// (docs/case-study-layout-sketch-for-claude-code.md): a light start, details as they come.
-//   label → headline → hero (full content width) → one or two intro paragraphs → facts (2×2) → link
-//   then the story in an 860px column, visuals wider, and the next project.
-// A slim rail of strokes at the far left lists the sections (names on hover, the current one longer).
+// Version A case study, after hansonwu.com/game-breakdowns and the layout sketch v3
+// (docs/case-study-layout-sketch-for-claude-code.md): a light start, proof early, details as they come.
+//   client → headline → hero (full content width) → one or two intro paragraphs → facts (2×2) → "Take a look"
+//   then the three key numbers, the story in an 860px column, visuals wider, and the next project.
+// A slim rail of strokes at the far left lists the sections: it appears open at the first section,
+// closes to strokes after it (names on hover), the current one longer.
 // Used by /work/<slug>/ and the /next/… and /tests variations: base = where the links stay,
 // look = their colour or type variation.
 import { Image } from 'astro:assets';
@@ -13,6 +14,7 @@ import FramedMedia from '../FramedMedia.astro';
 import ContactA from './ContactA.astro';
 import type { CollectionEntry } from 'astro:content';
 import { caseHref } from '../../../lib/versions';
+import { cutLine } from '../../../lib/papercut';
 import '../../../styles/next-a.css';
 import '../../../styles/next-a-looks.css';
 import '../../../styles/case-a.css';
@@ -21,14 +23,14 @@ interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'p
 const { project, next, base = '/next/a/', look } = Astro.props;
 const d = project.data;
 const { Content, headings } = await render(project);
-const labelOf = (p: CollectionEntry<'projects'>['data']) => p.label ?? [p.org ?? p.client, p.projectName].filter(Boolean).join(' · ');
+const labelOf = (p: CollectionEntry<'projects'>['data']) => p.org ?? p.client; // the client's name
 const meta = [
   { label: 'Role', value: d.role },
   { label: 'Team', value: d.team },
   { label: 'Timeline', value: d.duration },
   { label: 'Deliverables', value: d.deliverables },
 ].filter((m) => m.value) as { label: string; value: string }[];
-const linkLabel = d.link?.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+const rows = [meta.slice(0, 2), meta.slice(2)].filter((r) => r.length);
 // rail: the body's section names (its h2s)
 const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, label: h.text }));
 ---
@@ -54,10 +56,28 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
   <div class="a-wrap">
     <div class="a-col a-case__intro">
       {d.lede.map((p) => <p class="a-case__lede">{p}</p>)}
-      {meta.length > 0 && <dl class="a-case__meta">{meta.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}</dl>}
-      {d.link && <p class="a-case__link"><a href={d.link} target="_blank" rel="noopener">{linkLabel}<span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>}
+      {rows.map((r, i) => (
+        <Fragment>
+          {i > 0 && <svg class="a-case__rule" viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true"><path d={cutLine(37)} /></svg>}
+          <dl class="a-case__meta">{r.map((m) => <div><dt>{m.label}</dt><dd>{m.value}</dd></div>)}</dl>
+        </Fragment>
+      ))}
+      {d.link && (
+        <a class="a-case__cta" href={d.link} target="_blank" rel="noopener">
+          <span class="a-case__cta-paper" data-paper data-seed="11" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
+          Take a look<span class="sr-only"> at {d.link.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')} (opens in a new tab)</span>
+        </a>
+      )}
     </div>
   </div>
+
+  {d.numbers.length > 0 && (
+    <section class="a-wrap a-case__numbers" aria-label="Key numbers">
+      <ul>{d.numbers.map((n) => <li><span class="a-case__num">{n.value}</span><span class="a-case__num-label">{n.label}</span></li>)}</ul>
+      {d.numbersCaption && <p class="a-case__num-caption">{d.numbersCaption}</p>}
+    </section>
+  )}
 
   <div class="a-story a-wrap" data-story><Content /></div>
 
@@ -76,7 +96,10 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
 
 <script>
   import '../../../scripts/case-enhance';
-  // Rail: the current section is the last one whose heading passed the top third of the screen
+  import '../../../scripts/paper'; // the "Take a look" cut-out
+  // Rail: the current section is the last one whose heading passed the top third of the screen.
+  // It shows from the first section on, open (names showing) while that first section is current.
+  const rail = document.querySelector<HTMLElement>('.a-rail');
   const links = [...document.querySelectorAll<HTMLAnchorElement>('.a-rail [data-section]')];
   const targets = links.map((a) => document.getElementById(a.dataset.section!)).filter(Boolean) as HTMLElement[];
   if (targets.length) {
@@ -90,6 +113,8 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
       if (id === active) return;
       active = id;
       links.forEach((a) => (a.dataset.section === id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+      rail?.classList.toggle('is-shown', id !== '');
+      rail?.classList.toggle('is-open', id !== '' && id === targets[0].id);
     };
     update();
     addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
