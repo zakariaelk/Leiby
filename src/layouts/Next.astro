@@ -10,8 +10,8 @@ import NextHeader from '../components/next/NextHeader.astro';
 // variant: a class on <html> for that version's own styles.
 // intro: the home page's opening animation (version A) may play; decided here, before the first paint
 // look: a colour or type variation of version A (data-look on <html>); 'dmsans' also loads DM Sans
-interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
-const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false, look } = Astro.props;
+interface Props { title?: string; description?: string; palette?: 'paper' | 'mono'; base?: string; variant?: string; logo?: boolean; work?: string; intro?: boolean; enter?: boolean; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
+const { title = 'Zakaria El Khachia · Product designer', description = 'Product designer with a frontend development background.', palette = 'mono', base = '/next/', variant, logo = false, work, intro = false, enter = false, look } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-palette={palette} data-look={look} class={variant ? `v-${variant}` : undefined}>
@@ -33,6 +33,20 @@ const { title = 'Zakaria El Khachia · Product designer', description = 'Product
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       })();
     </script>
+    {enter && (
+      <script is:inline>
+        // Entrance (home, scripts/enter-a.ts): the page appears top to bottom. Hidden from the first
+        // paint; never with reduced motion; everything shows after 4s if the script never takes over
+        (function () {
+          try {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var html = document.documentElement;
+            html.classList.add('is-enter');
+            setTimeout(function () { if (!html.classList.contains('is-enter-js')) html.classList.remove('is-enter'); }, 4000);
+          } catch (e) {}
+        })();
+      </script>
+    )}
     {intro && (
       <script is:inline>
         // Intro: once per visit (?intro replays it), never with reduced motion; released after 6s whatever happens

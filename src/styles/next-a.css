@@ -93,11 +93,6 @@
   .a-statement.a-lead, .a-more { font-size: min(var(--a-title), calc((100vw - 2 * var(--pad)) / 13.5)); font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; }
   .a-more { margin-top: 0.95em; } /* the gap between them back to ~25px, as before the second grew */
 }
-.a-hero > :is(.a-lead, .a-more) { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
-.a-hero > .a-more { animation-delay: 0.35s; }
-@keyframes a-rise { from { opacity: 0; transform: translateY(14px); } }
-html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; } /* the fade waits for the intro's logo to fly */
-@media (prefers-reduced-motion: reduce) { .a-hero > :is(.a-lead, .a-more) { animation: none; } }
 /* /v1/: the earlier intro, one sentence in two parts at one size; three lines on desktop, the font
    sized so the longest line ("accessible … zones.", 29.2em) fits the content width */
 .a-hero--v1 .a-s2 { display: block; margin-top: 1.2em; } /* an empty line between the two parts */
@@ -107,8 +102,6 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
   .a-hero--v1 .a-s2 { margin-top: 0; }
   .a-hero--v1 .a-br-d { display: inline; }
 }
-.a-hero--v1 > .a-statement { animation: a-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both; }
-@media (prefers-reduced-motion: reduce) { .a-hero--v1 > .a-statement { animation: none; } }
 /* its speaker sits on the last "a" of my name like an accent, tilted up */
 .a-hero--v1 .a-say-a { position: relative; white-space: normal; }
 .a-hero--v1 .a-say { position: absolute; left: 50%; bottom: 0.9em; display: block; width: 0.54em; height: 0.54em; margin: 0; vertical-align: baseline; transform: translateX(-18%) rotate(-45deg); }
@@ -296,10 +289,6 @@ html.is-intro:not(.is-intro-reveal) .a-hero > * { animation-play-state: paused; 
 /* ---------- Intro (home, once per visit; components/next/va/IntroA.astro, scripts/intro-a.ts) ---------- */
 html.is-intro { overflow: hidden; }
 html.is-intro .n-brand__logo { visibility: hidden; }
-html.is-intro :is(.n-nav, .n-burger, .a-work) { opacity: 0; transform: translateY(16px); }
-html.is-intro.is-intro-reveal :is(.n-nav, .n-burger, .a-work) { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
-html.is-intro.is-intro-reveal .n-nav, html.is-intro.is-intro-reveal .n-burger { transition-delay: 0.15s; }
-html.is-intro.is-intro-reveal .a-work { transition-delay: 0.45s; }
 .a-intro { display: none; }
 html.is-intro .a-intro { position: fixed; inset: 0; z-index: 100; display: block; pointer-events: none; }
 .a-intro::before { content: ''; position: absolute; inset: 0; background-color: var(--bg); background-image: var(--paper); transition: opacity 0.55s ease 0.1s; }
@@ -479,3 +468,27 @@ html.is-logo-spin .n-brand__logo :is(.n-logo__big-shape, .n-logo__small-shape) {
    hidden below ---------- */
 .a-contact__head { display: flex; align-items: last baseline; justify-content: space-between; gap: 16px 40px; }
 @media (max-width: 1023px) { .a-status { display: none; } }
+
+/* ---------- Entrance (home, scripts/enter-a.ts; html.is-enter is set before the first paint) ----------
+   logo → nav → the hero's lines rise from behind their masks → each featured case unmasks in view */
+html.is-enter .n-brand__logo { opacity: 0; transform: scale(0.88); transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+html.is-enter.enter-logo .n-brand__logo { opacity: 1; transform: none; }
+@media (min-width: 701px) {
+  html.is-enter .n-nav { opacity: 0; transform: translateY(-8px); transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  html.is-enter.enter-nav .n-nav { opacity: 1; transform: none; }
+}
+@media (max-width: 700px) {
+  html.is-enter :is(.n-burger, .n-theme--bar) { opacity: 0; transition: opacity 0.5s ease; }
+  html.is-enter.enter-nav :is(.n-burger, .n-theme--bar) { opacity: 1; }
+}
+/* hero: hidden until its words are masked, then each word rises with its line's delay */
+html.is-enter .a-hero > :is(.a-statement, .a-more):not(:has(.a-w)) { visibility: hidden; }
+.a-w { display: inline-block; overflow: clip; padding-block: 0.15em; margin-block: -0.15em; }
+.a-w__in { display: inline-block; transform: translateY(115%); transition: transform 0.8s cubic-bezier(0.2, 0.75, 0.2, 1) calc(var(--line, 0) * 90ms); }
+.is-in .a-w__in { transform: none; }
+/* featured cases: the visual's cover slides off to the right while its words rise, all at once */
+html.is-enter .a-feat__visual { clip-path: inset(0 0 0 0); transition: clip-path 0.9s cubic-bezier(0.165, 0.84, 0.44, 1); }
+html.is-enter .a-feat:not(.is-shown) .a-feat__visual { clip-path: inset(0 100% 0 0); }
+html.is-enter .a-feat :is(.a-feat__client, .a-feat__title, .a-feat__meta) { transition: opacity 0.6s ease 0.1s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s; }
+html.is-enter .a-feat:not(.is-shown) :is(.a-feat__client, .a-feat__title, .a-feat__meta) { opacity: 0; transform: translateY(32px); }
+
