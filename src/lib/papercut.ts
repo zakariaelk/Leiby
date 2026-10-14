@@ -166,3 +166,27 @@ export function paperPill(w: number, h: number, seed: number, anchor: string) {
   edge(h * 0.98, -1, 200);             // bottom edge, right to left
   return 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') + 'Z';
 }
+
+/** A pill-shaped paper cut-out of width w and height h (CSS path, px) whose small nicks sit at even
+ *  spacing along the outline. phase shifts the pattern of nicks by that many places around the
+ *  outline, so stepping it makes the edge travel round while the shape stays put. */
+export function paperRing(w: number, h: number, seed: number, phase = 0) {
+  const r = h / 2;
+  w = Math.max(w, h);
+  const straight = w - 2 * r;
+  const perimeter = 2 * straight + 2 * Math.PI * r;
+  const n = Math.max(12, Math.round(perimeter / (h * 0.3)));
+  const pts: string[] = [];
+  for (let i = 0; i < n; i++) {
+    let d = (i / n) * perimeter;
+    let x: number, y: number, nx: number, ny: number;
+    if (d < straight) { x = r + d; y = 0; nx = 0; ny = -1; } // top, left to right
+    else if ((d -= straight) < Math.PI * r) { const a = -Math.PI / 2 + d / r; x = w - r + Math.cos(a) * r; y = r + Math.sin(a) * r; nx = Math.cos(a); ny = Math.sin(a); } // right end
+    else if ((d -= Math.PI * r) < straight) { x = w - r - d; y = h; nx = 0; ny = 1; } // bottom, right to left
+    else { d -= straight; const a = Math.PI / 2 + d / r; x = r + Math.cos(a) * r; y = r + Math.sin(a) * r; nx = Math.cos(a); ny = Math.sin(a); } // left end
+    const nick = -h * 0.075 + hash(seed, (((i - phase) % n) + n) % n) * h * 0.09; // mostly inward, so it stays in the box
+    pts.push(`${(x + nx * nick).toFixed(1)} ${(y + ny * nick).toFixed(1)}`);
+  }
+  return 'M' + pts.join(' L') + 'Z';
+}
+

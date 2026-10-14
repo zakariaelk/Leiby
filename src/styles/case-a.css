@@ -44,8 +44,6 @@
 /* "Take a look": a paper cut-out like the phone menu's buttons, in the logo's colours */
 .a-case__cta { position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 10px; margin-top: clamp(32px, calc(32px + 16 * (100vw - 768px) / 512), 48px); padding: 15px 26px; font-family: var(--sans); font-weight: 430; font-size: 18px; letter-spacing: -0.2px; line-height: 1.2; color: var(--on-brown); text-decoration: none; }
 .a-case__cta-paper { position: absolute; inset: 0; z-index: -1; background-color: var(--brown); }
-.a-case__cta-paper { transform-origin: center; animation: n-spin 6s steps(24, end) infinite paused; } /* turns like the logo, 15° a step */
-.a-case__cta:hover .a-case__cta-paper, .a-case__cta:focus-visible .a-case__cta-paper { animation-play-state: running; }
 .a-case__cta svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Story ---------- */

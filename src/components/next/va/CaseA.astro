@@ -64,7 +64,7 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
       ))}
       {d.link && (
         <a class="a-case__cta" href={d.link} target="_blank" rel="noopener">
-          <span class="a-case__cta-paper" data-paper data-seed="11" aria-hidden="true"></span>
+          <span class="a-case__cta-paper" aria-hidden="true"></span>
           Take a look
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
           <span class="sr-only"> at {d.link.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')} (opens in a new tab)</span>
@@ -91,7 +91,24 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
 
 <script>
   import '../../../scripts/case-enhance';
-  import '../../../scripts/paper'; // the "Take a look" cut-out
+  import { paperRing } from '../../../lib/papercut';
+  // "Take a look": a paper cut-out whose rough edge circles round on hover (stop-motion steps, like
+  // the logo's turn) while the shape itself stays put
+  const cta = document.querySelector<HTMLElement>('.a-case__cta');
+  const paper = cta?.querySelector<HTMLElement>('.a-case__cta-paper');
+  if (cta && paper) {
+    let phase = 0;
+    let timer = 0;
+    const draw = () => { paper.style.clipPath = `path('${paperRing(paper.offsetWidth, paper.offsetHeight, 11, phase)}')`; };
+    new ResizeObserver(draw).observe(paper);
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const start = () => { if (still.matches || timer) return; timer = window.setInterval(() => { phase += 1; draw(); }, 140); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    cta.addEventListener('pointerenter', start);
+    cta.addEventListener('pointerleave', stop);
+    cta.addEventListener('focus', start);
+    cta.addEventListener('blur', stop);
+  }
   // highlighted sentences ({% mark %}) are drawn in when they reach the middle of the screen
   const marks = document.querySelectorAll<HTMLElement>('.cs-mark');
   const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); seen.unobserve(e.target); } }), { rootMargin: '-35% 0px -35% 0px' });
