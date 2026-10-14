@@ -122,19 +122,19 @@
 @media (min-width: 1100px) {
   .a-rail-track { display: block; position: absolute; left: 0; top: var(--a-gap); bottom: 0; z-index: 20; width: 0; } /* from the first section to the end of the story */
   .a-rail {
-    position: sticky; top: calc(50vh - 180px);
+    position: sticky; top: calc(50vh - 217px); /* about centred: the rail is ~434px tall */
     width: 40px; padding: 16px 16px 16px 14px; overflow: hidden; border-radius: 0 12px 12px 0;
     font-family: var(--sans);
     transition: width 0.45s cubic-bezier(0.65, 0, 0.25, 1), background-color 0.25s ease, box-shadow 0.25s ease;
   }
   .a-rail:hover, .a-rail:focus-within { width: 270px; background: var(--bg); box-shadow: 0 16px 48px -20px rgb(0 0 0 / 0.35), 0 0 0 1px var(--line); }
   .a-rail ol { margin: 0; padding: 0; list-style: none; }
-  .a-rail a { display: flex; align-items: center; gap: 14px; padding: 5px 0; color: var(--muted); font-size: 14px; line-height: 1.3; text-decoration: none; white-space: nowrap; }
+  .a-rail a { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; color: var(--muted); font-size: 16px; line-height: 1.3; text-decoration: none; }
   .a-rail a:hover, .a-rail a:focus-visible { color: var(--ink); }
-  .a-rail__tick { flex: none; width: 12px; height: 2px; border-radius: 1px; background: currentColor; opacity: 0.45; transition: width 0.2s ease, opacity 0.2s ease; }
+  .a-rail__tick { flex: none; width: 12px; height: 2px; margin-top: 0.6em; border-radius: 1px; background: currentColor; opacity: 0.45; transition: width 0.2s ease, opacity 0.2s ease; }
   .a-rail a[aria-current] { color: var(--ink); }
   .a-rail a[aria-current] .a-rail__tick { width: 20px; opacity: 1; }
-  .a-rail__label { opacity: 0; transform: translateX(-12px); transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.65, 0, 0.25, 1); }
+  .a-rail__label { flex: none; width: 160px; opacity: 0; transform: translateX(-12px); transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.65, 0, 0.25, 1); }
   .a-rail:hover .a-rail__label, .a-rail:focus-within .a-rail__label { opacity: 1; transform: none; }
   .a-rail__top { margin-top: 12px; }
   .a-rail__top .a-rail__tick { width: 6px; }
