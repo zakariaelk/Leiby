@@ -3,8 +3,8 @@
 // (docs/case-study-layout-sketch-for-claude-code.md): a light start, proof early, details as they come.
 //   client → headline → hero (full content width) → one or two intro paragraphs → facts (2×2) → "Take a look"
 //   then the story in an 860px column (opening with "The reality of this project"), visuals wider, and the next project.
-// A slim rail of strokes at the far left lists the sections: it appears open at the first section,
-// closes to strokes after it (names on hover), the current one longer.
+// A slim rail at the far left lists the sections: open beside the first section, it sticks as the page
+// scrolls and folds to its strokes after ~350px (names on hover); the current section's stroke is longer.
 // Used by /work/<slug>/ and the /next/… and /tests variations: base = where the links stay,
 // look = their colour or type variation.
 import { Image } from 'astro:assets';
@@ -35,14 +35,6 @@ const rows = [meta.slice(0, 2), meta.slice(2)].filter((r) => r.length);
 const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, label: h.text }));
 ---
 <Next base={base} variant="a" logo look={look} title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
-  {sections.length > 2 && (
-    <nav class="a-rail" aria-label="Sections">
-      <ol>
-        {sections.map((s) => <li><a href={`#${s.id}`} data-section={s.id}><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">{s.label}</span></a></li>)}
-      </ol>
-      <a class="a-rail__top" href="#top"><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">Back to top</span></a>
-    </nav>
-  )}
 
   <header class="a-wrap a-case" id="top">
     <p class="a-case__label">{labelOf(d)}</p>
@@ -74,7 +66,21 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
   </div>
 
 
-  <div class="a-story a-wrap" data-story><Content /></div>
+  <!-- the story, with the section rail in the left margin: it starts open beside the first section,
+       sticks as the page scrolls and folds to its strokes after ~350px -->
+  <div class="a-reading">
+    {sections.length > 2 && (
+      <div class="a-rail-track">
+        <nav class="a-rail" aria-label="Sections">
+          <ol>
+            {sections.map((s) => <li><a href={`#${s.id}`} data-section={s.id}><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">{s.label}</span></a></li>)}
+          </ol>
+          <a class="a-rail__top" href="#top"><span class="a-rail__tick" aria-hidden="true"></span><span class="a-rail__label">Back to top</span></a>
+        </nav>
+      </div>
+    )}
+    <div class="a-story a-wrap" data-story><Content /></div>
+  </div>
 
   <nav class="a-wrap a-next" aria-label="Next project">
     <a class="a-col a-next__link" href={caseHref(base, next.id)}>
@@ -114,8 +120,9 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
   const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); seen.unobserve(e.target); } }), { rootMargin: '-35% 0px -35% 0px' });
   marks.forEach((m) => seen.observe(m));
   // Rail: the current section is the last one whose heading passed the top third of the screen.
-  // It shows from the first section on, open (names showing) while that first section is current.
+  // It stays open until the page has scrolled ~350px past the point where the rail sticks.
   const rail = document.querySelector<HTMLElement>('.a-rail');
+  const track = document.querySelector<HTMLElement>('.a-rail-track');
   const links = [...document.querySelectorAll<HTMLAnchorElement>('.a-rail [data-section]')];
   const targets = links.map((a) => document.getElementById(a.dataset.section!)).filter(Boolean) as HTMLElement[];
   if (targets.length) {
@@ -123,14 +130,16 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
     let ticking = false;
     const update = () => {
       ticking = false;
+      if (rail && track) {
+        const stuckFor = parseFloat(getComputedStyle(rail).top) - track.getBoundingClientRect().top; // px scrolled since it stuck
+        rail.classList.toggle('is-open', stuckFor < 350);
+      }
       const line = innerHeight * 0.33;
       let id = '';
       targets.forEach((t) => { if (t.getBoundingClientRect().top < line) id = t.id; });
       if (id === active) return;
       active = id;
       links.forEach((a) => (a.dataset.section === id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
-      rail?.classList.toggle('is-shown', id !== '');
-      rail?.classList.toggle('is-open', id !== '' && id === targets[0].id);
     };
     update();
     addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
