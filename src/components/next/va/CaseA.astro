@@ -19,11 +19,12 @@ import '../../../styles/next-a.css';
 import '../../../styles/next-a-looks.css';
 import '../../../styles/case-a.css';
 
-interface Props { project: CollectionEntry<'projects'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
-const { project, next, base = '/next/a/', look } = Astro.props;
+// compare: a temporary bar linking the full and short versions of the INSO case (remove with the short page)
+interface Props { project: CollectionEntry<'projects' | 'lab'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown'; compare?: 'full' | 'short' }
+const { project, next, base = '/next/a/', look, compare } = Astro.props;
 const d = project.data;
 const { Content, headings } = await render(project);
-const labelOf = (p: CollectionEntry<'projects'>['data']) => p.org ?? p.client; // the client's name
+const labelOf = (p: CollectionEntry<'projects' | 'lab'>['data']) => p.org ?? p.client; // the client's name
 const meta = [
   { label: 'Role', value: d.role },
   { label: 'Team', value: d.team },
@@ -36,6 +37,9 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
 ---
 <Next base={base} variant="a" logo look={look} title={`${d.projectName ?? d.title} · Zakaria El Khachia`} description={d.statement ?? d.intro}>
 
+  {compare && (
+    <p class="a-wrap a-compare">Comparing versions:{' '}<a href="/work/mitigating-risk-with-location-based-alerts/" aria-current={compare === 'full' ? 'page' : undefined}>Full</a>{' · '}<a href="/work/mitigating-risk-with-location-based-alerts-short/" aria-current={compare === 'short' ? 'page' : undefined}>Short</a></p>
+  )}
   <header class="a-wrap a-case" id="top">
     <p class="a-case__label">{labelOf(d)}</p>
     <h1 class="a-case__title">{d.headline}</h1>
@@ -115,9 +119,9 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
     cta.addEventListener('focus', start);
     cta.addEventListener('blur', stop);
   }
-  // highlighted sentences ({% mark %}) are drawn in when they reach the middle of the screen
+  // highlighted sentences ({% mark %}) are drawn in once they are well into the screen
   const marks = document.querySelectorAll<HTMLElement>('.cs-mark');
-  const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); seen.unobserve(e.target); } }), { rootMargin: '-35% 0px -35% 0px' });
+  const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); seen.unobserve(e.target); } }), { rootMargin: '0px 0px -25% 0px' });
   marks.forEach((m) => seen.observe(m));
   // Rail: the current section is the last one whose heading passed the top third of the screen.
   // It stays open until the page has scrolled ~350px past the point where the rail sticks.

@@ -11,4 +11,4 @@ export async function getStaticPaths() {
 
 const { project, next } = Astro.props;
 ---
-<CaseA project={project} next={next} base="/" look="blue" />
+<CaseA project={project} next={next} base="/" look="blue" compare={project.id === 'mitigating-risk-with-location-based-alerts' ? 'full' : undefined} />

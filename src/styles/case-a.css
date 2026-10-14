@@ -26,6 +26,11 @@
 }
 .a-col { max-width: 860px; margin-inline: auto; }
 
+/* temporary: the bar linking the full and short versions of the INSO case */
+.a-compare { margin: 0; padding-top: 8px; font-family: var(--sans); font-size: 15px; color: var(--muted); }
+.a-compare a { color: inherit; text-underline-offset: 0.2em; }
+.a-compare a[aria-current] { color: var(--ink); font-weight: 500; text-decoration: none; }
+
 /* ---------- Top ---------- */
 .a-case { padding-top: clamp(20px, calc(20px + 18 * (100vw - 768px) / 492), 44px); } /* 38px at 1260 */
 .a-case__label { display: block; margin: 0; font-family: var(--sans); font-size: clamp(15px, calc(15px + 3 * (100vw - 768px) / 492), 19px); line-height: 1.2; color: var(--a-label); } /* the client: small, a light grey, so the headline leads */
