@@ -2,7 +2,7 @@
 // Version A case study, after hansonwu.com/game-breakdowns and the layout sketch v3
 // (docs/case-study-layout-sketch-for-claude-code.md): a light start, proof early, details as they come.
 //   client → headline → hero (full content width) → one or two intro paragraphs → facts (2×2) → "Take a look"
-//   then the three key numbers, the story in an 860px column, visuals wider, and the next project.
+//   then the story in an 860px column (opening with "The reality of this project"), visuals wider, and the next project.
 // A slim rail of strokes at the far left lists the sections: it appears open at the first section,
 // closes to strokes after it (names on hover), the current one longer.
 // Used by /work/<slug>/ and the /next/… and /tests variations: base = where the links stay,
@@ -65,19 +65,14 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
       {d.link && (
         <a class="a-case__cta" href={d.link} target="_blank" rel="noopener">
           <span class="a-case__cta-paper" data-paper data-seed="11" aria-hidden="true"></span>
+          Take a look
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
-          Take a look<span class="sr-only"> at {d.link.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')} (opens in a new tab)</span>
+          <span class="sr-only"> at {d.link.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')} (opens in a new tab)</span>
         </a>
       )}
     </div>
   </div>
 
-  {d.numbers.length > 0 && (
-    <section class="a-wrap a-case__numbers" aria-label="Key numbers">
-      <ul>{d.numbers.map((n) => <li><span class="a-case__num">{n.value}</span><span class="a-case__num-label">{n.label}</span></li>)}</ul>
-      {d.numbersCaption && <p class="a-case__num-caption">{d.numbersCaption}</p>}
-    </section>
-  )}
 
   <div class="a-story a-wrap" data-story><Content /></div>
 
@@ -97,6 +92,10 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
 <script>
   import '../../../scripts/case-enhance';
   import '../../../scripts/paper'; // the "Take a look" cut-out
+  // highlighted sentences ({% mark %}) are drawn in when they reach the middle of the screen
+  const marks = document.querySelectorAll<HTMLElement>('.cs-mark');
+  const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); seen.unobserve(e.target); } }), { rootMargin: '-35% 0px -35% 0px' });
+  marks.forEach((m) => seen.observe(m));
   // Rail: the current section is the last one whose heading passed the top third of the screen.
   // It shows from the first section on, open (names showing) while that first section is current.
   const rail = document.querySelector<HTMLElement>('.a-rail');

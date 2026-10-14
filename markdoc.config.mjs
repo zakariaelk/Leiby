@@ -32,7 +32,7 @@ export default defineMarkdocConfig({
     need: { render: story('Need') },
     friction: { render: story('Friction') },
     move: { render: story('Move'), attributes: { label: { type: String } } },
-    result: { render: story('Result'), attributes: { value: { type: String }, label: { type: String }, note: { type: String } } },
+    result: { render: story('Result'), attributes: { value: { type: String }, label: { type: String }, note: { type: String }, kind: { type: String, matches: ['', 'testing', 'interviews', 'partners'] } } },
     figure: {
       render: story('Figure'),
       selfClosing: true,
@@ -54,6 +54,11 @@ export default defineMarkdocConfig({
       selfClosing: true,
       attributes: { note: { type: String, required: true }, label: { type: String } },
     },
+    // one sentence in the site's orange marker highlight, drawn in when it reaches the middle of the screen
+    mark: { render: story('Mark'), inline: true, selfClosing: true, attributes: { text: { type: String, required: true } } },
+    // two or more options weighed against each other: cards side by side on wide screens
+    options: { render: story('Options') },
+    option: { render: story('Option'), attributes: { title: { type: String, required: true } } },
     missing: {
       render: story('Missing'),
       selfClosing: true,

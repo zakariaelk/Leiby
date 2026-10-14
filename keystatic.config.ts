@@ -34,7 +34,7 @@ const storyBlocks = {
   move: wrapper({ label: 'What I did', schema: { label: fields.text({ label: 'Label', defaultValue: 'What I did' }) } }),
   result: wrapper({
     label: 'Result (max 3 sentences)',
-    schema: { value: fields.text({ label: 'Large number (optional, older drafts)' }), label: fields.text({ label: 'Number label, with sample size' }), note: fields.text({ label: 'Small line: the numbers and sample size' }) },
+    schema: { value: fields.text({ label: 'Large number (optional, older drafts)' }), label: fields.text({ label: 'Number label, with sample size' }), note: fields.text({ label: 'Small line: the numbers, sample size and who answered' }), kind: fields.select({ label: 'Evidence', options: [{ label: 'Result', value: '' }, { label: 'What testing showed (prototype tests)', value: 'testing' }, { label: 'What interviews showed', value: 'interviews' }, { label: 'What partners said (survey)', value: 'partners' }], defaultValue: '' }) },
   }),
   figure: block({
     label: 'Figure',
@@ -55,6 +55,9 @@ const storyBlocks = {
   quote: wrapper({ label: 'Tester quote', schema: { by: fields.text({ label: 'Role and country only' }) } }),
   reflection: wrapper({ label: 'Reflection (two lists)', schema: {} }),
   confirm: inline({ label: 'Confirm flag', schema: { note: fields.text({ label: 'What to confirm' }), label: fields.text({ label: 'Label', defaultValue: 'Confirm' }) } }),
+  mark: inline({ label: 'Orange highlight (one sentence)', schema: { text: fields.text({ label: 'Highlighted text' }) } }),
+  options: wrapper({ label: 'Options (cards side by side)', schema: {} }),
+  option: wrapper({ label: 'Option card', schema: { title: fields.text({ label: 'Title' }) } }),
   missing: block({ label: 'Missing image flag', schema: { file: fields.text({ label: 'What is needed' }), label: fields.text({ label: 'Label', defaultValue: 'Missing image' }) } }),
 };
 
@@ -101,8 +104,6 @@ export default config({
         headline: fields.text({ label: 'Headline (case study page)' }),
         lede: fields.array(fields.text({ label: 'Paragraph', multiline: true }), { label: 'Intro under the hero (one or two short paragraphs)', itemLabel: (p) => p.value.slice(0, 60) }),
         deliverables: fields.text({ label: 'Deliverables (case study facts)' }),
-        numbers: fields.array(fields.object({ value: fields.text({ label: 'Number' }), label: fields.text({ label: 'Label, with sample size' }) }), { label: 'Key numbers (strip under the facts)', itemLabel: (p) => p.fields.value.value }),
-        numbersCaption: fields.text({ label: 'Caption under the key numbers' }),
         summary: fields.text({ label: 'Card summary', multiline: true }),
         intro: fields.text({ label: 'Intro (case study page)', multiline: true }),
         showIntro: fields.checkbox({ label: 'Show the intro under the title on the case study page', defaultValue: true }),

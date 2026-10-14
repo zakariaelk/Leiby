@@ -1,0 +1,6 @@
+---
+// One sentence in the site's orange marker highlight (CaseA draws it in when it comes into view)
+interface Props { text: string }
+const { text } = Astro.props;
+---
+<mark class="cs-mark">{text}</mark>
