@@ -15,7 +15,7 @@ org: "The International NGO Safety Organisation"
 projectName: "Alert mobile app"
 sector: "Humanitarian safety, NGOs"
 role: "Sole product designer"
-duration: "Dec 2022–Jun 2023, 2025 update"
+duration: "Dec 2022–Jun 2023, updates designed early 2025, released Sep 2025"
 team: "2 engineers + department lead"
 link: "https://app.ngosafety.org/"
 cover: "../../assets/projects/mitigating-risk-with-location-based-alerts/inso-mobile-app-cover-03.jpg"
@@ -215,20 +215,29 @@ Colleagues understood Geofence, but saw it as relevant only to those who work ac
 
 {% figure src="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-map-geofence.mp4" frame="after" alt="Geofence with the three-step guide: zoom in, tap to drop pins around an area, confirm, and the alerts inside the shape appear." caption="We simplified Geofence (formerly Polygon), allowing users to define areas directly by tapping on the map, supported by clear in-app guidance." /%}
 
+**What people actually use**
+
+Across releases, Explore takes most of the map traffic, with Proximity and Geofence well behind. That matches what partners ranked as most important, and it fits Geofence being a tool for a handful of specialists.
+
 ## After the first release
 
 Feedback from country office colleagues kept shaping the app after launch:
 
-- A font size setting, a dark theme, and the app in French, English and Ukrainian.
-- Notifications limited to your regions or to a saved map search, after a short survey with country office staff.
+- A font size setting, a dark theme, and the app in French, English and Ukrainian. Ukrainian became a full language in August 2023, and the Ukraine country office was one of the offices that told us the most about internet coverage, which kept improving even through the war, compared with other countries in Africa and Asia.
+- Notifications limited to your regions or to a saved map search, after a short survey with country office staff. People do open them: over 100,000 times from notifications in three years.
 - An update marker and fuller location detail in the list and notifications.
+- Unseen alerts pointed out, a new Recent Alerts block, and a restyled date picker with quick options (last 3 days, last week, last month) that shows clearly when a filter is on.
 - Animated tutorials in every map mode.
 
-**Composing alerts from the phone.** This was discussed from the start, but we agreed to focus on the NGO side first. Once the prototype showed map modes work fine on a small screen, a few colleagues asked if they could post from the app too, as field monitors often hear about something while far from a laptop. With management sign-off, the first version came in early 2025: a simple form with a map pin, plus updates to existing alerts. A later round added offline composing, which sends the alert as soon as the network is back.
+**Composing alerts from the phone.** This was discussed from the start, but we agreed to focus on the NGO side first. Once the prototype showed map modes work fine on a small screen, a few colleagues asked if they could post from the app too, as field monitors often hear about something while far from a laptop. With management sign-off I designed the first version in early 2025, and it was released in September 2025 together with login through an INSO account: a simple form with a map pin and distribution lists, plus updates to existing alerts. A later round added offline composing, which sends the alert as soon as the network is back.
 
 ## Outcome
 
-Partners gave the first real measurement after launch, in a Maze survey with 31 of them. Nothing was measured on the old version, so there's no before and after, and I read it as a starting point more than proof.
+**How the app is used today.** The launch month brought about 1,600 users, then a smaller base settled in: around 800 a month through 2024, and 450 to 630 through 2026. About 8 in 10 of them are returning users, so most people who use it keep coming back.
+
+{% usagechart caption="Monthly active and returning users since launch, rounded. Test and visitor traffic left out." /%}
+
+**What I can't say.** Nothing was measured before the redesign, so I can't say whether it made the app better, only that it's used and that people keep coming back.
 
 {% result kind="partners" note="23 of 29 rated ease of use 4 or 5 out of 5 (79%, average 4.1/5) · 24 of 31 for installation and onboarding · post-launch partner survey" %}
 Partners found the app easy to use.
@@ -244,6 +253,8 @@ The weakest score was whether the app helped them reach their goal: 21 of 31 gav
 
 ## Reflection
 
-**What I'd do differently:** set baseline metrics before redesigning, and run a proper retest of Geofence.
+**What I'd do differently:** set baseline metrics before redesigning, run a proper retest of Geofence, and set up tracking before a feature ships.
+
+**About the composer.** It was released in September 2025 and I didn't test or track it afterwards. By then the team, me included, had been tasked with the Partners Portal, a one-stop platform where NGO workers get all of INSO's products and services, and that took our focus. A few months after the release I left INSO for another challenge.
 
 **Still unsolved:** date filters that don't refresh, frequent log-outs, the copy and screenshot block, reading alerts offline, and what partners asked for next (a LIVE indicator, map search and region-based notifications).

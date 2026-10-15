@@ -59,6 +59,8 @@ export default defineMarkdocConfig({
     // two or more options weighed against each other: cards side by side on wide screens
     options: { render: story('Options') },
     option: { render: story('Option'), attributes: { title: { type: String, required: true } } },
+    // the INSO app's monthly active and returning users since launch (src/data/monthly-active-users.csv)
+    usagechart: { render: story('UsageChart'), selfClosing: true, attributes: { caption: { type: String } } },
     missing: {
       render: story('Missing'),
       selfClosing: true,

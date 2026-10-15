@@ -58,6 +58,7 @@ const storyBlocks = {
   mark: inline({ label: 'Orange highlight (one sentence)', schema: { text: fields.text({ label: 'Highlighted text' }) } }),
   options: wrapper({ label: 'Options (cards side by side)', schema: {} }),
   option: wrapper({ label: 'Option card', schema: { title: fields.text({ label: 'Title' }) } }),
+  usagechart: block({ label: 'Usage chart (monthly active and returning users)', schema: { caption: fields.text({ label: 'Caption' }) } }),
   missing: block({ label: 'Missing image flag', schema: { file: fields.text({ label: 'What is needed' }), label: fields.text({ label: 'Label', defaultValue: 'Missing image' }) } }),
 };
 

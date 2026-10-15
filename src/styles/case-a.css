@@ -108,6 +108,42 @@
 .a-story .cs-option { padding: clamp(20px, 2.5vw, 28px); background: var(--c-grey-tint); font-size: clamp(18px, calc(18px + 4 * (100vw - 768px) / 512), 22px); line-height: 1.5; }
 .a-story .cs-option__title { margin: 0 0 8px; font-weight: 500; }
 .a-story .cs-option p:last-child { margin-bottom: 0; }
+/* usage chart: two lines, values at both ends, years below, crosshair on hover, a table view */
+.v-a { --chart-a: #3d6fae; --chart-b: #b0763a; }
+:root[data-theme='dark'].v-a { --chart-a: #6592d6; --chart-b: #c4833f; }
+.a-story .cs-chart { margin: clamp(32px, 4vw, 48px) 0; font-family: var(--sans); }
+.cs-chart__legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 18px; padding: 0; list-style: none; font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); color: var(--ink); }
+.cs-chart__legend li { display: inline-flex; align-items: center; gap: 8px; }
+.cs-chart__key { display: inline-block; width: 16px; height: 2px; border-radius: 1px; background: var(--chart-a); }
+.cs-chart__key--b { background: var(--chart-b); }
+.cs-chart__frame { padding: 14px 104px 30px 48px; } /* room for the start and end values and the years */
+.cs-chart__plot { position: relative; height: clamp(200px, 26vw, 280px); touch-action: pan-y; }
+.cs-chart__plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cs-chart__base { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cs-chart__line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.cs-chart__line--a { stroke: var(--chart-a); }
+.cs-chart__line--b { stroke: var(--chart-b); }
+.cs-chart__cross { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; opacity: 0; }
+.cs-chart__val { position: absolute; transform: translateY(-100%); padding-bottom: 6px; font-size: 14px; line-height: 1.2; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cs-chart__val--start { right: 100%; transform: translateY(-50%); padding: 0 8px 0 0; }
+.cs-chart__val--end { left: 100%; transform: translateY(-50%); padding: 0 0 0 10px; }
+.cs-chart__val em { font-style: normal; color: var(--muted); }
+.cs-chart__years span { position: absolute; top: calc(100% + 8px); transform: translateX(-50%); font-size: 13px; color: var(--muted); }
+.cs-chart__years span:first-child { transform: none; }
+@media (max-width: 560px) { .cs-chart__years span:first-child { display: none; } } /* launch year too close to 2024 on phones */
+.cs-chart__dot { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--chart-a); box-shadow: 0 0 0 2px var(--bg); opacity: 0; pointer-events: none; }
+.cs-chart__dot--b { background: var(--chart-b); }
+.cs-chart__tip { position: absolute; top: 0; z-index: 2; display: grid; gap: 4px; margin-left: 12px; padding: 10px 12px; border: 1px solid var(--line); background: var(--bg); font-size: 14px; line-height: 1.3; color: var(--ink); white-space: nowrap; opacity: 0; pointer-events: none; }
+.cs-chart__tip.is-left { transform: translateX(calc(-100% - 24px)); }
+.cs-chart__tip span { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+.cs-chart.is-hover :is(.cs-chart__cross, .cs-chart__dot, .cs-chart__tip) { opacity: 1; }
+.a-story .cs-chart figcaption { margin: 14px 0 0; font-size: clamp(14px, calc(14px + 2 * (100vw - 768px) / 512), 16px); line-height: 1.5; color: var(--muted); }
+.cs-chart__table { margin-top: 10px; font-size: 14px; }
+.cs-chart__table summary { cursor: pointer; color: var(--muted); }
+.cs-chart__table table { width: 100%; margin-top: 10px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.cs-chart__table :is(th, td) { padding: 4px 8px 4px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+.cs-chart__table thead th { color: var(--muted); }
+
 /* flags for what the author still has to confirm, and missing images */
 .a-story .cs-confirm { padding: 1px 6px; background: var(--c-brown-tint); color: var(--c-brown-ink); font-family: var(--sans); font-size: 0.72em; line-height: 1.5; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .a-story .cs-missing { padding: 16px 20px; border: 1px dashed var(--c-brown); background: var(--c-brown-tint); color: var(--c-brown-ink); font-family: var(--sans); font-size: 16px; }

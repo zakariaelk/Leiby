@@ -1,0 +1,93 @@
+---
+// Monthly active and returning users of the INSO app since launch (src/data/monthly-active-users.csv,
+// rounded to the nearest 10, test and visitor traffic left out). Two lines, no numbers on the value
+// axis: values sit at both ends of each line, years along the bottom, a hover crosshair shows a month,
+// and a table view carries the same data. Colours checked for colour-blind separation in both themes.
+import csv from '../../data/monthly-active-users.csv?raw';
+
+interface Props { caption?: string }
+const { caption } = Astro.props;
+
+const rows = csv.trim().split('\n').slice(1).map((line) => {
+  const [month, active, returning] = line.split(',');
+  return { month, active: +active, returning: +returning };
+});
+const MAX = 1800; // headroom above the launch month
+const n = rows.length;
+const x = (i: number) => (i / (n - 1)) * 1000; // viewBox 1000 × 100
+const y = (v: number) => 100 - (v / MAX) * 100;
+const pts = (key: 'active' | 'returning') => rows.map((r, i) => `${x(i).toFixed(1)},${y(r[key]).toFixed(2)}`).join(' ');
+const fmt = (v: number) => v.toLocaleString('en-GB');
+const name = (m: string) => new Date(`${m}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const years = rows.map((r, i) => ({ r, i })).filter(({ r, i }) => i === 0 || r.month.endsWith('-01'));
+const first = rows[0];
+const last = rows[n - 1];
+const pct = (i: number) => `${((i / (n - 1)) * 100).toFixed(3)}%`;
+const top = (v: number) => `${(100 - (v / MAX) * 100).toFixed(3)}%`;
+const summary = `Line chart of monthly users from ${name(first.month)} to ${name(last.month)}. Active users start at about ${fmt(first.active)} in the launch month, settle around 800 a month through 2024 and sit between about 450 and 630 through 2026. Returning users follow closely below, at about 8 in 10 of active users.`;
+---
+<figure class="cs-chart" data-chart>
+  <ul class="cs-chart__legend" aria-hidden="true">
+    <li><span class="cs-chart__key cs-chart__key--a"></span>Active users</li>
+    <li><span class="cs-chart__key cs-chart__key--b"></span>Returning users</li>
+  </ul>
+  <div class="cs-chart__frame">
+    <div class="cs-chart__plot" role="img" aria-label={summary}>
+      <svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
+        <line class="cs-chart__base" x1="0" y1="100" x2="1000" y2="100" />
+        <polyline class="cs-chart__line cs-chart__line--a" points={pts('active')} />
+        <polyline class="cs-chart__line cs-chart__line--b" points={pts('returning')} />
+        <line class="cs-chart__cross" x1="0" y1="0" x2="0" y2="100" />
+      </svg>
+      <!-- values at both ends of each line, outside the plot -->
+      <span class="cs-chart__val cs-chart__val--start" style={`top:${top(first.active)}`}>{fmt(first.active)}</span>
+      <span class="cs-chart__val cs-chart__val--start" style={`top:${top(first.returning)}`}>{fmt(first.returning)}</span>
+      <span class="cs-chart__val cs-chart__val--end" style={`top:${top(last.active)}`}>{fmt(last.active)} <em>active</em></span>
+      <span class="cs-chart__val cs-chart__val--end" style={`top:${top(last.returning)}`}>{fmt(last.returning)} <em>returning</em></span>
+      <span class="cs-chart__dot cs-chart__dot--a" aria-hidden="true"></span>
+      <span class="cs-chart__dot cs-chart__dot--b" aria-hidden="true"></span>
+      <div class="cs-chart__tip" aria-hidden="true"></div>
+      <div class="cs-chart__years" aria-hidden="true">{years.map(({ r, i }) => <span style={`left:${pct(i)}`}>{r.month.slice(0, 4)}</span>)}</div>
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+  <details class="cs-chart__table">
+    <summary>Table view</summary>
+    <table>
+      <thead><tr><th scope="col">Month</th><th scope="col">Active users</th><th scope="col">Returning users</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><th scope="row">{name(r.month)}</th><td>{fmt(r.active)}</td><td>{fmt(r.returning)}</td></tr>)}</tbody>
+    </table>
+  </details>
+  <script type="application/json" data-chart-data set:html={JSON.stringify({ rows: rows.map((r) => [name(r.month), r.active, r.returning]), max: MAX })} />
+</figure>
+
+<script>
+  // Hover / touch: a crosshair on the nearest month, a dot on each line and a small tooltip
+  document.querySelectorAll<HTMLElement>('[data-chart]').forEach((fig) => {
+    const plot = fig.querySelector<HTMLElement>('.cs-chart__plot')!;
+    const { rows, max } = JSON.parse(fig.querySelector('[data-chart-data]')!.textContent!) as { rows: [string, number, number][]; max: number };
+    const cross = fig.querySelector<SVGLineElement>('.cs-chart__cross')!;
+    const dotA = fig.querySelector<HTMLElement>('.cs-chart__dot--a')!;
+    const dotB = fig.querySelector<HTMLElement>('.cs-chart__dot--b')!;
+    const tip = fig.querySelector<HTMLElement>('.cs-chart__tip')!;
+    const fmt = (v: number) => v.toLocaleString('en-GB');
+    const show = (e: PointerEvent) => {
+      const box = plot.getBoundingClientRect();
+      const i = Math.round(Math.min(1, Math.max(0, (e.clientX - box.left) / box.width)) * (rows.length - 1));
+      const [label, a, b] = rows[i];
+      const left = (i / (rows.length - 1)) * 100;
+      cross.setAttribute('x1', String(left * 10));
+      cross.setAttribute('x2', String(left * 10));
+      dotA.style.left = dotB.style.left = `${left}%`;
+      dotA.style.top = `${100 - (a / max) * 100}%`;
+      dotB.style.top = `${100 - (b / max) * 100}%`;
+      tip.innerHTML = `<strong>${label}</strong><span><i class="cs-chart__key cs-chart__key--a"></i>${fmt(a)} active</span><span><i class="cs-chart__key cs-chart__key--b"></i>${fmt(b)} returning</span>`;
+      tip.style.left = `${left}%`;
+      tip.classList.toggle('is-left', left > 60);
+      fig.classList.add('is-hover');
+    };
+    plot.addEventListener('pointermove', show);
+    plot.addEventListener('pointerdown', show);
+    plot.addEventListener('pointerleave', () => fig.classList.remove('is-hover'));
+  });
+</script>

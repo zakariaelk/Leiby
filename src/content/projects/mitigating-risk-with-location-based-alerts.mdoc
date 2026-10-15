@@ -269,26 +269,36 @@ Colleagues understood Geofence, but saw it as relevant only to those who work ac
 
 Next idea (from a GIS officer): draw a line and set a buffer around a road or river.
 
+**What people actually use**
+
+Looking at screen views across releases, Explore takes most of the map traffic, with Proximity and Geofence well behind. That matches what partners ranked as most important, and it fits Geofence being a tool for a handful of specialists.
+
 ## After the first release
 
 Interviews and working sessions with country office colleagues shaped what came next:
 
-- **Accessibility and language:** a font-size setting (small, medium, large), a dark theme for people prone to eye strain, and localisation into French, English and Ukrainian.
-- **Notification control:** people can limit notifications to their active programmes (regions), or to a saved map search (Explore, Proximity or Geofence). This came from a short Maze survey with 12 country office staff (country directors, information managers, operations managers; 8 had used the live app): 7 of 8 wanted to be notified as soon as an alert is posted, 4 of 8 wanted alerts from their proximity or geofence setup, and 6 of 8 wanted a "high priority" label when an alert is close. Satisfaction with notifications was 7.1/10.
+- **Accessibility and language:** a font-size setting (small, medium, large), a dark theme for people prone to eye strain, and the app in French, English and Ukrainian. Ukrainian went from partly translated to a full language in August 2023. The Ukraine country office was one of the offices that told us the most about internet coverage, which kept improving even through the war, compared with other countries in Africa and Asia.
+- **Notification control:** people can limit notifications to their active programmes (regions), or to a saved map search (Explore, Proximity or Geofence). This came from a short Maze survey with 12 country office staff (country directors, information managers, operations managers; 8 had used the live app): 7 of 8 wanted to be notified as soon as an alert is posted, 4 of 8 wanted alerts from their proximity or geofence setup, and 6 of 8 wanted a "high priority" label when an alert is close. Satisfaction with notifications was 7.1/10. People do open them: over 100,000 times from notifications in three years.
+- **Spotting what's new:** the app now points out alerts you haven't seen yet (August 2023), and the Recent Alerts block got a new look and updates as you read through the list (February 2025).
+- **Filters you can see:** the settings screen, search bar and date picker were restyled in February 2025. The date picker got quick options (last 3 days, last week, last month) and a clear sign when filters are on.
 - **Clearer updates:** an update marker and fuller location detail in the list and notifications.
 - **Animated tutorials:** full-screen, animated tutorials in every map mode, replacing the small pop-ups.
 - **One place for the radius:** the distance range lives only on the map.
-- **Alert composer:** the sender feature, below.
+- **Alert composer and INSO login:** staff can sign in with their INSO account and send alerts from the app, below.
 
 **Composing alerts from the phone**
 
-When the prototype went to colleagues, a few asked whether they could also post from the app. The prototype had shown that advanced features like map modes work on a phone without a big screen, which opened the door: senders need a map to drop exact pins, which we had assumed needed a computer. Field monitors often get information while busy (at a wedding, say) and then have to get to a laptop to post it, so posting from the phone solves a real problem. It needed management sign-off, which we got as it benefits several teams. In early 2025 I designed the first round: a simple form where staff enter the alert details as text and set the location on a map, plus updates to an existing alert, which arrive as an "Alert update: …" notification. A later iteration added offline composing: the alert is saved on the phone and submitted as soon as the network is back.
+When the prototype went to colleagues, a few asked whether they could also post from the app. The prototype had shown that advanced features like map modes work on a phone without a big screen, which opened the door: senders need a map to drop exact pins, which we had assumed needed a computer. Field monitors often get information while busy (at a wedding, say) and then have to get to a laptop to post it, so posting from the phone solves a real problem. It needed management sign-off, which we got as it benefits several teams. I designed the first round in early 2025, and it was released in September 2025 together with login through an INSO account: a simple form where staff type the alert, set the location with coordinates or a pin on the map and choose which distribution lists (programmes) it goes to, plus updates to an existing alert, which arrive as an "Alert update: …" notification. Alerts sent this way show an "INSO ALERT" label, and staff get a megaphone button on the alerts screen. A later iteration added offline composing: the alert is saved on the phone and submitted as soon as the network is back.
 
 ## Outcome
 
 **Outcome and takeaways**
 
-Partners gave the first real measurement after launch, in a Maze survey of 31 people. There is no before-and-after comparison, as nothing was measured on the old version, so I read it as a starting point for future iterations and not as proof of impact.
+**How the app is used today.** The launch month brought about 1,600 users, then a smaller base settled in: around 800 a month through 2024, and 450 to 630 through 2026. About 8 in 10 of them are returning users, so most people who use it keep coming back.
+
+{% usagechart caption="Monthly active and returning users since launch, rounded. Test and visitor traffic left out." /%}
+
+**What I can't say.** Nothing was measured before the redesign, so I can't say whether it made the app better, only that it's used and that people keep coming back.
 
 {% result kind="partners" note="23 of 29 rated ease of use 4 or 5 out of 5 (79%, average 4.1/5) · 24 of 31 for installation and onboarding · post-launch partner survey" %}
 Partners found the app easy to use.
@@ -308,6 +318,9 @@ The weakest score was whether the app helped them reach their goal: 21 of 31 rat
 
 - Set baseline metrics before redesigning, so improvements can be shown.
 - Run a formal retest of geofence.
+- Set up tracking before a feature ships, so there's something to look at afterwards.
+
+**About the composer.** The composer was released in September 2025, and I didn't test or track it afterwards. By then the team, me included, had been tasked with the Partners Portal, a one-stop platform where NGO workers get all of INSO's products and services, and that took our focus. A few months after the release I left INSO for another challenge.
 
 **Still unsolved**
 
