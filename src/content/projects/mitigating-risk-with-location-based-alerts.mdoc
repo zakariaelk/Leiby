@@ -218,6 +218,8 @@ monitor remote places by setting a custom radius.
 
 I reworked Proximity mode so users can monitor a radius around their current location or a custom pin.
 
+{% figure src="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-map-proximity.mp4" frame="after" alt="Proximity mode: a circle around the user's position or a dropped pin, with a radius control, lists the alerts inside it." caption="I reworked the Proximity mode, allowing users to monitor alerts within a radius based on either their current location or a custom location dropped on the map." /%}
+
 {% friction %}
 In the first version you could set the radius in two places: on the map, and in the filter menu with a distance slider, a bit like dating apps do. In testing most people reached the map through the Map button on the alerts list and set their proximity there, so I removed the slider from the filter menu and kept one place to set a radius. The trickier part was that some testers didn't get the difference between proximity around their live location and around a custom location, or how to use either. That came down to a single pop-up introducing the whole feature: "Use this feature to know what's happening around you and/or while on the move. You can also set a remote location."
 {% /friction %}
@@ -239,7 +241,9 @@ Showing what each map mode is for and how to use it, shown the first time someon
 
 We took the risk with the tutorials, as a mix of text and animation gets the message across in a more dynamic way than text alone.
 
-{% figure src="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-map-proximity.mp4" frame="after" alt="Proximity mode: a circle around the user's position or a dropped pin, with a radius control, lists the alerts inside it." caption="I reworked the Proximity mode, allowing users to monitor alerts within a radius based on either their current location or a custom location dropped on the map." /%}
+{% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-map-modes-tutorial.jpg" alt="The map opens, then a full-screen tutorial introduces each mode in turn: Explore, Proximity and Geofence, each with a short line on what it is for, Next and Skip." caption="Full-screen tutorials introduce each map mode the first time the map opens." /%}
+
+{% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-proximity-tutorial.jpg" frame="after" alt="The three-step Proximity tutorial: see what is around you, see what is around a custom location, and select the radius with a slider; then the results view, a radius on the map with the alerts inside it." caption="The three-step Proximity tutorial, then the results view." /%}
 
 {% result kind="interviews" note="Interviews with 5 country office colleagues who hadn't seen the app before · updated design and prototype" %}
 The tutorial cleared up the difference between live and custom location, and colleagues were more satisfied with the feature.
@@ -286,9 +290,13 @@ Interviews and working sessions with country office colleagues shaped what came 
 - **One place for the radius:** the distance range lives only on the map.
 - **Alert composer and INSO login:** staff can sign in with their INSO account and send alerts from the app, below.
 
+{% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-new-alerts.jpg" frame="after" alt="Two alerts lists: the plain list, and the same list with a Recent Alerts block at the top holding the alerts not seen yet." caption="New alerts pointed out in the alerts list, with the Recent Alerts block on top." /%}
+
 **Composing alerts from the phone**
 
 When the prototype went to colleagues, a few asked whether they could also post from the app. The prototype had shown that advanced features like map modes work on a phone without a big screen, which opened the door: senders need a map to drop exact pins, which we had assumed needed a computer. Field monitors often get information while busy (at a wedding, say) and then have to get to a laptop to post it, so posting from the phone solves a real problem. It needed management sign-off, which we got as it benefits several teams. I designed the first round in early 2025, and it was released in September 2025 together with login through an INSO account: a simple form where staff type the alert, set the location with coordinates or a pin on the map and choose which distribution lists (programmes) it goes to, plus updates to an existing alert, which arrive as an "Alert update: …" notification. Alerts sent this way show an "INSO ALERT" label, and staff get a megaphone button on the alerts screen. A later iteration added offline composing: the alert is saved on the phone and submitted as soon as the network is back.
+
+{% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-compose.jpg" frame="after" alt="Composing an alert: the alerts list with an INSO ALERT label and a megaphone button, the empty form, the filled form with location and distribution lists, and the sent confirmation." caption="Composing an INSO ALERT from the phone, from the megaphone on the alerts list to the confirmation. Alert text, place names, the map and list sizes are blurred." /%}
 
 ## Outcome
 
