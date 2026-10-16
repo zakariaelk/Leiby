@@ -7,7 +7,8 @@
 // scrolls and folds to its strokes after ~350px (names on hover); the current section's stroke is longer.
 // Used by /work/<slug>/ and the /next/… and /tests variations: base = where the links stay,
 // look = their colour or type variation.
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
+import { posterFor } from '../../../lib/media';
 import { render } from 'astro:content';
 import Next from '../../../layouts/Next.astro';
 import FramedMedia from '../FramedMedia.astro';
@@ -20,8 +21,11 @@ import '../../../styles/next-a-looks.css';
 import '../../../styles/case-a.css';
 
 // compare: a temporary bar linking the full and short versions of the INSO case (remove with the short page)
-interface Props { project: CollectionEntry<'projects' | 'lab'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown'; compare?: 'full' | 'short' }
-const { project, next, base = '/next/a/', look, compare } = Astro.props;
+// heroVideo: a video as the hero instead of the cover, its poster from posters/ (/tests/one-alert/)
+interface Props { project: CollectionEntry<'projects' | 'lab'>; next: CollectionEntry<'projects'>; base?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown'; compare?: 'full' | 'short'; heroVideo?: string }
+const { project, next, base = '/next/a/', look, compare, heroVideo } = Astro.props;
+const heroPoster = heroVideo ? posterFor(heroVideo) : undefined;
+const heroPosterSrc = heroPoster ? (await getImage({ src: heroPoster, format: 'webp', width: 1920 })).src : undefined;
 const d = project.data;
 const { Content, headings } = await render(project);
 const labelOf = (p: CollectionEntry<'projects' | 'lab'>['data']) => p.org ?? p.client; // the client's name
@@ -46,7 +50,7 @@ const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug,
   </header>
 
   <div class="a-wrap a-case__hero">
-    <FramedMedia frame={false} image={d.cover} alt={`${labelOf(d)}: ${d.projectName ?? d.title}`} sizes="(min-width: 1440px) 1340px, 100vw" eager />
+    <FramedMedia frame={false} image={heroPoster ?? d.cover} video={heroPoster ? heroVideo : undefined} posterSrc={heroPosterSrc} alt={`${labelOf(d)}: ${d.projectName ?? d.title}`} sizes="(min-width: 1440px) 1340px, 100vw" eager />
   </div>
 
   <div class="a-wrap">
