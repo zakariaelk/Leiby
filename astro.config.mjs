@@ -18,6 +18,8 @@ export default defineConfig({
     '/blog': '/',
     '/contact': '/',
     '/portrait': '/',
+    // the video test's first card opens the short version of the INSO case
+    '/tests/one-alert/work/mitigating-risk-with-location-based-alerts': '/work/mitigating-risk-with-location-based-alerts-short/',
   },
   prefetch: {
     prefetchAll: true,

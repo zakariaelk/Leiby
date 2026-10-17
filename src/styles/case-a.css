@@ -54,8 +54,6 @@
 /* ---------- Story ---------- */
 .a-story h2 { font-size: clamp(16px, calc(16px + 8 * (100vw - 768px) / 512), 24px); scroll-margin-top: 32px; }
 :is(.a-story > article, .a-story) > h2:first-child { margin-top: 0; } /* half the space between the facts/numbers and the first section */
-.a-story__lead > h2 { max-width: 860px; margin: 0 auto 0; } /* "The story in one minute" (test), in the reading column */
-.a-story__lead + article > h2:first-child { margin-top: var(--a-gap); }
 .a-story h2 + .is-lead { font-weight: 470; font-size: clamp(26px, calc(26px + 14 * (100vw - 768px) / 512), 40px); line-height: 1.2; }
 .a-story h2 + .is-lead strong { font-weight: 470; }
 .a-story .is-lead { font-size: clamp(22px, calc(22px + 6 * (100vw - 768px) / 512), 28px); line-height: 1.3; }
@@ -111,6 +109,7 @@
 .a-story .cs-option__title { margin: 0 0 8px; font-weight: 500; }
 .a-story .cs-option p:last-child { margin-bottom: 0; }
 /* the one-minute story: its cover with a round play button, then the video with controls */
+.a-case__hero .cs-player { max-width: none; margin: 0; } /* as the cover: the full content width */
 .cs-player__frame { position: relative; aspect-ratio: 16 / 9; background: var(--c-grey-tint); }
 .cs-player__video { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cs-player__play { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end; padding: clamp(18px, 4.5vw, 64px) clamp(14px, 5vw, 72px); border: 0; background: center / cover no-repeat; cursor: pointer; } /* the button sits low right, under the end card's title and clear of the phone */

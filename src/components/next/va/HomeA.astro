@@ -25,7 +25,8 @@ type Featured = 'split' | 'client' | 'screen-1' | 'screen-2' | 'screen-3';
 // intro: the opening animation (the home page only, not the tests)
 // base: where the links stay; caseBase: where the INSO case lives (defaults to base); look: a colour or type variation (/tests/orange-theme/, /tests/serif-option/)
 // hero 'v1': the earlier one-sentence intro ("I'm Zakaria El Khachia, a product designer…"), three lines on desktop (/v1/)
-// leadVideo: a video for the first featured case instead of its usual one, shown whole (16:9), its poster from posters/ (/tests/one-alert/)
+// leadVideo: a video for the first featured case instead of its usual one, shown whole (16:9), its poster from
+// posters/, starting only once it reaches the middle of the screen (/tests/one-alert/)
 interface Props { leadVideo?: string; hero?: 'v1'; featured?: Featured; highlight?: 'blue' | 'peach' | false; title?: string; intro?: boolean; button?: boolean; base?: string; caseBase?: string; look?: 'orange' | 'dmsans' | 'blue' | 'brown' }
 const { leadVideo, hero, featured: layout = 'split', highlight = 'blue', title = 'Zakaria El Khachia · Product designer & builder', intro = false, button = true, base = '/next/a/', caseBase, look } = Astro.props;
 const caseRoot = caseBase ?? base;
@@ -100,7 +101,7 @@ const mark = highlight ? ['a-mark', highlight === 'peach' && 'a-mark--peach'] : 
                   )}
                 </div>
                 <div class="a-feat__visual">
-                  <FramedMedia frame={false} cut={unevenRect(31 + i * 7, 0.8)} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} sizes="(min-width: 900px) 54vw, 92vw" eager={i === 0} />
+                  <FramedMedia playAtCenter={i === 0 && !!leadVideo} frame={false} cut={unevenRect(31 + i * 7, 0.8)} image={poster ?? p.data.cover} video={video} posterSrc={posterSrc} alt={`${orgOf(p)}: ${p.data.projectName ?? p.data.title}`} sizes="(min-width: 900px) 54vw, 92vw" eager={i === 0} />
                 </div>
               </a>
             </article>
