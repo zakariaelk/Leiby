@@ -81,7 +81,7 @@ I got into this project out of curiosity after hearing the developers talk about
 {% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-former-version.jpg" frame="before" alt="The app when I joined: a dense dark list of alerts in capitals, an alert detail packed with text under a small map, and a map that shows a single alert pin." caption="Visuals showing what the App looked like when I joined the project team." /%}
 
 {% friction %}
-The solution had come first and its value was named later, so there was no problem statement to design against. I ran a heuristic evaluation of the in-progress app, shared the findings with the project lead, and asked to take the app on. What started as UI alignment became a broader UX redesign.
+The solution had come first and its value was named later, so there was no problem statement to design against. A quick heuristic evaluation of the app became my starting point. After sharing it with the project lead, I asked to take the app on, with the idea of lining up the UI with the brand, not knowing it would grow into a UX redesign. Along the way it felt like a patchwork every now and then.
 {% /friction %}
 
 ## Users
@@ -182,6 +182,12 @@ Alerts and their updates looked the same in the list, so a tester couldn't tell 
 Updates now carry their own marker, and the list and notifications show fuller location detail.
 {% /move %}
 
+## Usability vs security
+
+**Keeping alerts safe made the app harder to use**
+
+Alerts are sensitive, so what people can copy or see was a long conversation with country office colleagues, and so was keeping the app discreet if someone looks at the phone. Finding the middle ground was tricky. It isn't fully settled, because the solutions to security concerns kept creating usability problems somewhere else: no copying or screenshots, several layers to get into the app, no Face ID. Partners named the copy and screenshot block as their biggest frustration.
+
 ## Maps
 
 **Seeing incidents on a map changes everything**
@@ -256,6 +262,8 @@ define one specific area without technical interactions.
 {% /need %}
 
 Geofence was built for people comfortable with maps, such as security and GIS staff, not for every partner. Even so, it was the hardest feature to learn.
+
+**Where I pushed back.** Colleagues in the country offices told me it takes some tech savviness, and even they didn't feel natural using it. Drawing an area also takes precision, which is far easier on a desktop than with a finger on a phone. The idea was to put the attention where it was needed the most, but the foundation was already there, an early feature called Polygon, so Geofence stayed and the job became making it usable. In that first version there were no instructions at all, just a map, and you were supposed to know you had to tap it to draw.
 
 {% friction %}
 In the prototype test, 5 of 8 testers completed the task, but none followed the intended path, and misclicks peaked while placing points (usability score 9/100, ease 6.4/10). People don't read: a pop-up explaining a feature like this doesn't work, they need to see it done step by step.

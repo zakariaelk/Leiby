@@ -73,7 +73,7 @@ The idea was simple: take alerts out of SMS and email and put them in one place,
 {% figure src="projects/mitigating-risk-with-location-based-alerts/inso-app-former-version.jpg" frame="before" alt="The app when I joined: a dense dark list of alerts in capitals, an alert detail packed with text under a small map, and a map that shows a single alert pin." caption="Visuals showing what the App looked like when I joined the project team." /%}
 
 {% friction %}
-There was no problem statement to design against, so a quick heuristic evaluation of the in-progress app became the starting point. After sharing it with the project lead I asked to take the app on, and what started as lining up the UI with the brand grew into a full UX redesign.
+There was no problem statement to design against, so a quick heuristic evaluation of the app became my starting point. After sharing it with the project lead, I asked to take the app on, with the idea of lining up the UI with the brand, not knowing it would grow into a UX redesign. Along the way it felt like a patchwork every now and then.
 {% /friction %}
 
 {% figure src="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-product-intro-02.mp4" alt="Walk-through of the redesigned app: the alerts list, an alert opening, and the map with its modes." caption="High-level overview of the app structure and key interactions around alerts." /%}
@@ -152,6 +152,12 @@ Interviews with country office colleagues were clear on this: people look for th
 
 {% figure src="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-alert-details-comparison.mp4" frame="compare" alt="Alert detail before: a map and a long block of text with the incident type buried. After: the title, place and time first, then full location, incident type, latest update and latest advice." caption="Alert detail screen before & after showing the differences in prioritisation of interests" /%}
 
+## Usability vs security
+
+**Keeping alerts safe made the app harder to use**
+
+Alerts are sensitive, so what people can copy or see was a long conversation with country office colleagues, and so was keeping the app discreet if someone looks at the phone. Finding the middle ground was tricky. It isn't fully settled, because the solutions to security concerns kept creating usability problems somewhere else: no copying or screenshots, several layers to get into the app, no Face ID. Partners named the copy and screenshot block as their biggest frustration.
+
 ## Maps
 
 **Seeing incidents on a map changes everything**
@@ -211,7 +217,9 @@ The tutorial cleared up the difference between live and custom location, and col
 
 **Geofence: how do I track one specific area?**
 
-Geofence lets people draw their own area on the map, which is really for security and GIS staff more than everyone. It was also the hardest to learn: 5 of 8 testers finished the task but none of them took the intended path. Two asked for a video, which is heavy on weak connections, so Geofence got the same kind of three-step animated tutorial instead.
+Geofence lets people draw their own area on the map, which is really for security and GIS staff more than everyone. This is where I pushed back. Colleagues in the country offices told me it takes some tech savviness, and even they didn't feel natural using it. Drawing an area also takes precision, which is far easier on a desktop than with a finger on a phone. The idea was to put the attention where it was needed the most, but the foundation was already there, an early feature called Polygon, so Geofence stayed and the job became making it usable. In that first version there were no instructions at all, just a map, and you were supposed to know you had to tap it to draw.
+
+It was also the hardest to learn: 5 of 8 testers finished the task but none of them took the intended path. Two asked for a video, which is heavy on weak connections, so Geofence got the same kind of three-step animated tutorial instead.
 
 {% result kind="interviews" note="Same 5 interviews · lowest-ranked feature in the post-launch partner survey (9 of 30), as expected for a specialist tool" %}
 Colleagues understood Geofence, but saw it as relevant only to those who work actively with maps.
