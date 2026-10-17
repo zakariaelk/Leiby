@@ -1,5 +1,5 @@
 ---
-// Test: the INSO case with the "One alert" animatic as its hero (see /tests/one-alert/)
+// Test: the INSO case with the teaser as its hero and "The story in one minute" (see /tests/one-alert/)
 import CaseA from '../../../../components/next/va/CaseA.astro';
 import { getProjects } from '../../../../lib/data';
 
@@ -7,4 +7,4 @@ const projects = await getProjects();
 const project = projects.find((p) => p.id === 'mitigating-risk-with-location-based-alerts')!;
 const next = projects.find((p) => p.id === 'ngosafety-website-redesign')!;
 ---
-<CaseA project={project} next={next} base="/" look="blue" heroVideo="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-one-alert.mp4" />
+<CaseA project={project} next={next} base="/" look="blue" heroVideo="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-teaser.mp4" storyVideo="/media/projects/mitigating-risk-with-location-based-alerts/inso-app-one-alert-story.mp4" />

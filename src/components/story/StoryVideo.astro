@@ -1,0 +1,33 @@
+---
+// A video with sound behind a play button (the one-minute story): its cover until someone presses
+// play, then the video with its controls. Nothing loads before that.
+import { getImage } from 'astro:assets';
+import { posterFor } from '../../lib/media';
+
+interface Props { src: string; title: string; caption?: string; length?: string }
+const { src, title, caption, length } = Astro.props;
+const poster = posterFor(src);
+const posterSrc = poster ? (await getImage({ src: poster, format: 'webp', width: 1920 })).src : undefined;
+---
+<figure class="cs-figure cs-figure--wide cs-player" data-player>
+  <div class="cs-player__frame">
+    <video class="cs-player__video" src={src} poster={posterSrc} width={poster?.width} height={poster?.height} preload="none" playsinline aria-label={title}></video>
+    <button type="button" class="cs-player__play" aria-label={`Play: ${title}`} style={posterSrc ? `background-image:url(${posterSrc})` : undefined}>
+      <span class="cs-player__pill"><span class="cs-player__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg></span><span>Play{length && <span class="cs-player__len"> · {length}</span>}</span></span>
+    </button>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-player]').forEach((fig) => {
+    const video = fig.querySelector<HTMLVideoElement>('video')!;
+    const button = fig.querySelector<HTMLButtonElement>('.cs-player__play')!;
+    button.addEventListener('click', () => {
+      fig.classList.add('is-playing');
+      video.controls = true;
+      video.play().catch(() => {});
+      video.focus();
+    });
+  });
+</script>
